@@ -1,0 +1,13 @@
+description: "Api Error V1"
+type: object
+properties:
+  code:
+    type: string
+    description: "Error code"
+  message:
+    type: string
+    description: "Error message"
+  timestamp:
+    type: string
+    format: date-time
+    description: "Error timestamp"

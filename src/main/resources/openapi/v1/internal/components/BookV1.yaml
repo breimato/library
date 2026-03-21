@@ -1,0 +1,7 @@
+description: "Book V1"
+type: object
+properties:
+  id:
+    type: integer
+    format: int64
+    description: "Book identifier"

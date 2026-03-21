@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: library
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:library_db}
+    username: ${DB_USERNAME:library_user}
+    password: ${DB_PASSWORD:library_pass}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.breixo.library.domain.model
+
+springdoc:
+  api-docs:
+    path: /v1/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+server:
+  port: 8080

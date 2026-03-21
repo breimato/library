@@ -1,0 +1,70 @@
+# ===========================
+# Maven
+# ===========================
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+pom_deps.txt
+
+# ===========================
+# IDE - IntelliJ IDEA
+# ===========================
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# ===========================
+# IDE - Eclipse
+# ===========================
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+# ===========================
+# IDE - VS Code
+# ===========================
+.vscode/
+.claude/
+
+# ===========================
+# OS
+# ===========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ===========================
+# Spring Boot / Sensitive config
+# ===========================
+application-local.yml
+application-local.properties
+application-local*.yml
+application-local*.properties
+*.env
+.env
+.env.*
+
+# ===========================
+# Logs
+# ===========================
+logs/
+*.log
+spring.log
+
+# ===========================
+# Docker
+# ===========================
+# docker-compose.override.yml is intentionally NOT ignored (it's safe to share)
+
+# ===========================
+# Test output
+# ===========================
+test-output/
+surefire-reports/

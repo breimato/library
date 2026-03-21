@@ -1,0 +1,62 @@
+get:
+  summary: "Get Book By Id V1"
+  description: "Get Book By Id V1"
+  operationId: "GetBookIdV1"
+  tags:
+    - get-book-id-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+      description: "Book identifier"
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/GetBookIdV1Response.yaml'
+    '404':
+      description: "Not Found - Book not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+delete:
+  summary: "Delete Book V1"
+  description: "Delete a book"
+  operationId: "DeleteBookV1"
+  tags:
+    - delete-book-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+      description: "Book identifier"
+  responses:
+    '204':
+      description: "204 No Content"
+    '404':
+      description: "Not Found - Book not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

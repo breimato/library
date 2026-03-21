@@ -1,0 +1,37 @@
+openapi: 3.0.3
+info:
+  title: es-appointment-api
+  version: 1.0.0
+  description: Appointment service API
+
+paths:
+  # Books
+  /v1/library/books/{id}:
+    $ref: './library/books-id-v1.api.yaml'
+
+components:
+  schemas:
+    ApiError:
+      $ref: './components/ApiErrorV1.yaml'
+    BookV1:
+      $ref: './components/BookV1.yaml'
+    
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
