@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-  title: es-appointment-api
+  title: es-library-api
   version: 1.0.0
-  description: Appointment service API
+  description: Library service API
 
 paths:
   # Books

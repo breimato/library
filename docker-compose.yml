@@ -1,17 +1,17 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: appointment-db
+    container_name: library-db
     environment:
-      POSTGRES_DB: appointment_db
-      POSTGRES_USER: appointment_user
-      POSTGRES_PASSWORD: appointment_pass
+      POSTGRES_DB: library_db
+      POSTGRES_USER: library_user
+      POSTGRES_PASSWORD: library_pass
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U appointment_user -d appointment_db"]
+      test: [ "CMD-SHELL", "pg_isready -U library_user -d library_db" ]
       interval: 10s
       timeout: 5s
       retries: 5
