@@ -101,6 +101,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Instancio -->
+        <dependency>
+            <groupId>org.instancio</groupId>
+            <artifactId>instancio-junit</artifactId>
+            <version>5.4.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -122,12 +130,14 @@
                             <output>${project.build.directory}/generated-sources/openapi</output>
                             <apiPackage>com.breixo.library.infrastructure.adapter.input.web.api</apiPackage>
                             <modelPackage>com.breixo.library.infrastructure.adapter.input.web.dto</modelPackage>
+                            <modelNameMappings>BookV1=BookV1Dto</modelNameMappings>
                             <configOptions>
                                 <interfaceOnly>true</interfaceOnly>
                                 <useSpringBoot3>true</useSpringBoot3>
                                 <useTags>true</useTags>
                                 <dateLibrary>java8</dateLibrary>
                                 <openApiNullable>true</openApiNullable>
+                                <generateBuilders>true</generateBuilders>
                                 <useOptional>false</useOptional>
                             </configOptions>
                         </configuration>

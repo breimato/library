@@ -1,7 +1,6 @@
 -- ============================================================
 -- BIBLIOTECA HEXAGONAL — DDL PostgreSQL
 -- ============================================================
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- ------------------------------------------------------------
 -- ENUMS
 -- ------------------------------------------------------------
@@ -19,7 +18,7 @@ CREATE TYPE fine_status AS ENUM ('pending', 'paid', 'waived');
 -- USERS
 -- ------------------------------------------------------------
 CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     phone VARCHAR(20),
@@ -32,7 +31,7 @@ CREATE TABLE users (
 -- BOOKS
 -- ------------------------------------------------------------
 CREATE TABLE books (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     isbn VARCHAR(13) NOT NULL UNIQUE,
     title VARCHAR(255) NOT NULL,
     author VARCHAR(150) NOT NULL,
@@ -47,9 +46,9 @@ CREATE TABLE books (
 -- LOANS
 -- ------------------------------------------------------------
 CREATE TABLE loans (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES users(id),
-    book_id UUID NOT NULL REFERENCES books(id),
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id),
+    book_id BIGINT NOT NULL REFERENCES books(id),
     loan_date DATE NOT NULL DEFAULT CURRENT_DATE,
     due_date DATE NOT NULL,
     return_date DATE,
@@ -67,9 +66,9 @@ CREATE TABLE loans (
 -- RESERVATIONS
 -- ------------------------------------------------------------
 CREATE TABLE reservations (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES users(id),
-    book_id UUID NOT NULL REFERENCES books(id),
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id),
+    book_id BIGINT NOT NULL REFERENCES books(id),
     reserved_at TIMESTAMP NOT NULL DEFAULT NOW(),
     expires_at TIMESTAMP NOT NULL,
     status reservation_status NOT NULL DEFAULT 'pending',
@@ -81,8 +80,8 @@ CREATE TABLE reservations (
 -- FINES
 -- ------------------------------------------------------------
 CREATE TABLE fines (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    loan_id UUID NOT NULL REFERENCES loans(id) UNIQUE,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    loan_id BIGINT NOT NULL REFERENCES loans(id) UNIQUE,
     amount_euros NUMERIC(6, 2) NOT NULL CHECK (amount_euros > 0),
     status fine_status NOT NULL DEFAULT 'pending',
     paid_at TIMESTAMP,

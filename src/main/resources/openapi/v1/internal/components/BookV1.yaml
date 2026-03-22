@@ -5,3 +5,31 @@ properties:
     type: integer
     format: int64
     description: "Book identifier"
+  isbn:
+    type: string
+    description: "Book ISBN"
+  title:
+    type: string
+    description: "Book title"
+  author:
+    type: string
+    description: "Book author"
+  genre:
+    type: string
+    description: "Book genre"
+  totalCopies:
+    type: integer
+    format: int32
+    description: "Total copies"
+  availableCopies:
+    type: integer
+    format: int32
+    description: "Available copies"
+  createdAt:
+    type: string
+    format: date-time
+    description: "Creation timestamp"
+  updatedAt:
+    type: string
+    format: date-time
+    description: "Last update timestamp"
