@@ -7,7 +7,3 @@ properties:
   message:
     type: string
     description: "Error message"
-  timestamp:
-    type: string
-    format: date-time
-    description: "Error timestamp"

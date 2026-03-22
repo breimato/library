@@ -1,19 +1,12 @@
 package com.breixo.library.domain.exception;
 
-import java.io.Serial;
-
-import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 /** The Class Book Exception. */
-@Getter
-public class BookException extends RuntimeException {
+public class BookException extends LibraryException {
 
     /** The Constant serialVersionUID. */
-    @Serial
     private static final long serialVersionUID = 1L;
-
-    /** The code. */
-    private final String code;
 
     /**
      * Instantiates a new book exception.
@@ -22,7 +15,6 @@ public class BookException extends RuntimeException {
      * @param message the message
      */
     public BookException(final String code, final String message) {
-        super(message);
-        this.code = code;
+        super(code, message, HttpStatus.NOT_FOUND);
     }
 }
