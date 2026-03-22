@@ -1,5 +1,8 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
+import com.breixo.library.domain.exception.BookException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
+import com.breixo.library.domain.model.FindBookCommand;
 import com.breixo.library.domain.port.output.BookRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.api.GetBookIdV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetBookIdV1Response;
@@ -24,11 +27,19 @@ public class GetBookIdController implements GetBookIdV1Api {
     @Override
     public ResponseEntity<GetBookIdV1Response> getBookIdV1(final Long id) {
 
-        final var book = this.bookRetrievalPersistencePort.findById(id);
+        final var findBookCommand = new FindBookCommand(id, null, null, null, null);
 
-        final var bookDto = this.bookMapper.toBookV1(book);
+        final var books = this.bookRetrievalPersistencePort.execute(findBookCommand);
 
-        final var getBookIdV1Response = GetBookIdV1Response.builder().book(bookDto).build();
+        if (books.isEmpty()) {
+            throw new BookException(
+                    ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
+                    ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR);
+        }
+
+        final var bookV1Dto = this.bookMapper.toBookV1(books.get(0));
+
+        final var getBookIdV1Response = GetBookIdV1Response.builder().book(bookV1Dto).build();
 
         return ResponseEntity.ok(getBookIdV1Response);
     }

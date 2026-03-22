@@ -1,8 +1,9 @@
 package com.breixo.library.infrastructure.adapter.output.mybatis;
 
-import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
+import java.util.List;
+
 import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.exception.BookException;
+import com.breixo.library.domain.model.FindBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.repository.BookRetrievalPersistenceRepository;
@@ -15,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class BookRetrievalRepositoryTest {
 
-    /** The book persistence adapter. */
+    /** The book retrieval persistence repository. */
     @InjectMocks
     BookRetrievalPersistenceRepository bookRetrievalPersistenceRepository;
 
@@ -37,41 +38,40 @@ class BookRetrievalRepositoryTest {
     BookEntityMapper bookEntityMapper;
 
     /**
-     * Test find by id when book exists then return book.
+     * Test execute when books found then return book list.
      */
     @Test
-    void testFindById_whenBookExists_thenReturnBook() {
+    void testExecute_whenBooksFound_thenReturnBookList() {
         // Given
-        final var id = Instancio.create(Long.class);
+        final var findBookCommand = Instancio.create(FindBookCommand.class);
         final var bookEntity = Instancio.create(BookEntity.class);
         final var book = Instancio.create(Book.class);
 
         // When
-        when(this.bookMyBatisMapper.findById(id)).thenReturn(bookEntity);
+        when(this.bookMyBatisMapper.find(findBookCommand)).thenReturn(List.of(bookEntity));
         when(this.bookEntityMapper.toBook(bookEntity)).thenReturn(book);
-        final var result = this.bookRetrievalPersistenceRepository.findById(id);
+        final var result = this.bookRetrievalPersistenceRepository.execute(findBookCommand);
 
         // Then
-        verify(this.bookMyBatisMapper, times(1)).findById(id);
+        verify(this.bookMyBatisMapper, times(1)).find(findBookCommand);
         verify(this.bookEntityMapper, times(1)).toBook(bookEntity);
-        assertEquals(book, result);
+        assertEquals(List.of(book), result);
     }
 
     /**
-     * Test find by id when book not found then throw book not found exception.
+     * Test execute when no books found then return empty list.
      */
     @Test
-    void testFindById_whenBookNotFound_thenThrowBookNotFoundException() {
-
+    void testExecute_whenNoBooksFound_thenReturnEmptyList() {
         // Given
-        final var id = Instancio.create(Long.class);
+        final var findBookCommand = Instancio.create(FindBookCommand.class);
 
         // When
-        when(this.bookMyBatisMapper.findById(id)).thenReturn(null);
-        final var bookNotFoundException = assertThrows(BookException.class, () -> bookRetrievalPersistenceRepository.findById(id));
+        when(this.bookMyBatisMapper.find(findBookCommand)).thenReturn(List.of());
+        final var result = this.bookRetrievalPersistenceRepository.execute(findBookCommand);
 
         // Then
-        verify(this.bookMyBatisMapper, times(1)).findById(id);
-        assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, bookNotFoundException.getMessage());
+        verify(this.bookMyBatisMapper, times(1)).find(findBookCommand);
+        assertTrue(result.isEmpty());
     }
 }

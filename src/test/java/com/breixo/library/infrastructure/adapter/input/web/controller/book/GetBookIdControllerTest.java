@@ -1,9 +1,14 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
+import java.util.List;
+
 import com.breixo.library.domain.model.Book;
+import com.breixo.library.domain.model.FindBookCommand;
 import com.breixo.library.domain.port.output.BookRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.dto.BookV1Dto;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.book.BookMapper;
+
+import com.breixo.library.infrastructure.adapter.input.web.handler.GlobalExceptionHandler;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,7 +54,9 @@ class GetBookIdControllerTest {
     /** Sets the up. */
     @BeforeEach
     void setUp() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(this.getBookIdController).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(this.getBookIdController)
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
     }
 
     /**
@@ -62,7 +70,7 @@ class GetBookIdControllerTest {
         final var bookV1Dto = Instancio.create(BookV1Dto.class);
 
         // When
-        when(this.bookRetrievalPersistencePort.findById(id)).thenReturn(book);
+        when(this.bookRetrievalPersistencePort.execute(any(FindBookCommand.class))).thenReturn(List.of(book));
         when(this.bookMapper.toBookV1(book)).thenReturn(bookV1Dto);
 
         this.mockMvc.perform(get(URL, id).accept(MediaType.APPLICATION_JSON))
@@ -70,7 +78,25 @@ class GetBookIdControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Then
-        verify(this.bookRetrievalPersistencePort, times(1)).findById(id);
+        verify(this.bookRetrievalPersistencePort, times(1)).execute(any(FindBookCommand.class));
         verify(this.bookMapper, times(1)).toBookV1(book);
+    }
+
+    /**
+     * Test get book id v 1 when book not found then return not found response.
+     */
+    @Test
+    void testGetBookIdV1_whenBookNotFound_thenReturnNotFoundResponse() throws Exception {
+        // Given
+        final var id = Instancio.create(Long.class);
+
+        // When
+        when(this.bookRetrievalPersistencePort.execute(any(FindBookCommand.class))).thenReturn(List.of());
+
+        this.mockMvc.perform(get(URL, id).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        // Then
+        verify(this.bookRetrievalPersistencePort, times(1)).execute(any(FindBookCommand.class));
     }
 }

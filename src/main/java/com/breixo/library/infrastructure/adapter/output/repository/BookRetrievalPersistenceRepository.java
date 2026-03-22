@@ -1,16 +1,15 @@
 package com.breixo.library.infrastructure.adapter.output.repository;
 
-import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
+import java.util.List;
+
 import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.exception.BookException;
+import com.breixo.library.domain.model.FindBookCommand;
 import com.breixo.library.domain.port.output.BookRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
 
 /** The Class Book Retrieval Persistence Repository. */
 @Component
@@ -25,13 +24,8 @@ public class BookRetrievalPersistenceRepository implements BookRetrievalPersiste
 
     /** {@inheritDoc} */
     @Override
-    public Book findById(final Long id) {
-        final var bookEntity = this.bookMyBatisMapper.findById(id);
-        if (Objects.isNull(bookEntity)) {
-            throw new BookException(
-                    ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
-                    ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR);
-        }
-        return this.bookEntityMapper.toBook(bookEntity);
+    public List<Book> execute(final FindBookCommand findBookCommand) {
+        final var bookEntities = this.bookMyBatisMapper.find(findBookCommand);
+        return bookEntities.stream().map(this.bookEntityMapper::toBook).toList();
     }
 }

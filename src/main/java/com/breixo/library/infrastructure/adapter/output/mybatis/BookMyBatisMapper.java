@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.mybatis;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -7,6 +9,7 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.breixo.library.domain.model.FindBookCommand;
 import com.breixo.library.domain.model.UpdateBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 
@@ -15,13 +18,13 @@ import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 public interface BookMyBatisMapper {
 
     /**
-     * Find by id.
+     * Find.
      *
-     * @param id the id.
-     * @return the book entity.
+     * @param findBookCommand the find book command.
+     * @return the list of book entities.
      */
-    @Select(
-        """
+    @Select("""
+            <script>
             select
                 id,
                 isbn,
@@ -32,20 +35,27 @@ public interface BookMyBatisMapper {
                 available_copies,
                 created_at,
                 updated_at
-            from books where id = #{id}
-        """)
-    BookEntity findById(Long id);
+            from books
+            <where>
+                <if test="id != null">and id = #{id}</if>
+                <if test="isbn != null">and isbn = #{isbn}</if>
+                <if test="title != null">and title ilike #{title}</if>
+                <if test="author != null">and author ilike #{author}</if>
+                <if test="genre != null">and genre ilike #{genre}</if>
+            </where>
+            </script>
+            """)
+    List<BookEntity> find(FindBookCommand findBookCommand);
 
     /**
      * Insert.
      *
      * @param bookEntity the book entity.
      */
-    @Insert(
-        """
+    @Insert("""
             insert into books (isbn, title, author, genre, total_copies, available_copies)
             values (#{isbn}, #{title}, #{author}, #{genre}, #{totalCopies}, #{availableCopies})
-        """)
+            """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(BookEntity bookEntity);
 
