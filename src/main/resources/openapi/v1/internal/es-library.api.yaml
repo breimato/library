@@ -6,6 +6,8 @@ info:
 
 paths:
   # Books
+  /v1/library/books:
+    $ref: './library/books-v1.api.yaml'
   /v1/library/books/{id}:
     $ref: './library/books-id-v1.api.yaml'
 
@@ -15,6 +17,8 @@ components:
       $ref: './components/ApiErrorV1.yaml'
     BookV1:
       $ref: './components/BookV1.yaml'
+    PostBookV1Request:
+      $ref: './requests/PostBookV1Request.yaml'
     
   responses:
     BadRequest:

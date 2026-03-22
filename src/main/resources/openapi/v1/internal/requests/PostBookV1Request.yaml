@@ -1,0 +1,30 @@
+description: "Post Book V1 Request"
+type: object
+required:
+  - isbn
+  - title
+  - author
+  - genre
+  - totalCopies
+  - availableCopies
+properties:
+  isbn:
+    type: string
+    description: "Book ISBN"
+  title:
+    type: string
+    description: "Book title"
+  author:
+    type: string
+    description: "Book author"
+  genre:
+    type: string
+    description: "Book genre"
+  totalCopies:
+    type: integer
+    format: int32
+    description: "Total copies"
+  availableCopies:
+    type: integer
+    format: int32
+    description: "Available copies"

@@ -1,0 +1,61 @@
+package com.breixo.library.infrastructure.adapter.output.mybatis;
+
+import com.breixo.library.domain.model.Book;
+import com.breixo.library.domain.model.CreateBookCommand;
+import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
+import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
+import com.breixo.library.infrastructure.adapter.output.repository.BookCreationPersistenceRepository;
+
+import org.instancio.Instancio;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+/** The Class Book Creation Repository Test. */
+@ExtendWith(MockitoExtension.class)
+class BookCreationRepositoryTest {
+
+    /** The book creation persistence repository. */
+    @InjectMocks
+    BookCreationPersistenceRepository bookCreationPersistenceRepository;
+
+    /** The book my batis mapper. */
+    @Mock
+    BookMyBatisMapper bookMyBatisMapper;
+
+    /** The book entity mapper. */
+    @Mock
+    BookEntityMapper bookEntityMapper;
+
+    /**
+     * Test execute when command is valid then return created book.
+     */
+    @Test
+    void testExecute_whenCommandIsValid_thenReturnCreatedBook() {
+        // Given
+        final var createBookCommand = Instancio.create(CreateBookCommand.class);
+        final var bookEntity = Instancio.create(BookEntity.class);
+        final var createdBookEntity = Instancio.create(BookEntity.class);
+        final var book = Instancio.create(Book.class);
+
+        // When
+        when(this.bookEntityMapper.toBookEntity(createBookCommand)).thenReturn(bookEntity);
+        when(this.bookMyBatisMapper.findById(bookEntity.getId())).thenReturn(createdBookEntity);
+        when(this.bookEntityMapper.toBook(createdBookEntity)).thenReturn(book);
+        final var result = this.bookCreationPersistenceRepository.execute(createBookCommand);
+
+        // Then
+        verify(this.bookEntityMapper, times(1)).toBookEntity(createBookCommand);
+        verify(this.bookMyBatisMapper, times(1)).insert(bookEntity);
+        verify(this.bookMyBatisMapper, times(1)).findById(bookEntity.getId());
+        verify(this.bookEntityMapper, times(1)).toBook(createdBookEntity);
+        assertEquals(book, result);
+    }
+}

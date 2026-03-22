@@ -1,0 +1,25 @@
+post:
+  summary: "Post Book V1"
+  description: "Create a new book"
+  operationId: "PostBookV1"
+  tags:
+    - post-book-v1
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/PostBookV1Request.yaml'
+  responses:
+    '201':
+      description: "201 Created"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/PostBookV1Response.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

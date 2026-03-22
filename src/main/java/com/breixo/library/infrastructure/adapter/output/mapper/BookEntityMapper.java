@@ -1,6 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.mapper;
 
 import com.breixo.library.domain.model.Book;
+import com.breixo.library.domain.model.CreateBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 
 import org.mapstruct.Mapper;
@@ -16,4 +17,12 @@ public interface BookEntityMapper {
      * @return the book.
      */
     Book toBook(BookEntity bookEntity);
+
+    /**
+     * To book entity.
+     *
+     * @param command the create book command.
+     * @return the book entity.
+     */
+    BookEntity toBookEntity(CreateBookCommand command);
 }

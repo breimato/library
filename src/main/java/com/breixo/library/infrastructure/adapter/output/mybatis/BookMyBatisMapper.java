@@ -1,6 +1,8 @@
 package com.breixo.library.infrastructure.adapter.output.mybatis;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
@@ -30,4 +32,17 @@ public interface BookMyBatisMapper {
             from books where id = #{id}
         """)
     BookEntity findById(Long id);
+
+    /**
+     * Insert.
+     *
+     * @param bookEntity the book entity.
+     */
+    @Insert(
+        """
+            insert into books (isbn, title, author, genre, total_copies, available_copies)
+            values (#{isbn}, #{title}, #{author}, #{genre}, #{totalCopies}, #{availableCopies})
+        """)
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void insert(BookEntity bookEntity);
 }
