@@ -19,6 +19,8 @@ components:
       $ref: './components/BookV1.yaml'
     PostBookV1Request:
       $ref: './requests/PostBookV1Request.yaml'
+    PatchBookV1Request:
+      $ref: './requests/PatchBookV1Request.yaml'
     
   responses:
     BadRequest:

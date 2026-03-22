@@ -3,9 +3,10 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 import com.breixo.library.domain.model.Book;
 import com.breixo.library.domain.model.CreateBookCommand;
 import com.breixo.library.domain.port.output.BookCreationPersistencePort;
-import com.breixo.library.infrastructure.adapter.input.web.dto.BookV1Dto;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PostBookV1Request;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.book.BookMapper;
+import com.breixo.library.infrastructure.adapter.input.web.dto.PostBookV1Response;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.book.PostBookRequestMapper;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.book.PostBookResponseMapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.instancio.Instancio;
@@ -48,9 +49,13 @@ class PostBookControllerTest {
     @Mock
     BookCreationPersistencePort bookCreationPersistencePort;
 
-    /** The book mapper. */
+    /** The post book request mapper. */
     @Mock
-    BookMapper bookMapper;
+    PostBookRequestMapper postBookRequestMapper;
+
+    /** The post book response mapper. */
+    @Mock
+    PostBookResponseMapper postBookResponseMapper;
 
     /** Sets the up. */
     @BeforeEach
@@ -67,12 +72,12 @@ class PostBookControllerTest {
         final var postBookV1Request = Instancio.create(PostBookV1Request.class);
         final var createBookCommand = Instancio.create(CreateBookCommand.class);
         final var book = Instancio.create(Book.class);
-        final var bookV1Dto = Instancio.create(BookV1Dto.class);
+        final var postBookV1Response = Instancio.create(PostBookV1Response.class);
 
         // When
-        when(this.bookMapper.toCreateBookCommand(any(PostBookV1Request.class))).thenReturn(createBookCommand);
+        when(this.postBookRequestMapper.toCreateBookCommand(any(PostBookV1Request.class))).thenReturn(createBookCommand);
         when(this.bookCreationPersistencePort.execute(createBookCommand)).thenReturn(book);
-        when(this.bookMapper.toBookV1(book)).thenReturn(bookV1Dto);
+        when(this.postBookResponseMapper.toPostBookV1Response(book)).thenReturn(postBookV1Response);
 
         this.mockMvc.perform(post(URL)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -82,8 +87,8 @@ class PostBookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Then
-        verify(this.bookMapper, times(1)).toCreateBookCommand(any(PostBookV1Request.class));
+        verify(this.postBookRequestMapper, times(1)).toCreateBookCommand(any(PostBookV1Request.class));
         verify(this.bookCreationPersistencePort, times(1)).execute(createBookCommand);
-        verify(this.bookMapper, times(1)).toBookV1(book);
+        verify(this.postBookResponseMapper, times(1)).toPostBookV1Response(book);
     }
 }

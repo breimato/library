@@ -4,7 +4,9 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
+import com.breixo.library.domain.model.UpdateBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 
 /** The Interface Book My Batis Mapper. */
@@ -45,4 +47,24 @@ public interface BookMyBatisMapper {
         """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(BookEntity bookEntity);
+
+    /**
+     * Update.
+     *
+     * @param updateBookCommand the update book command.
+     */
+    @Update("""
+            <script>
+            update books
+            <set>
+                <if test="title != null">title = #{title},</if>
+                <if test="author != null">author = #{author},</if>
+                <if test="genre != null">genre = #{genre},</if>
+                <if test="totalCopies != null">total_copies = #{totalCopies},</if>
+                <if test="availableCopies != null">available_copies = #{availableCopies},</if>
+            </set>
+            where id = #{id}
+            </script>
+            """)
+    void update(UpdateBookCommand updateBookCommand);
 }

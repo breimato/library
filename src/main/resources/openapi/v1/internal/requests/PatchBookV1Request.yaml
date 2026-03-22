@@ -1,0 +1,20 @@
+description: "Patch Book V1 Request"
+type: object
+properties:
+  title:
+    type: string
+    description: "Book title"
+  author:
+    type: string
+    description: "Book author"
+  genre:
+    type: string
+    description: "Book genre"
+  totalCopies:
+    type: integer
+    format: int32
+    description: "Total copies"
+  availableCopies:
+    type: integer
+    format: int32
+    description: "Available copies"

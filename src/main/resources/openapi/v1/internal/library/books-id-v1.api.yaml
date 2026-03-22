@@ -31,6 +31,45 @@ get:
         application/json:
           schema:
             $ref: '../components/ApiErrorV1.yaml'
+patch:
+  summary: "Patch Book V1"
+  description: "Partially update a book"
+  operationId: "PatchBookV1"
+  tags:
+    - patch-book-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+      description: "Book identifier"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/PatchBookV1Request.yaml'
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/PatchBookV1Response.yaml'
+    '404':
+      description: "Not Found - Book not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
 delete:
   summary: "Delete Book V1"
   description: "Delete a book"

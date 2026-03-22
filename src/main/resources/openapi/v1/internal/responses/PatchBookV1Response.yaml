@@ -1,0 +1,5 @@
+description: "Patch Book V1 Response"
+type: object
+properties:
+  book:
+    $ref: '../components/BookV1.yaml'
