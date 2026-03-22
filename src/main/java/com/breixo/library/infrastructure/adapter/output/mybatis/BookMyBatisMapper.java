@@ -1,5 +1,6 @@
 package com.breixo.library.infrastructure.adapter.output.mybatis;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -67,4 +68,12 @@ public interface BookMyBatisMapper {
             </script>
             """)
     void update(UpdateBookCommand updateBookCommand);
+
+    /**
+     * Delete.
+     *
+     * @param id the book identifier.
+     */
+    @Delete("delete from books where id = #{id}")
+    void delete(Long id);
 }
