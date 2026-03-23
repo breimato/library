@@ -131,7 +131,7 @@
                             <output>${project.build.directory}/generated-sources/openapi</output>
                             <apiPackage>com.breixo.library.infrastructure.adapter.input.web.api</apiPackage>
                             <modelPackage>com.breixo.library.infrastructure.adapter.input.web.dto</modelPackage>
-                            <modelNameMappings>BookV1=BookV1Dto</modelNameMappings>
+                            <modelNameMappings>BookV1=BookV1Dto,UserV1=UserV1Dto</modelNameMappings>
                             <configOptions>
                                 <interfaceOnly>true</interfaceOnly>
                                 <useSpringBoot3>true</useSpringBoot3>
@@ -206,6 +206,7 @@
                                 <include>com/breixo/library/**/repository/**</include>
                                 <include>com/breixo/library/**/usecase/**</include>
                                 <include>com/breixo/library/**/vo/**</include>
+                                <include>com/breixo/library/**/model/user/**</include>
                             </includes>
                         </configuration>
                     </execution>
