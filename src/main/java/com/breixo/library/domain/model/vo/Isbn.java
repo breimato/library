@@ -113,7 +113,9 @@ public final class Isbn {
      * @param isbn the isbn.
      */
     private static void validateCheckDigit(final String isbn) {
+
         var sum = 0;
+
         for (int i = 0; i < CHECK_DIGIT_BASE_LENGTH; i++) {
             final var digit = isbn.charAt(i) - '0';
             final var weight = i % 2 == 0 ? ODD_WEIGHT : EVEN_WEIGHT;
@@ -123,10 +125,21 @@ public final class Isbn {
         final var expectedCheckDigit = (EAN_MODULUS - (sum % EAN_MODULUS)) % EAN_MODULUS;
         final var actualCheckDigit = isbn.charAt(ISBN_LENGTH - 1) - '0';
 
-        if (expectedCheckDigit != actualCheckDigit) {
+        if (BooleanUtils.isFalse(isValidCheckDigit(expectedCheckDigit, actualCheckDigit))) {
             throw new IsbnException(
                     ExceptionMessageConstants.INVALID_ISBN_CODE_ERROR,
                     ExceptionMessageConstants.INVALID_ISBN_CHECK_DIGIT_MESSAGE_ERROR);
         }
+    }
+
+    /**
+     * Checks if valid check digit.
+     *
+     * @param expected the expected check digit.
+     * @param actual the actual check digit.
+     * @return true, if is valid check digit.
+     */
+    private static boolean isValidCheckDigit(final int expected, final int actual) {
+        return expected == actual;
     }
 }
