@@ -54,7 +54,8 @@ class BookUpdateRepositoryTest {
 
         // When
         when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand))
-                .thenReturn(List.of(bookEntity), List.of(updatedBookEntity));
+                .thenReturn(List.of(bookEntity))
+                .thenReturn(List.of(updatedBookEntity));
         when(this.bookEntityMapper.toBook(updatedBookEntity)).thenReturn(book);
         final var result = this.bookUpdatePersistenceRepository.execute(updateBookCommand);
 
