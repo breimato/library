@@ -1,8 +1,8 @@
 package com.breixo.library.infrastructure.adapter.output.repository;
 
 import com.breixo.library.domain.model.Book;
+import com.breixo.library.domain.model.BookSearchCriteriaCommand;
 import com.breixo.library.domain.model.CreateBookCommand;
-import com.breixo.library.domain.model.FindBookCommand;
 import com.breixo.library.domain.port.output.BookCreationPersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
@@ -26,7 +26,8 @@ public class BookCreationPersistenceRepository implements BookCreationPersistenc
     public Book execute(final CreateBookCommand createBookCommand) {
         final var bookEntity = this.bookEntityMapper.toBookEntity(createBookCommand);
         this.bookMyBatisMapper.insert(bookEntity);
-        final var createdBookEntity = this.bookMyBatisMapper.find(new FindBookCommand(bookEntity.getId(), null, null, null, null)).get(0);
+        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(bookEntity.getId()).build();
+        final var createdBookEntity = this.bookMyBatisMapper.find(bookSearchCriteriaCommand).getFirst();
         return this.bookEntityMapper.toBook(createdBookEntity);
     }
 }

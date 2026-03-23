@@ -5,7 +5,8 @@ import java.util.List;
 import com.breixo.library.domain.exception.BookException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.FindBookCommand;
+import com.breixo.library.domain.model.BookSearchCriteriaCommand;
+import com.breixo.library.domain.model.vo.Isbn;
 import com.breixo.library.domain.model.UpdateBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
@@ -18,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,16 +52,18 @@ class BookUpdateRepositoryTest {
         final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
         final var bookEntity = Instancio.create(BookEntity.class);
         final var updatedBookEntity = Instancio.create(BookEntity.class);
-        final var book = Instancio.create(Book.class);
+        final var book = Instancio.of(Book.class)
+                .set(field(Book.class, "isbn"), new Isbn("9780134685991"))
+                .create();
 
         // When
-        when(this.bookMyBatisMapper.find(any(FindBookCommand.class)))
+        when(this.bookMyBatisMapper.find(any(BookSearchCriteriaCommand.class)))
                 .thenReturn(List.of(bookEntity), List.of(updatedBookEntity));
         when(this.bookEntityMapper.toBook(updatedBookEntity)).thenReturn(book);
         final var result = this.bookUpdatePersistenceRepository.execute(updateBookCommand);
 
         // Then
-        verify(this.bookMyBatisMapper, times(2)).find(any(FindBookCommand.class));
+        verify(this.bookMyBatisMapper, times(2)).find(any(BookSearchCriteriaCommand.class));
         verify(this.bookMyBatisMapper, times(1)).update(updateBookCommand);
         verify(this.bookEntityMapper, times(1)).toBook(updatedBookEntity);
         assertEquals(book, result);
@@ -74,12 +78,12 @@ class BookUpdateRepositoryTest {
         final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
 
         // When
-        when(this.bookMyBatisMapper.find(any(FindBookCommand.class))).thenReturn(List.of());
+        when(this.bookMyBatisMapper.find(any(BookSearchCriteriaCommand.class))).thenReturn(List.of());
         final var bookException = assertThrows(BookException.class,
                 () -> this.bookUpdatePersistenceRepository.execute(updateBookCommand));
 
         // Then
-        verify(this.bookMyBatisMapper, times(1)).find(any(FindBookCommand.class));
+        verify(this.bookMyBatisMapper, times(1)).find(any(BookSearchCriteriaCommand.class));
         assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, bookException.getMessage());
     }
 }

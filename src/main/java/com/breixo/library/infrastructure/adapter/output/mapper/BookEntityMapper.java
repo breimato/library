@@ -3,11 +3,12 @@ package com.breixo.library.infrastructure.adapter.output.mapper;
 import com.breixo.library.domain.model.Book;
 import com.breixo.library.domain.model.CreateBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
+import com.breixo.library.infrastructure.mapper.IsbnMapper;
 
 import org.mapstruct.Mapper;
 
 /** The Interface Book Entity Mapper. */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = IsbnMapper.class)
 public interface BookEntityMapper {
 
     /**
@@ -25,4 +26,5 @@ public interface BookEntityMapper {
      * @return the book entity.
      */
     BookEntity toBookEntity(CreateBookCommand command);
+
 }

@@ -2,11 +2,12 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper.book;
 
 import com.breixo.library.domain.model.CreateBookCommand;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PostBookV1Request;
+import com.breixo.library.infrastructure.mapper.IsbnMapper;
 
 import org.mapstruct.Mapper;
 
 /** The Interface Post Book Request Mapper. */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = IsbnMapper.class)
 public interface PostBookRequestMapper {
 
     /**

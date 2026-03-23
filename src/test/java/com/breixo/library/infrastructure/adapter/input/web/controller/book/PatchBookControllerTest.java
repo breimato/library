@@ -2,6 +2,7 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
 import com.breixo.library.domain.model.Book;
 import com.breixo.library.domain.model.UpdateBookCommand;
+import com.breixo.library.domain.model.vo.Isbn;
 import com.breixo.library.domain.port.output.BookUpdatePersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Response;
@@ -20,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.instancio.Select.field;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -35,6 +37,9 @@ class PatchBookControllerTest {
 
     /** The Constant URL. */
     static final String URL = "/v1/library/books/{id}";
+
+    /** The Constant VALID_ISBN. */
+    static final String VALID_ISBN = "9780134685991";
 
     /** The object mapper. */
     final ObjectMapper objectMapper = new ObjectMapper();
@@ -73,7 +78,9 @@ class PatchBookControllerTest {
         final var id = Instancio.create(Long.class);
         final var patchBookV1Request = Instancio.create(PatchBookV1Request.class);
         final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
-        final var book = Instancio.create(Book.class);
+        final var book = Instancio.of(Book.class)
+                .set(field(Book.class, "isbn"), new Isbn(VALID_ISBN))
+                .create();
         final var patchBookV1Response = Instancio.create(PatchBookV1Response.class);
 
         // When

@@ -1,9 +1,9 @@
 package com.breixo.library.infrastructure.adapter.output.repository;
 
-import java.util.List;
-
+import com.breixo.library.domain.exception.BookException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.FindBookCommand;
+import com.breixo.library.domain.model.BookSearchCriteriaCommand;
 import com.breixo.library.domain.port.output.BookRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
@@ -24,8 +24,13 @@ public class BookRetrievalPersistenceRepository implements BookRetrievalPersiste
 
     /** {@inheritDoc} */
     @Override
-    public List<Book> execute(final FindBookCommand findBookCommand) {
-        final var bookEntities = this.bookMyBatisMapper.find(findBookCommand);
-        return bookEntities.stream().map(this.bookEntityMapper::toBook).toList();
+    public Book execute(final BookSearchCriteriaCommand bookSearchCriteriaCommand) {
+        final var bookEntities = this.bookMyBatisMapper.find(bookSearchCriteriaCommand);
+        if (bookEntities.isEmpty()) {
+            throw new BookException(
+                    ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
+                    ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR);
+        }
+        return this.bookEntityMapper.toBook(bookEntities.get(0));
     }
 }

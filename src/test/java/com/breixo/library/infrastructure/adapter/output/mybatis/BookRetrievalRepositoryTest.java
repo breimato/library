@@ -2,8 +2,11 @@ package com.breixo.library.infrastructure.adapter.output.mybatis;
 
 import java.util.List;
 
+import com.breixo.library.domain.exception.BookException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.FindBookCommand;
+import com.breixo.library.domain.model.BookSearchCriteriaCommand;
+import com.breixo.library.domain.model.vo.Isbn;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.repository.BookRetrievalPersistenceRepository;
@@ -15,8 +18,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,40 +42,43 @@ class BookRetrievalRepositoryTest {
     BookEntityMapper bookEntityMapper;
 
     /**
-     * Test execute when books found then return book list.
+     * Test execute when book found then return book.
      */
     @Test
-    void testExecute_whenBooksFound_thenReturnBookList() {
+    void testExecute_whenBookFound_thenReturnBook() {
         // Given
-        final var findBookCommand = Instancio.create(FindBookCommand.class);
+        final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
         final var bookEntity = Instancio.create(BookEntity.class);
-        final var book = Instancio.create(Book.class);
+        final var book = Instancio.of(Book.class)
+                .set(field(Book.class, "isbn"), new Isbn("9780134685991"))
+                .create();
 
         // When
-        when(this.bookMyBatisMapper.find(findBookCommand)).thenReturn(List.of(bookEntity));
+        when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of(bookEntity));
         when(this.bookEntityMapper.toBook(bookEntity)).thenReturn(book);
-        final var result = this.bookRetrievalPersistenceRepository.execute(findBookCommand);
+        final var result = this.bookRetrievalPersistenceRepository.execute(bookSearchCriteriaCommand);
 
         // Then
-        verify(this.bookMyBatisMapper, times(1)).find(findBookCommand);
+        verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
         verify(this.bookEntityMapper, times(1)).toBook(bookEntity);
-        assertEquals(List.of(book), result);
+        assertEquals(book, result);
     }
 
     /**
-     * Test execute when no books found then return empty list.
+     * Test execute when book not found then throw book not found exception.
      */
     @Test
-    void testExecute_whenNoBooksFound_thenReturnEmptyList() {
+    void testExecute_whenBookNotFound_thenThrowBookNotFoundException() {
         // Given
-        final var findBookCommand = Instancio.create(FindBookCommand.class);
+        final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
 
         // When
-        when(this.bookMyBatisMapper.find(findBookCommand)).thenReturn(List.of());
-        final var result = this.bookRetrievalPersistenceRepository.execute(findBookCommand);
+        when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of());
+        final var bookException = assertThrows(BookException.class,
+                () -> this.bookRetrievalPersistenceRepository.execute(bookSearchCriteriaCommand));
 
         // Then
-        verify(this.bookMyBatisMapper, times(1)).find(findBookCommand);
-        assertTrue(result.isEmpty());
+        verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
+        assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, bookException.getMessage());
     }
 }

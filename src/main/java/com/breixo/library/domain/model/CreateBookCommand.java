@@ -1,5 +1,7 @@
 package com.breixo.library.domain.model;
 
+import com.breixo.library.domain.model.vo.Isbn;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -13,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  * @param totalCopies     The total copies.
  * @param availableCopies The available copies.
  */
-public record CreateBookCommand(@NotBlank String isbn, @NotBlank String title, @NotBlank String author,
+public record CreateBookCommand(@NotNull Isbn isbn, @NotBlank String title, @NotBlank String author,
                                 @NotBlank String genre, @NotNull Integer totalCopies,
                                 @NotNull Integer availableCopies) {
 

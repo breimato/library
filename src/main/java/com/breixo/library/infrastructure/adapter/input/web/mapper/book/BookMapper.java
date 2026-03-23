@@ -3,11 +3,12 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper.book;
 import com.breixo.library.domain.model.Book;
 import com.breixo.library.infrastructure.adapter.input.web.dto.BookV1Dto;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
+import com.breixo.library.infrastructure.mapper.IsbnMapper;
 
 import org.mapstruct.Mapper;
 
 /** The Interface Book Mapper. */
-@Mapper(componentModel = "spring", uses = DateMapper.class)
+@Mapper(componentModel = "spring", uses = {DateMapper.class, IsbnMapper.class})
 public interface BookMapper {
 
     /**

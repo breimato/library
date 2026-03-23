@@ -1,9 +1,7 @@
 package com.breixo.library.domain.port.output;
 
-import java.util.List;
-
 import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.FindBookCommand;
+import com.breixo.library.domain.model.BookSearchCriteriaCommand;
 
 /** The Interface Book Retrieval Persistence Port. */
 public interface BookRetrievalPersistencePort {
@@ -11,8 +9,8 @@ public interface BookRetrievalPersistencePort {
     /**
      * Execute.
      *
-     * @param findBookCommand the find book command.
-     * @return the list of books.
+     * @param bookSearchCriteriaCommand the book search criteria command.
+     * @return the book.
      */
-    List<Book> execute(FindBookCommand findBookCommand);
+    Book execute(BookSearchCriteriaCommand bookSearchCriteriaCommand);
 }

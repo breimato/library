@@ -1,14 +1,13 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
-import java.util.List;
-
+import com.breixo.library.domain.exception.BookException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.FindBookCommand;
+import com.breixo.library.domain.model.BookSearchCriteriaCommand;
 import com.breixo.library.domain.port.output.BookRetrievalPersistencePort;
-import com.breixo.library.infrastructure.adapter.input.web.dto.BookV1Dto;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.book.BookMapper;
-
+import com.breixo.library.infrastructure.adapter.input.web.dto.GetBookIdV1Response;
 import com.breixo.library.infrastructure.adapter.input.web.handler.GlobalExceptionHandler;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.book.GetBookResponseMapper;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,9 +46,9 @@ class GetBookIdControllerTest {
     @Mock
     BookRetrievalPersistencePort bookRetrievalPersistencePort;
 
-    /** The book mapper. */
+    /** The get book response mapper. */
     @Mock
-    BookMapper bookMapper;
+    GetBookResponseMapper getBookResponseMapper;
 
     /** Sets the up. */
     @BeforeEach
@@ -67,19 +66,19 @@ class GetBookIdControllerTest {
         // Given
         final var id = Instancio.create(Long.class);
         final var book = Instancio.create(Book.class);
-        final var bookV1Dto = Instancio.create(BookV1Dto.class);
+        final var getBookIdV1Response = Instancio.create(GetBookIdV1Response.class);
 
         // When
-        when(this.bookRetrievalPersistencePort.execute(any(FindBookCommand.class))).thenReturn(List.of(book));
-        when(this.bookMapper.toBookV1(book)).thenReturn(bookV1Dto);
+        when(this.bookRetrievalPersistencePort.execute(any(BookSearchCriteriaCommand.class))).thenReturn(book);
+        when(this.getBookResponseMapper.toGetBookIdV1Response(book)).thenReturn(getBookIdV1Response);
 
         this.mockMvc.perform(get(URL, id).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Then
-        verify(this.bookRetrievalPersistencePort, times(1)).execute(any(FindBookCommand.class));
-        verify(this.bookMapper, times(1)).toBookV1(book);
+        verify(this.bookRetrievalPersistencePort, times(1)).execute(any(BookSearchCriteriaCommand.class));
+        verify(this.getBookResponseMapper, times(1)).toGetBookIdV1Response(book);
     }
 
     /**
@@ -91,12 +90,15 @@ class GetBookIdControllerTest {
         final var id = Instancio.create(Long.class);
 
         // When
-        when(this.bookRetrievalPersistencePort.execute(any(FindBookCommand.class))).thenReturn(List.of());
+        when(this.bookRetrievalPersistencePort.execute(any(BookSearchCriteriaCommand.class)))
+                .thenThrow(new BookException(
+                        ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR));
 
         this.mockMvc.perform(get(URL, id).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
         // Then
-        verify(this.bookRetrievalPersistencePort, times(1)).execute(any(FindBookCommand.class));
+        verify(this.bookRetrievalPersistencePort, times(1)).execute(any(BookSearchCriteriaCommand.class));
     }
 }

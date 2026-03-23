@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
-import com.breixo.library.domain.model.FindBookCommand;
+import com.breixo.library.domain.model.BookSearchCriteriaCommand;
 import com.breixo.library.domain.model.UpdateBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 
@@ -20,7 +20,7 @@ public interface BookMyBatisMapper {
     /**
      * Find.
      *
-     * @param findBookCommand the find book command.
+     * @param bookSearchCriteriaCommand the book search criteria command.
      * @return the list of book entities.
      */
     @Select("""
@@ -45,7 +45,7 @@ public interface BookMyBatisMapper {
             </where>
             </script>
             """)
-    List<BookEntity> find(FindBookCommand findBookCommand);
+    List<BookEntity> find(BookSearchCriteriaCommand bookSearchCriteriaCommand);
 
     /**
      * Insert.
