@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** The Class Post Book Request Mapper Test. */
 @ExtendWith(MockitoExtension.class)
@@ -48,5 +49,13 @@ class PostBookRequestMapperTest {
         assertEquals(postBookV1Request.getGenre(), createBookCommand.genre());
         assertEquals(postBookV1Request.getTotalCopies(), createBookCommand.totalCopies());
         assertEquals(postBookV1Request.getAvailableCopies(), createBookCommand.availableCopies());
+    }
+
+    /**
+     * Test to create book command when request is null then return null.
+     */
+    @Test
+    void testToCreateBookCommand_whenRequestIsNull_thenReturnNull() {
+        assertNull(this.postBookRequestMapper.toCreateBookCommand(null));
     }
 }

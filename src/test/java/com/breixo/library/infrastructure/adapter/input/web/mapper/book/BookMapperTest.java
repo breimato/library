@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,5 +63,13 @@ class BookMapperTest {
         assertEquals(book.availableCopies(), bookV1Dto.getAvailableCopies());
         assertEquals(book.createdAt().atOffset(ZoneOffset.UTC), bookV1Dto.getCreatedAt());
         assertEquals(book.updatedAt().atOffset(ZoneOffset.UTC), bookV1Dto.getUpdatedAt());
+    }
+
+    /**
+     * Test to book v 1 when book is null then return null.
+     */
+    @Test
+    void testToBookV1_whenBookIsNull_thenReturnNull() {
+        assertNull(this.bookMapper.toBookV1(null));
     }
 }

@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,5 +45,13 @@ class PatchBookResponseMapperTest {
         verify(this.bookMapper, times(1)).toBookV1(book);
         assertNotNull(patchBookV1Response);
         assertEquals(bookV1Dto, patchBookV1Response.getBook());
+    }
+
+    /**
+     * Test to patch book v1 response when book is null then return null.
+     */
+    @Test
+    void testToPatchBookV1Response_whenBookIsNull_thenReturnNull() {
+        assertNull(this.patchBookResponseMapper.toPatchBookV1Response(null));
     }
 }

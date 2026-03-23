@@ -27,6 +27,7 @@
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <openapi-generator.version>7.8.0</openapi-generator.version>
         <build-helper.version>3.6.0</build-helper.version>
+        <jacoco.version>0.8.12</jacoco.version>
     </properties>
 
     <dependencies>
@@ -178,6 +179,37 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+
+            <!-- JaCoCo -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>jacoco-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>com/breixo/library/**/controller/**</include>
+                                <include>com/breixo/library/**/mapper/**</include>
+                                <include>com/breixo/library/**/repository/**</include>
+                                <include>com/breixo/library/**/usecase/**</include>
+                                <include>com/breixo/library/**/vo/**</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Maven Compiler Plugin — Lombok + MapStruct -->
