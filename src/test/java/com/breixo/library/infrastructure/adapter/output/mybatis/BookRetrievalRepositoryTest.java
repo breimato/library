@@ -4,9 +4,8 @@ import java.util.List;
 
 import com.breixo.library.domain.exception.BookException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
-import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.BookSearchCriteriaCommand;
-import com.breixo.library.domain.model.vo.Isbn;
+import com.breixo.library.domain.model.book.Book;
+import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.repository.BookRetrievalPersistenceRepository;
@@ -18,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
@@ -49,9 +47,7 @@ class BookRetrievalRepositoryTest {
         // Given
         final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
         final var bookEntity = Instancio.create(BookEntity.class);
-        final var book = Instancio.of(Book.class)
-                .set(field(Book.class, "isbn"), new Isbn("9780134685991"))
-                .create();
+        final var book = Instancio.create(Book.class);
 
         // When
         when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of(bookEntity));

@@ -1,6 +1,6 @@
 package com.breixo.library.infrastructure.mapper;
 
-import com.breixo.library.domain.model.vo.Isbn;
+import com.breixo.library.domain.vo.Isbn;
 
 import org.mapstruct.Mapper;
 

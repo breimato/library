@@ -1,8 +1,8 @@
-package com.breixo.library.domain.model;
+package com.breixo.library.domain.model.book;
 
 import java.time.LocalDateTime;
 
-import com.breixo.library.domain.model.vo.Isbn;
+import com.breixo.library.domain.vo.Isbn;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

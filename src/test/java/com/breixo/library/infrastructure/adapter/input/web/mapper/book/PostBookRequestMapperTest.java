@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -35,9 +34,8 @@ class PostBookRequestMapperTest {
     @Test
     void testToCreateBookCommand_whenRequestIsValid_thenReturnMappedCommand() {
         // Given
-        final var postBookV1Request = Instancio.of(PostBookV1Request.class)
-                .set(field(PostBookV1Request.class, "isbn"), VALID_ISBN)
-                .create();
+        final var postBookV1Request = Instancio.create(PostBookV1Request.class);
+        postBookV1Request.setIsbn(VALID_ISBN);
 
         // When
         final var createBookCommand = this.postBookRequestMapper.toCreateBookCommand(postBookV1Request);

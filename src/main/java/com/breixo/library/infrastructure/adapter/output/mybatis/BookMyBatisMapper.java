@@ -9,8 +9,8 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
-import com.breixo.library.domain.model.BookSearchCriteriaCommand;
-import com.breixo.library.domain.model.UpdateBookCommand;
+import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
+import com.breixo.library.domain.command.book.UpdateBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 
 /** The Interface Book My Batis Mapper. */

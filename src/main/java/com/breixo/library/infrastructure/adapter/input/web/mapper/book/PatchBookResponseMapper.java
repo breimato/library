@@ -1,6 +1,6 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.book;
 
-import com.breixo.library.domain.model.Book;
+import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Response;
 
 import org.mapstruct.Mapper;

@@ -1,6 +1,6 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.book;
 
-import com.breixo.library.domain.model.CreateBookCommand;
+import com.breixo.library.domain.command.book.CreateBookCommand;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PostBookV1Request;
 import com.breixo.library.infrastructure.mapper.IsbnMapper;
 

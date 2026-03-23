@@ -1,7 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.mapper;
 
-import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.CreateBookCommand;
+import com.breixo.library.domain.model.book.Book;
+import com.breixo.library.domain.command.book.CreateBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 import com.breixo.library.infrastructure.mapper.IsbnMapper;
 

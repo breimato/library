@@ -3,6 +3,7 @@ package com.breixo.library.domain.model.vo;
 import com.breixo.library.domain.exception.IsbnException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 
+import com.breixo.library.domain.vo.Isbn;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,7 +1,6 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.book;
 
-import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.vo.Isbn;
+import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.infrastructure.adapter.input.web.dto.BookV1Dto;
 
 import org.instancio.Instancio;
@@ -11,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.times;
@@ -36,9 +34,7 @@ class GetBookResponseMapperTest {
     @Test
     void testToGetBookIdV1Response_whenBookIsValid_thenReturnMappedResponse() {
         // Given
-        final var book = Instancio.of(Book.class)
-                .set(field(Book.class, "isbn"), new Isbn("9780134685991"))
-                .create();
+        final var book = Instancio.create(Book.class);
         final var bookV1Dto = Instancio.create(BookV1Dto.class);
 
         // When

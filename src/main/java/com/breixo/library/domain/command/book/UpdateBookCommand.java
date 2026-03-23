@@ -1,4 +1,4 @@
-package com.breixo.library.domain.model;
+package com.breixo.library.domain.command.book;
 
 import jakarta.validation.constraints.NotNull;
 

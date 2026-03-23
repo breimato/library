@@ -1,7 +1,7 @@
 package com.breixo.library.domain.port.output;
 
-import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.BookSearchCriteriaCommand;
+import com.breixo.library.domain.model.book.Book;
+import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 
 /** The Interface Book Retrieval Persistence Port. */
 public interface BookRetrievalPersistencePort {

@@ -2,8 +2,7 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper.book;
 
 import java.time.ZoneOffset;
 
-import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.vo.Isbn;
+import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
 import com.breixo.library.infrastructure.mapper.IsbnMapperImpl;
 
@@ -15,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.times;
@@ -25,9 +23,6 @@ import static org.mockito.Mockito.when;
 /** The Class Book Mapper Test. */
 @ExtendWith(MockitoExtension.class)
 class BookMapperTest {
-
-    /** The Constant VALID_ISBN. */
-    static final String VALID_ISBN = "9780134685991";
 
     /** The book mapper. */
     @InjectMocks
@@ -41,16 +36,13 @@ class BookMapperTest {
     @Spy
     IsbnMapperImpl isbnMapper;
 
-
     /**
      * Test to book v 1 when book is valid then return mapped dto.
      */
     @Test
     void testToBookV1_whenBookIsValid_thenReturnMappedDto() {
         // Given
-        final var book = Instancio.of(Book.class)
-                .set(field(Book.class, "isbn"), new Isbn(VALID_ISBN))
-                .create();
+        final var book = Instancio.create(Book.class);
 
         // When
         when(this.dateMapper.toOffsetDateTime(book.createdAt())).thenReturn(book.createdAt().atOffset(ZoneOffset.UTC));

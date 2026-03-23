@@ -5,7 +5,6 @@ import java.util.List;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.command.book.CreateBookCommand;
-import com.breixo.library.domain.vo.Isbn;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.repository.BookCreationPersistenceRepository;
@@ -17,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -45,18 +43,13 @@ class BookCreationRepositoryTest {
     @Test
     void testExecute_whenCommandIsValid_thenReturnCreatedBook() {
         // Given
-        final var createBookCommand = Instancio.of(CreateBookCommand.class)
-                .set(field(CreateBookCommand.class, "isbn"), new Isbn("9780134685991"))
-                .create();
+        final var createBookCommand = Instancio.create(CreateBookCommand.class);
         final var bookEntity = Instancio.create(BookEntity.class);
         final var createdBookEntity = Instancio.create(BookEntity.class);
-        final var book = Instancio.of(Book.class)
-                .set(field(Book.class, "isbn"), new Isbn("9780134685991"))
-                .create();
-
-        // When
+        final var book = Instancio.create(Book.class);
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(bookEntity.getId()).build();
 
+        // When
         when(this.bookEntityMapper.toBookEntity(createBookCommand)).thenReturn(bookEntity);
         when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of(createdBookEntity));
         when(this.bookEntityMapper.toBook(createdBookEntity)).thenReturn(book);

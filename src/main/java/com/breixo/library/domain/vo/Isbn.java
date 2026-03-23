@@ -1,4 +1,4 @@
-package com.breixo.library.domain.model.vo;
+package com.breixo.library.domain.vo;
 
 import java.util.Objects;
 import java.util.Set;

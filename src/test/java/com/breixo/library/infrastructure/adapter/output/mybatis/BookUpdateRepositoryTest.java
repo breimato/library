@@ -6,7 +6,6 @@ import com.breixo.library.domain.exception.BookException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
-import com.breixo.library.domain.vo.Isbn;
 import com.breixo.library.domain.command.book.UpdateBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
@@ -19,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
@@ -51,10 +49,7 @@ class BookUpdateRepositoryTest {
         final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
         final var bookEntity = Instancio.create(BookEntity.class);
         final var updatedBookEntity = Instancio.create(BookEntity.class);
-        final var book = Instancio.of(Book.class)
-                .set(field(Book.class, "isbn"), new Isbn("9780134685991"))
-                .create();
-
+        final var book = Instancio.create(Book.class);
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(updateBookCommand.id()).build();
 
         // When
@@ -77,7 +72,6 @@ class BookUpdateRepositoryTest {
     void testExecute_whenBookNotFound_thenThrowBookNotFoundException() {
         // Given
         final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
-
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(updateBookCommand.id()).build();
 
         // When

@@ -1,7 +1,7 @@
 package com.breixo.library.domain.port.output;
 
-import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.CreateBookCommand;
+import com.breixo.library.domain.model.book.Book;
+import com.breixo.library.domain.command.book.CreateBookCommand;
 
 /** The Interface Book Creation Persistence Port. */
 public interface BookCreationPersistencePort {
