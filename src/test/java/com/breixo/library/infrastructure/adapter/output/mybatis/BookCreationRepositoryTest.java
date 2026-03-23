@@ -2,10 +2,10 @@ package com.breixo.library.infrastructure.adapter.output.mybatis;
 
 import java.util.List;
 
-import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.BookSearchCriteriaCommand;
-import com.breixo.library.domain.model.CreateBookCommand;
-import com.breixo.library.domain.model.vo.Isbn;
+import com.breixo.library.domain.model.book.Book;
+import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
+import com.breixo.library.domain.command.book.CreateBookCommand;
+import com.breixo.library.domain.vo.Isbn;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.repository.BookCreationPersistenceRepository;
@@ -19,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,15 +55,17 @@ class BookCreationRepositoryTest {
                 .create();
 
         // When
+        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(bookEntity.getId()).build();
+
         when(this.bookEntityMapper.toBookEntity(createBookCommand)).thenReturn(bookEntity);
-        when(this.bookMyBatisMapper.find(any(BookSearchCriteriaCommand.class))).thenReturn(List.of(createdBookEntity));
+        when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of(createdBookEntity));
         when(this.bookEntityMapper.toBook(createdBookEntity)).thenReturn(book);
         final var result = this.bookCreationPersistenceRepository.execute(createBookCommand);
 
         // Then
         verify(this.bookEntityMapper, times(1)).toBookEntity(createBookCommand);
         verify(this.bookMyBatisMapper, times(1)).insert(bookEntity);
-        verify(this.bookMyBatisMapper, times(1)).find(any(BookSearchCriteriaCommand.class));
+        verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
         verify(this.bookEntityMapper, times(1)).toBook(createdBookEntity);
         assertEquals(book, result);
     }

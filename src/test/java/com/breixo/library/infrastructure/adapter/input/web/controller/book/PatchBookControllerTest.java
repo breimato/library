@@ -1,8 +1,8 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
-import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.UpdateBookCommand;
-import com.breixo.library.domain.model.vo.Isbn;
+import com.breixo.library.domain.model.book.Book;
+import com.breixo.library.domain.command.book.UpdateBookCommand;
+import com.breixo.library.domain.vo.Isbn;
 import com.breixo.library.domain.port.output.BookUpdatePersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Response;
@@ -22,8 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.instancio.Select.field;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -84,7 +82,7 @@ class PatchBookControllerTest {
         final var patchBookV1Response = Instancio.create(PatchBookV1Response.class);
 
         // When
-        when(this.patchBookRequestMapper.toUpdateBookCommand(eq(id), any(PatchBookV1Request.class))).thenReturn(updateBookCommand);
+        when(this.patchBookRequestMapper.toUpdateBookCommand(id, patchBookV1Request)).thenReturn(updateBookCommand);
         when(this.bookUpdatePersistencePort.execute(updateBookCommand)).thenReturn(book);
         when(this.patchBookResponseMapper.toPatchBookV1Response(book)).thenReturn(patchBookV1Response);
 
@@ -96,7 +94,7 @@ class PatchBookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Then
-        verify(this.patchBookRequestMapper, times(1)).toUpdateBookCommand(eq(id), any(PatchBookV1Request.class));
+        verify(this.patchBookRequestMapper, times(1)).toUpdateBookCommand(id, patchBookV1Request);
         verify(this.bookUpdatePersistencePort, times(1)).execute(updateBookCommand);
         verify(this.patchBookResponseMapper, times(1)).toPatchBookV1Response(book);
     }

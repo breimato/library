@@ -1,8 +1,8 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
-import com.breixo.library.domain.model.Book;
-import com.breixo.library.domain.model.CreateBookCommand;
-import com.breixo.library.domain.model.vo.Isbn;
+import com.breixo.library.domain.model.book.Book;
+import com.breixo.library.domain.command.book.CreateBookCommand;
+import com.breixo.library.domain.vo.Isbn;
 import com.breixo.library.domain.port.output.BookCreationPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PostBookV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PostBookV1Response;
@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.instancio.Select.field;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -84,7 +83,7 @@ class PostBookControllerTest {
         final var postBookV1Response = Instancio.create(PostBookV1Response.class);
 
         // When
-        when(this.postBookRequestMapper.toCreateBookCommand(any(PostBookV1Request.class))).thenReturn(createBookCommand);
+        when(this.postBookRequestMapper.toCreateBookCommand(postBookV1Request)).thenReturn(createBookCommand);
         when(this.bookCreationPersistencePort.execute(createBookCommand)).thenReturn(book);
         when(this.postBookResponseMapper.toPostBookV1Response(book)).thenReturn(postBookV1Response);
 
@@ -96,7 +95,7 @@ class PostBookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Then
-        verify(this.postBookRequestMapper, times(1)).toCreateBookCommand(any(PostBookV1Request.class));
+        verify(this.postBookRequestMapper, times(1)).toCreateBookCommand(postBookV1Request);
         verify(this.bookCreationPersistencePort, times(1)).execute(createBookCommand);
         verify(this.postBookResponseMapper, times(1)).toPostBookV1Response(book);
     }

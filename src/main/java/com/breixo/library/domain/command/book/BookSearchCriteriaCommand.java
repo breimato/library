@@ -1,6 +1,7 @@
-package com.breixo.library.domain.model;
+package com.breixo.library.domain.command.book;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
@@ -8,6 +9,7 @@ import lombok.Getter;
  */
 @Getter
 @Builder
+@EqualsAndHashCode
 public class BookSearchCriteriaCommand {
 
     /** The id. */
