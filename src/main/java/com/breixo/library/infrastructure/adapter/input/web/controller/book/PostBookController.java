@@ -1,6 +1,6 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
-import com.breixo.library.domain.port.output.BookCreationPersistencePort;
+import com.breixo.library.domain.port.output.book.BookCreationPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.api.PostBookV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PostBookV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PostBookV1Response;

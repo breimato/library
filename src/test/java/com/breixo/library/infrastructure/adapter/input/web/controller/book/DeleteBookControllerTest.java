@@ -1,6 +1,6 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
-import com.breixo.library.domain.port.output.BookDeletionPersistencePort;
+import com.breixo.library.domain.port.output.book.BookDeletionPersistencePort;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;

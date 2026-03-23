@@ -1,6 +1,6 @@
-package com.breixo.library.infrastructure.adapter.output.repository;
+package com.breixo.library.infrastructure.adapter.output.repository.book;
 
-import com.breixo.library.domain.port.output.BookDeletionPersistencePort;
+import com.breixo.library.domain.port.output.book.BookDeletionPersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
 
 import jakarta.validation.constraints.NotNull;

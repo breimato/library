@@ -1,4 +1,4 @@
-package com.breixo.library.infrastructure.adapter.output.mybatis;
+package com.breixo.library.infrastructure.adapter.output.repository.book;
 
 import java.util.List;
 
@@ -6,9 +6,10 @@ import com.breixo.library.domain.exception.BookException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
+import com.breixo.library.domain.command.book.UpdateBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
-import com.breixo.library.infrastructure.adapter.output.repository.BookRetrievalPersistenceRepository;
+import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
@@ -23,13 +24,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/** The Class Book Retrieval Repository Test. */
+/** The Class Book Update Repository Test. */
 @ExtendWith(MockitoExtension.class)
-class BookRetrievalRepositoryTest {
+class BookUpdateRepositoryTest {
 
-    /** The book retrieval persistence repository. */
+    /** The book update persistence repository. */
     @InjectMocks
-    BookRetrievalPersistenceRepository bookRetrievalPersistenceRepository;
+    BookUpdatePersistenceRepository bookUpdatePersistenceRepository;
 
     /** The book my batis mapper. */
     @Mock
@@ -40,23 +41,28 @@ class BookRetrievalRepositoryTest {
     BookEntityMapper bookEntityMapper;
 
     /**
-     * Test execute when book found then return book.
+     * Test execute when book exists then return updated book.
      */
     @Test
-    void testExecute_whenBookFound_thenReturnBook() {
+    void testExecute_whenBookExists_thenReturnUpdatedBook() {
         // Given
-        final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
+        final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
         final var bookEntity = Instancio.create(BookEntity.class);
+        final var updatedBookEntity = Instancio.create(BookEntity.class);
         final var book = Instancio.create(Book.class);
+        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(updateBookCommand.id()).build();
 
         // When
-        when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of(bookEntity));
-        when(this.bookEntityMapper.toBook(bookEntity)).thenReturn(book);
-        final var result = this.bookRetrievalPersistenceRepository.execute(bookSearchCriteriaCommand);
+        when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand))
+                .thenReturn(List.of(bookEntity))
+                .thenReturn(List.of(updatedBookEntity));
+        when(this.bookEntityMapper.toBook(updatedBookEntity)).thenReturn(book);
+        final var result = this.bookUpdatePersistenceRepository.execute(updateBookCommand);
 
         // Then
-        verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
-        verify(this.bookEntityMapper, times(1)).toBook(bookEntity);
+        verify(this.bookMyBatisMapper, times(2)).find(bookSearchCriteriaCommand);
+        verify(this.bookMyBatisMapper, times(1)).update(updateBookCommand);
+        verify(this.bookEntityMapper, times(1)).toBook(updatedBookEntity);
         assertEquals(book, result);
     }
 
@@ -66,12 +72,13 @@ class BookRetrievalRepositoryTest {
     @Test
     void testExecute_whenBookNotFound_thenThrowBookNotFoundException() {
         // Given
-        final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
+        final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
+        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(updateBookCommand.id()).build();
 
         // When
         when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of());
         final var bookException = assertThrows(BookException.class,
-                () -> this.bookRetrievalPersistenceRepository.execute(bookSearchCriteriaCommand));
+                () -> this.bookUpdatePersistenceRepository.execute(updateBookCommand));
 
         // Then
         verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);

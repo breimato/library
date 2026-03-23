@@ -1,6 +1,6 @@
-package com.breixo.library.infrastructure.adapter.output.mybatis;
+package com.breixo.library.infrastructure.adapter.output.repository.book;
 
-import com.breixo.library.infrastructure.adapter.output.repository.BookDeletionPersistenceRepository;
+import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;

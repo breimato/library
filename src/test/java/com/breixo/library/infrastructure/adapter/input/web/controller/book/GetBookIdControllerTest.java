@@ -2,7 +2,7 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
-import com.breixo.library.domain.port.output.BookRetrievalPersistencePort;
+import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetBookIdV1Response;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.book.GetBookResponseMapper;
 

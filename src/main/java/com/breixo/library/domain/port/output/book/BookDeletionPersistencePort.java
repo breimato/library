@@ -1,4 +1,4 @@
-package com.breixo.library.domain.port.output;
+package com.breixo.library.domain.port.output.book;
 
 import jakarta.validation.constraints.NotNull;
 

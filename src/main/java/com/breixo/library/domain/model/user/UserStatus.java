@@ -1,0 +1,32 @@
+package com.breixo.library.domain.model.user;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+/** The Enum User Status. */
+@Getter
+@RequiredArgsConstructor
+public enum UserStatus {
+
+    /** Active. */
+    ACTIVE(0),
+
+    /** Suspended. */
+    SUSPENDED(1),
+
+    /** Blocked. */
+    BLOCKED(2);
+
+    /** The id. */
+    private final int id;
+
+    /**
+     * From.
+     *
+     * @param value the value.
+     * @return the user status.
+     */
+    public static UserStatus from(final String value) {
+        return UserStatus.valueOf(value.toUpperCase());
+    }
+}

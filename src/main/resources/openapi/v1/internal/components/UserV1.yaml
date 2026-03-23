@@ -1,0 +1,32 @@
+description: "User V1"
+type: object
+properties:
+  id:
+    type: integer
+    format: int64
+    description: "User identifier"
+  name:
+    type: string
+    description: "User name"
+  email:
+    type: string
+    description: "User email"
+  phone:
+    type: string
+    description: "User phone"
+  membershipExpires:
+    type: string
+    format: date
+    description: "Membership expiration date"
+  status:
+    type: integer
+    format: int32
+    description: "User status"
+  createdAt:
+    type: string
+    format: date-time
+    description: "Creation timestamp"
+  updatedAt:
+    type: string
+    format: date-time
+    description: "Last update timestamp"

@@ -1,0 +1,33 @@
+get:
+  summary: "Get User By Id V1"
+  description: "Get User By Id V1"
+  operationId: "GetUserIdV1"
+  tags:
+    - get-user-id-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+      description: "User identifier"
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/GetUserIdV1Response.yaml'
+    '404':
+      description: "Not Found - User not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

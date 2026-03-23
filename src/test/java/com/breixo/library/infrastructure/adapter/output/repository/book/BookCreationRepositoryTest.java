@@ -1,4 +1,4 @@
-package com.breixo.library.infrastructure.adapter.output.mybatis;
+package com.breixo.library.infrastructure.adapter.output.repository.book;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.command.book.CreateBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
-import com.breixo.library.infrastructure.adapter.output.repository.BookCreationPersistenceRepository;
+import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;

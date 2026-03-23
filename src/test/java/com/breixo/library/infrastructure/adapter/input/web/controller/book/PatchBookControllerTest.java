@@ -2,7 +2,7 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.UpdateBookCommand;
-import com.breixo.library.domain.port.output.BookUpdatePersistencePort;
+import com.breixo.library.domain.port.output.book.BookUpdatePersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Response;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.book.PatchBookRequestMapper;

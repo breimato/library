@@ -1,9 +1,9 @@
-package com.breixo.library.infrastructure.adapter.output.repository;
+package com.breixo.library.infrastructure.adapter.output.repository.book;
 
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.command.book.CreateBookCommand;
-import com.breixo.library.domain.port.output.BookCreationPersistencePort;
+import com.breixo.library.domain.port.output.book.BookCreationPersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
 

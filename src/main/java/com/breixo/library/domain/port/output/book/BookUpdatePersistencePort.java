@@ -1,4 +1,4 @@
-package com.breixo.library.domain.port.output;
+package com.breixo.library.domain.port.output.book;
 
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.UpdateBookCommand;

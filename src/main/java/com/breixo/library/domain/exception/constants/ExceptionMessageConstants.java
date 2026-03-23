@@ -21,4 +21,10 @@ public class ExceptionMessageConstants {
 
     /** The Constant INVALID_ISBN_CHECK_DIGIT_MESSAGE_ERROR. */
     public static final String INVALID_ISBN_CHECK_DIGIT_MESSAGE_ERROR = "Error: Invalid ISBN-13 check digit";
+
+    /** The Constant USER_NOT_FOUND_CODE_ERROR. */
+    public static final String USER_NOT_FOUND_CODE_ERROR = "LIB-USER-001";
+
+    /** The Constant USER_NOT_FOUND_MESSAGE_ERROR. */
+    public static final String USER_NOT_FOUND_MESSAGE_ERROR = "Error: User not found";
 }
