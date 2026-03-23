@@ -9,6 +9,8 @@ import com.breixo.library.domain.port.output.BookUpdatePersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -25,8 +27,10 @@ public class BookUpdatePersistenceRepository implements BookUpdatePersistencePor
 
     /** {@inheritDoc} */
     @Override
-    public Book execute(final UpdateBookCommand updateBookCommand) {
+    public Book execute(@Valid @NotNull final UpdateBookCommand updateBookCommand) {
+
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(updateBookCommand.id()).build();
+
         final var bookEntities = this.bookMyBatisMapper.find(bookSearchCriteriaCommand);
         if (bookEntities.isEmpty()) {
             throw new BookException(
@@ -34,7 +38,9 @@ public class BookUpdatePersistenceRepository implements BookUpdatePersistencePor
                     ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR);
         }
         this.bookMyBatisMapper.update(updateBookCommand);
+
         final var updatedBookEntities = this.bookMyBatisMapper.find(bookSearchCriteriaCommand);
+
         return this.bookEntityMapper.toBook(updatedBookEntities.getFirst());
     }
 }

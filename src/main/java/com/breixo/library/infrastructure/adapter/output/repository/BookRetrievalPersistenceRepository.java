@@ -8,6 +8,8 @@ import com.breixo.library.domain.port.output.BookRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -24,13 +26,15 @@ public class BookRetrievalPersistenceRepository implements BookRetrievalPersiste
 
     /** {@inheritDoc} */
     @Override
-    public Book execute(final BookSearchCriteriaCommand bookSearchCriteriaCommand) {
+    public Book execute(@Valid @NotNull final BookSearchCriteriaCommand bookSearchCriteriaCommand) {
+
         final var bookEntities = this.bookMyBatisMapper.find(bookSearchCriteriaCommand);
+
         if (bookEntities.isEmpty()) {
             throw new BookException(
                     ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
                     ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR);
         }
-        return this.bookEntityMapper.toBook(bookEntities.get(0));
+        return this.bookEntityMapper.toBook(bookEntities.getFirst());
     }
 }

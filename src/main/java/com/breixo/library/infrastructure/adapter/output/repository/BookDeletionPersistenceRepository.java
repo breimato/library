@@ -3,6 +3,7 @@ package com.breixo.library.infrastructure.adapter.output.repository;
 import com.breixo.library.domain.port.output.BookDeletionPersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,7 @@ public class BookDeletionPersistenceRepository implements BookDeletionPersistenc
 
     /** {@inheritDoc} */
     @Override
-    public void execute(final Long id) {
+    public void execute(@NotNull final Long id) {
         this.bookMyBatisMapper.delete(id);
     }
 }

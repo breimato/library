@@ -7,6 +7,8 @@ import com.breixo.library.domain.port.output.BookCreationPersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +25,16 @@ public class BookCreationPersistenceRepository implements BookCreationPersistenc
 
     /** {@inheritDoc} */
     @Override
-    public Book execute(final CreateBookCommand createBookCommand) {
+    public Book execute(@Valid @NotNull final CreateBookCommand createBookCommand) {
+
         final var bookEntity = this.bookEntityMapper.toBookEntity(createBookCommand);
+
         this.bookMyBatisMapper.insert(bookEntity);
+
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(bookEntity.getId()).build();
+
         final var createdBookEntity = this.bookMyBatisMapper.find(bookSearchCriteriaCommand).getFirst();
+
         return this.bookEntityMapper.toBook(createdBookEntity);
     }
 }
