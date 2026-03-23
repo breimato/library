@@ -1,5 +1,7 @@
 package com.breixo.library.domain.port.output;
 
+import jakarta.validation.constraints.NotNull;
+
 /** The Interface Book Deletion Persistence Port. */
 public interface BookDeletionPersistencePort {
 
@@ -8,5 +10,5 @@ public interface BookDeletionPersistencePort {
      *
      * @param id the book identifier.
      */
-    void execute(Long id);
+    void execute(@NotNull Long id);
 }

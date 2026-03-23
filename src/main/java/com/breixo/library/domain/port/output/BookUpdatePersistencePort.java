@@ -2,6 +2,8 @@ package com.breixo.library.domain.port.output;
 
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.UpdateBookCommand;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 /** The Interface Book Update Persistence Port. */
 public interface BookUpdatePersistencePort {
@@ -12,5 +14,5 @@ public interface BookUpdatePersistencePort {
      * @param updateBookCommand the update book command.
      * @return the updated book.
      */
-    Book execute(UpdateBookCommand updateBookCommand);
+    Book execute(@Valid @NotNull UpdateBookCommand updateBookCommand);
 }
