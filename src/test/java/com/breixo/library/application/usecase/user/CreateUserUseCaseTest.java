@@ -43,14 +43,14 @@ class CreateUserUseCaseTest {
     @Test
     void testExecute_whenEmailDoesNotExist_thenCreateAndReturnUser() {
         // Given
-        final var command = CreateUserCommand.builder().name("John").email("john@example.com").phone("123456789").build();
+        final var createUserCommand = Instancio.create(CreateUserCommand.class);
         final var user = Instancio.create(User.class);
-        final var emailCriteria = UserSearchCriteriaCommand.builder().email("john@example.com").build();
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().email(createUserCommand.email()).build();
 
         // When
-        when(this.userRetrievalPersistencePort.execute(emailCriteria)).thenReturn(Optional.empty());
-        when(this.userCreationPersistencePort.execute(command)).thenReturn(user);
-        final var result = this.createUserUseCase.execute(command);
+        when(this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)).thenReturn(Optional.empty());
+        when(this.userCreationPersistencePort.execute(createUserCommand)).thenReturn(user);
+        final var result = this.createUserUseCase.execute(createUserCommand);
 
         // Then
         assertEquals(user, result);
@@ -62,14 +62,14 @@ class CreateUserUseCaseTest {
     @Test
     void testExecute_whenEmailAlreadyExists_thenThrowUserException() {
         // Given
-        final var command = CreateUserCommand.builder().name("John").email("john@example.com").build();
-        final var existingUser = Instancio.create(User.class);
-        final var emailCriteria = UserSearchCriteriaCommand.builder().email("john@example.com").build();
+        final var createUserCommand = Instancio.create(CreateUserCommand.class);
+        final var user = Instancio.create(User.class);
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().email(createUserCommand.email()).build();
 
         // When
-        when(this.userRetrievalPersistencePort.execute(emailCriteria)).thenReturn(Optional.of(existingUser));
+        when(this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)).thenReturn(Optional.of(user));
         final var exception = assertThrows(UserException.class,
-                () -> this.createUserUseCase.execute(command));
+                () -> this.createUserUseCase.execute(createUserCommand));
 
         // Then
         assertEquals(ExceptionMessageConstants.USER_EMAIL_ALREADY_EXISTS_MESSAGE_ERROR, exception.getMessage());

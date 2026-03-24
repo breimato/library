@@ -3,6 +3,7 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,7 +25,7 @@ class DateMapperTest {
     @Test
     void testToOffsetDateTime_whenLocalDateTimeIsValid_thenReturnOffsetDateTime() {
         // Given
-        final var localDateTime = LocalDateTime.now();
+        final var localDateTime = Instancio.create(LocalDateTime.class);
 
         // When / Then
         assertEquals(localDateTime.atOffset(ZoneOffset.UTC), this.dateMapper.toOffsetDateTime(localDateTime));

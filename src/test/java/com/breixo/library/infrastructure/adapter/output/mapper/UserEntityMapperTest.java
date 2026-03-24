@@ -66,16 +66,16 @@ class UserEntityMapperTest {
     @Test
     void testToUserEntity_whenCreateUserCommandIsValid_thenReturnMappedUserEntity() {
         // Given
-        final var command = CreateUserCommand.builder().name("John").email("john@example.com").phone("123456789").build();
+        final var createUserCommand = Instancio.create(CreateUserCommand.class);
 
         // When
-        final var userEntity = this.userEntityMapper.toUserEntity(command);
+        final var userEntity = this.userEntityMapper.toUserEntity(createUserCommand);
 
         // Then
         assertNotNull(userEntity);
-        assertEquals(command.name(), userEntity.getName());
-        assertEquals(command.email(), userEntity.getEmail());
-        assertEquals(command.phone(), userEntity.getPhone());
+        assertEquals(createUserCommand.name(), userEntity.getName());
+        assertEquals(createUserCommand.email(), userEntity.getEmail());
+        assertEquals(createUserCommand.phone(), userEntity.getPhone());
         assertEquals("active", userEntity.getStatus());
     }
 
