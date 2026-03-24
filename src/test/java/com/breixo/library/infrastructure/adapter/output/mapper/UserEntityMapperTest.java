@@ -49,8 +49,6 @@ class UserEntityMapperTest {
         assertEquals(userEntity.getEmail(), user.email());
         assertEquals(userEntity.getPhone(), user.phone());
         assertEquals(UserStatus.ACTIVE, user.status());
-        assertEquals(userEntity.getCreatedAt(), user.createdAt());
-        assertEquals(userEntity.getUpdatedAt(), user.updatedAt());
     }
 
     /**

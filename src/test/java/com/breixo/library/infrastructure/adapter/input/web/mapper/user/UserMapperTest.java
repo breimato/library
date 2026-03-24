@@ -1,10 +1,6 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.user;
 
-import java.time.ZoneOffset;
-
 import com.breixo.library.domain.model.user.User;
-import com.breixo.library.domain.model.user.UserStatus;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
 import com.breixo.library.infrastructure.mapper.UserStatusMapper;
 
 import org.instancio.Instancio;
@@ -17,8 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /** The Class User Mapper Test. */
@@ -29,86 +23,29 @@ class UserMapperTest {
     @InjectMocks
     UserMapperImpl userMapper;
 
-    /** The date mapper. */
-    @Mock
-    DateMapper dateMapper;
-
     /** The user status mapper. */
     @Mock
     UserStatusMapper userStatusMapper;
 
     /**
-     * Test to user v1 when status is active then return mapped dto with active status.
+     * Test to user v1 when user is valid then return mapped dto.
      */
     @Test
-    void testToUserV1_whenStatusIsActive_thenReturnMappedDtoWithActiveStatus() {
+    void testToUserV1_whenUserIsValid_thenReturnMappedDto() {
         // Given
-        final var base = Instancio.create(User.class);
-        final var user = User.builder().id(base.id()).name(base.name()).email(base.email())
-                .phone(base.phone()).status(UserStatus.ACTIVE).createdAt(base.createdAt())
-                .updatedAt(base.updatedAt()).build();
+        final var user = Instancio.create(User.class);
 
         // When
-        when(this.dateMapper.toOffsetDateTime(user.createdAt())).thenReturn(user.createdAt().atOffset(ZoneOffset.UTC));
-        when(this.dateMapper.toOffsetDateTime(user.updatedAt())).thenReturn(user.updatedAt().atOffset(ZoneOffset.UTC));
-        when(this.userStatusMapper.toStatusId(UserStatus.ACTIVE)).thenReturn(UserStatus.ACTIVE.getId());
+        when(this.userStatusMapper.toStatusId(user.status())).thenReturn(user.status().getId());
         final var userV1Dto = this.userMapper.toUserV1(user);
 
         // Then
-        verify(this.dateMapper, times(1)).toOffsetDateTime(user.createdAt());
-        verify(this.dateMapper, times(1)).toOffsetDateTime(user.updatedAt());
         assertNotNull(userV1Dto);
         assertEquals(user.id(), userV1Dto.getId());
         assertEquals(user.name(), userV1Dto.getName());
         assertEquals(user.email(), userV1Dto.getEmail());
         assertEquals(user.phone(), userV1Dto.getPhone());
-        assertEquals(UserStatus.ACTIVE.getId(), userV1Dto.getStatus());
-        assertEquals(user.createdAt().atOffset(ZoneOffset.UTC), userV1Dto.getCreatedAt());
-        assertEquals(user.updatedAt().atOffset(ZoneOffset.UTC), userV1Dto.getUpdatedAt());
-    }
-
-    /**
-     * Test to user v1 when status is suspended then return mapped dto with suspended status.
-     */
-    @Test
-    void testToUserV1_whenStatusIsSuspended_thenReturnMappedDtoWithSuspendedStatus() {
-        // Given
-        final var base = Instancio.create(User.class);
-        final var user = User.builder().id(base.id()).name(base.name()).email(base.email())
-                .phone(base.phone()).status(UserStatus.SUSPENDED).createdAt(base.createdAt())
-                .updatedAt(base.updatedAt()).build();
-
-        // When
-        when(this.dateMapper.toOffsetDateTime(user.createdAt())).thenReturn(user.createdAt().atOffset(ZoneOffset.UTC));
-        when(this.dateMapper.toOffsetDateTime(user.updatedAt())).thenReturn(user.updatedAt().atOffset(ZoneOffset.UTC));
-        when(this.userStatusMapper.toStatusId(UserStatus.SUSPENDED)).thenReturn(UserStatus.SUSPENDED.getId());
-        final var userV1Dto = this.userMapper.toUserV1(user);
-
-        // Then
-        assertNotNull(userV1Dto);
-        assertEquals(UserStatus.SUSPENDED.getId(), userV1Dto.getStatus());
-    }
-
-    /**
-     * Test to user v1 when status is blocked then return mapped dto with blocked status.
-     */
-    @Test
-    void testToUserV1_whenStatusIsBlocked_thenReturnMappedDtoWithBlockedStatus() {
-        // Given
-        final var base = Instancio.create(User.class);
-        final var user = User.builder().id(base.id()).name(base.name()).email(base.email())
-                .phone(base.phone()).status(UserStatus.BLOCKED).createdAt(base.createdAt())
-                .updatedAt(base.updatedAt()).build();
-
-        // When
-        when(this.dateMapper.toOffsetDateTime(user.createdAt())).thenReturn(user.createdAt().atOffset(ZoneOffset.UTC));
-        when(this.dateMapper.toOffsetDateTime(user.updatedAt())).thenReturn(user.updatedAt().atOffset(ZoneOffset.UTC));
-        when(this.userStatusMapper.toStatusId(UserStatus.BLOCKED)).thenReturn(UserStatus.BLOCKED.getId());
-        final var userV1Dto = this.userMapper.toUserV1(user);
-
-        // Then
-        assertNotNull(userV1Dto);
-        assertEquals(UserStatus.BLOCKED.getId(), userV1Dto.getStatus());
+        assertEquals(user.status().getId(), userV1Dto.getStatus());
     }
 
     /**
