@@ -8,13 +8,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum UserStatus {
 
-    /** Active. */
+    /** The Active. */
     ACTIVE(0),
 
-    /** Suspended. */
+    /** The Suspended. */
     SUSPENDED(1),
 
-    /** Blocked. */
+    /** The Blocked. */
     BLOCKED(2);
 
     /** The id. */
