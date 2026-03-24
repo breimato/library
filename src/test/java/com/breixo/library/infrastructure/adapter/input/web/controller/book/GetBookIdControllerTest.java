@@ -2,6 +2,8 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
 import java.util.Optional;
 
+import com.breixo.library.domain.exception.BookException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
@@ -19,6 +21,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -76,5 +81,26 @@ class GetBookIdControllerTest {
         // Then
         verify(this.bookRetrievalPersistencePort, times(1)).execute(bookSearchCriteriaCommand);
         verify(this.getBookResponseMapper, times(1)).toGetBookIdV1Response(book);
+    }
+
+    /**
+     * Test get book id v 1 when book not found then throw book exception.
+     */
+    @Test
+    void testGetBookIdV1_whenBookNotFound_thenThrowBookException() {
+        // Given
+        final var id = Instancio.create(Long.class);
+        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
+
+        // When
+        when(this.bookRetrievalPersistencePort.execute(bookSearchCriteriaCommand)).thenReturn(Optional.empty());
+        final var bookException = assertThrows(BookException.class,
+                () -> this.getBookIdController.getBookIdV1(id));
+
+        // Then
+        verify(this.bookRetrievalPersistencePort, times(1)).execute(bookSearchCriteriaCommand);
+        verifyNoInteractions(this.getBookResponseMapper);
+        assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR, bookException.getCode());
+        assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, bookException.getMessage());
     }
 }

@@ -29,13 +29,13 @@ class PostUserRequestMapperTest {
         final var request = Instancio.create(PostUserV1RequestDto.class);
 
         // When
-        final var command = this.postUserRequestMapper.toCreateUserCommand(request);
+        final var createUserCommand = this.postUserRequestMapper.toCreateUserCommand(request);
 
         // Then
-        assertNotNull(command);
-        assertEquals(request.getName(), command.name());
-        assertEquals(request.getEmail(), command.email());
-        assertEquals(request.getPhone(), command.phone());
+        assertNotNull(createUserCommand);
+        assertEquals(request.getName(), createUserCommand.name());
+        assertEquals(request.getEmail(), createUserCommand.email());
+        assertEquals(request.getPhone(), createUserCommand.phone());
     }
 
     /**

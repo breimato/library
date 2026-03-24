@@ -22,9 +22,9 @@ public interface BookEntityMapper {
     /**
      * To book entity.
      *
-     * @param command the create book command.
+     * @param createBookCommand the create book command.
      * @return the book entity.
      */
-    BookEntity toBookEntity(CreateBookCommand command);
+    BookEntity toBookEntity(CreateBookCommand createBookCommand);
 
 }

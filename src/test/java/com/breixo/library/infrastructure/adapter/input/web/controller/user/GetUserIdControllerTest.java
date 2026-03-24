@@ -3,6 +3,8 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.user;
 import java.util.Optional;
 
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
+import com.breixo.library.domain.exception.UserException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetUserIdV1Response;
@@ -19,6 +21,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -76,5 +81,26 @@ class GetUserIdControllerTest {
         // Then
         verify(this.userRetrievalPersistencePort, times(1)).execute(userSearchCriteriaCommand);
         verify(this.getUserResponseMapper, times(1)).toGetUserIdV1Response(user);
+    }
+
+    /**
+     * Test get user id v1 when user not found then throw user exception.
+     */
+    @Test
+    void testGetUserIdV1_whenUserNotFound_thenThrowUserException() {
+        // Given
+        final var id = Instancio.create(Long.class);
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
+
+        // When
+        when(this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)).thenReturn(Optional.empty());
+        final var userException = assertThrows(UserException.class,
+                () -> this.getUserIdController.getUserIdV1(id));
+
+        // Then
+        verify(this.userRetrievalPersistencePort, times(1)).execute(userSearchCriteriaCommand);
+        verifyNoInteractions(this.getUserResponseMapper);
+        assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR, userException.getCode());
+        assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR, userException.getMessage());
     }
 }
