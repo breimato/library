@@ -30,8 +30,9 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
     @Override
     public User execute(@Valid @NotNull final CreateUserCommand createUserCommand) {
 
-        final var emailCriteria = UserSearchCriteriaCommand.builder().email(createUserCommand.email()).build();
-        final var emailAlreadyExists = this.userRetrievalPersistencePort.execute(emailCriteria).isPresent();
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().email(createUserCommand.email()).build();
+
+        final var emailAlreadyExists = this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand).isPresent();
 
         if (emailAlreadyExists) {
             throw new UserException(
