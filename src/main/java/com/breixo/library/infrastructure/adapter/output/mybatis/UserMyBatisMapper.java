@@ -2,6 +2,7 @@ package com.breixo.library.infrastructure.adapter.output.mybatis;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -47,4 +48,12 @@ public interface UserMyBatisMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     @Insert("insert into users (name, email, phone, status) values (#{name}, #{email}, #{phone}, #{status}::user_status)")
     void insert(UserEntity userEntity);
+
+    /**
+     * Delete.
+     *
+     * @param id the user identifier.
+     */
+    @Delete("delete from users where id = #{id}")
+    void delete(Long id);
 }
