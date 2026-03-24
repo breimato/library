@@ -1,6 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.mapper;
 
 import com.breixo.library.domain.command.user.CreateUserCommand;
+import com.breixo.library.domain.command.user.UpdateUserCommand;
 import com.breixo.library.domain.model.user.UserStatus;
 import com.breixo.library.infrastructure.adapter.output.entities.UserEntity;
 import com.breixo.library.infrastructure.mapper.UserStatusMapper;
@@ -36,10 +37,10 @@ class UserEntityMapperTest {
     void testToUser_whenUserEntityIsValid_thenReturnMappedUser() {
         // Given
         final var userEntity = Instancio.create(UserEntity.class);
-        userEntity.setStatus(UserStatus.ACTIVE.name().toLowerCase());
+        userEntity.setStatusId(UserStatus.ACTIVE.getId());
 
         // When
-        when(this.userStatusMapper.toUserStatus(userEntity.getStatus())).thenReturn(UserStatus.ACTIVE);
+        when(this.userStatusMapper.toUserStatus(userEntity.getStatusId())).thenReturn(UserStatus.ACTIVE);
         final var user = this.userEntityMapper.toUser(userEntity);
 
         // Then
@@ -76,7 +77,6 @@ class UserEntityMapperTest {
         assertEquals(createUserCommand.name(), userEntity.getName());
         assertEquals(createUserCommand.email(), userEntity.getEmail());
         assertEquals(createUserCommand.phone(), userEntity.getPhone());
-        assertEquals("active", userEntity.getStatus());
     }
 
     /**
@@ -85,6 +85,35 @@ class UserEntityMapperTest {
     @Test
     void testToUserEntity_whenCreateUserCommandIsNull_thenReturnNull() {
         // When / Then
-        assertNull(this.userEntityMapper.toUserEntity(null));
+        assertNull(this.userEntityMapper.toUserEntity((CreateUserCommand) null));
+    }
+
+    /**
+     * Test to user entity when update user command is valid then return mapped user entity.
+     */
+    @Test
+    void testToUserEntity_whenUpdateUserCommandIsValid_thenReturnMappedUserEntity() {
+        // Given
+        final var updateUserCommand = Instancio.create(UpdateUserCommand.class);
+
+        // When
+        when(this.userStatusMapper.toStatusId(updateUserCommand.status())).thenReturn(updateUserCommand.status().getId());
+        final var userEntity = this.userEntityMapper.toUserEntity(updateUserCommand);
+
+        // Then
+        assertNotNull(userEntity);
+        assertEquals(updateUserCommand.id(), userEntity.getId());
+        assertEquals(updateUserCommand.name(), userEntity.getName());
+        assertEquals(updateUserCommand.phone(), userEntity.getPhone());
+        assertEquals(updateUserCommand.status().getId(), userEntity.getStatusId());
+    }
+
+    /**
+     * Test to user entity when update user command is null then return null.
+     */
+    @Test
+    void testToUserEntity_whenUpdateUserCommandIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.userEntityMapper.toUserEntity((UpdateUserCommand) null));
     }
 }

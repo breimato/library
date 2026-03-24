@@ -1,6 +1,6 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
-import com.breixo.library.domain.port.output.book.BookUpdatePersistencePort;
+import com.breixo.library.domain.port.input.book.UpdateBookUseCase;
 import com.breixo.library.infrastructure.adapter.input.web.api.PatchBookV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Response;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PatchBookController implements PatchBookV1Api {
 
-    /** The book update persistence port. */
-    private final BookUpdatePersistencePort bookUpdatePersistencePort;
+    /** The update book use case. */
+    private final UpdateBookUseCase updateBookUseCase;
 
     /** The patch book request mapper. */
     private final PatchBookRequestMapper patchBookRequestMapper;
@@ -31,7 +31,7 @@ public class PatchBookController implements PatchBookV1Api {
 
         final var updateBookCommand = this.patchBookRequestMapper.toUpdateBookCommand(id, patchBookV1Request);
 
-        final var book = this.bookUpdatePersistencePort.execute(updateBookCommand);
+        final var book = this.updateBookUseCase.execute(updateBookCommand);
 
         final var patchBookV1Response = this.patchBookResponseMapper.toPatchBookV1Response(book);
 

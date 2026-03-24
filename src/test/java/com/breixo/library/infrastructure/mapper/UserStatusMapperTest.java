@@ -45,29 +45,29 @@ class UserStatusMapperTest {
     }
 
     /**
-     * Test to user status when id is active then return active.
+     * Test to user status when integer id is active then return active.
      */
     @Test
-    void testToUserStatus_whenIdIsActive_thenReturnActive() {
+    void testToUserStatus_whenIntegerIdIsActive_thenReturnActive() {
         // When / Then
-        assertEquals(UserStatus.ACTIVE, this.userStatusMapper.toUserStatus("active"));
+        assertEquals(UserStatus.ACTIVE, this.userStatusMapper.toUserStatus(UserStatus.ACTIVE.getId()));
     }
 
     /**
-     * Test to user status when id is suspended then return suspended.
+     * Test to user status when integer id is suspended then return suspended.
      */
     @Test
-    void testToUserStatus_whenIdIsSuspended_thenReturnSuspended() {
+    void testToUserStatus_whenIntegerIdIsSuspended_thenReturnSuspended() {
         // When / Then
-        assertEquals(UserStatus.SUSPENDED, this.userStatusMapper.toUserStatus("suspended"));
+        assertEquals(UserStatus.SUSPENDED, this.userStatusMapper.toUserStatus(UserStatus.SUSPENDED.getId()));
     }
 
     /**
-     * Test to user status when id is blocked then return blocked.
+     * Test to user status when integer id is blocked then return blocked.
      */
     @Test
-    void testToUserStatus_whenIdIsBlocked_thenReturnBlocked() {
+    void testToUserStatus_whenIntegerIdIsBlocked_thenReturnBlocked() {
         // When / Then
-        assertEquals(UserStatus.BLOCKED, this.userStatusMapper.toUserStatus("blocked"));
+        assertEquals(UserStatus.BLOCKED, this.userStatusMapper.toUserStatus(UserStatus.BLOCKED.getId()));
     }
 }

@@ -2,8 +2,6 @@ package com.breixo.library.infrastructure.adapter.output.entities;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /** The Class Book Entity. */
 @Data
 public class BookEntity {
@@ -28,10 +26,4 @@ public class BookEntity {
 
     /** The available copies. */
     private Integer availableCopies;
-
-    /** The created at. */
-    private LocalDateTime createdAt;
-
-    /** The updated at. */
-    private LocalDateTime updatedAt;
 }

@@ -1,7 +1,5 @@
 package com.breixo.library.infrastructure.adapter.output.repository.book;
 
-import com.breixo.library.domain.exception.BookException;
-import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.command.book.UpdateBookCommand;
@@ -29,18 +27,21 @@ public class BookUpdatePersistenceRepository implements BookUpdatePersistencePor
     @Override
     public Book execute(@Valid @NotNull final UpdateBookCommand updateBookCommand) {
 
-        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(updateBookCommand.id()).build();
-
-        final var bookEntities = this.bookMyBatisMapper.find(bookSearchCriteriaCommand);
-        if (bookEntities.isEmpty()) {
-            throw new BookException(
-                    ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
-                    ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR);
-        }
         this.bookMyBatisMapper.update(updateBookCommand);
 
-        final var updatedBookEntities = this.bookMyBatisMapper.find(bookSearchCriteriaCommand);
+        return this.find(updateBookCommand.id());
+    }
 
-        return this.bookEntityMapper.toBook(updatedBookEntities.getFirst());
+    /**
+     * Find.
+     *
+     * @param id the book identifier.
+     * @return the book.
+     */
+    private Book find(final Long id) {
+
+        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
+
+        return this.bookEntityMapper.toBook(this.bookMyBatisMapper.find(bookSearchCriteriaCommand).getFirst());
     }
 }

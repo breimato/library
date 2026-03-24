@@ -2,7 +2,7 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.UpdateBookCommand;
-import com.breixo.library.domain.port.output.book.BookUpdatePersistencePort;
+import com.breixo.library.domain.port.input.book.UpdateBookUseCase;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Response;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.book.PatchBookRequestMapper;
@@ -44,9 +44,9 @@ class PatchBookControllerTest {
     @InjectMocks
     PatchBookController patchBookController;
 
-    /** The book update persistence port. */
+    /** The update book use case. */
     @Mock
-    BookUpdatePersistencePort bookUpdatePersistencePort;
+    UpdateBookUseCase updateBookUseCase;
 
     /** The patch book request mapper. */
     @Mock
@@ -76,7 +76,7 @@ class PatchBookControllerTest {
 
         // When
         when(this.patchBookRequestMapper.toUpdateBookCommand(id, patchBookV1Request)).thenReturn(updateBookCommand);
-        when(this.bookUpdatePersistencePort.execute(updateBookCommand)).thenReturn(book);
+        when(this.updateBookUseCase.execute(updateBookCommand)).thenReturn(book);
         when(this.patchBookResponseMapper.toPatchBookV1Response(book)).thenReturn(patchBookV1Response);
 
         this.mockMvc.perform(patch(URL, id)
@@ -88,7 +88,7 @@ class PatchBookControllerTest {
 
         // Then
         verify(this.patchBookRequestMapper, times(1)).toUpdateBookCommand(id, patchBookV1Request);
-        verify(this.bookUpdatePersistencePort, times(1)).execute(updateBookCommand);
+        verify(this.updateBookUseCase, times(1)).execute(updateBookCommand);
         verify(this.patchBookResponseMapper, times(1)).toPatchBookV1Response(book);
     }
 }

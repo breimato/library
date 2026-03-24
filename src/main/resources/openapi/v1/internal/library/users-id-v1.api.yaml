@@ -31,6 +31,45 @@ get:
         application/json:
           schema:
             $ref: '../components/ApiErrorV1.yaml'
+patch:
+  summary: "Patch User V1"
+  description: "Partially update a user"
+  operationId: "PatchUserV1"
+  tags:
+    - patch-user-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+      description: "User identifier"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/PatchUserV1Request.yaml'
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/PatchUserV1Response.yaml'
+    '404':
+      description: "Not Found - User not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
 delete:
   summary: "Delete User V1"
   description: "Delete a user"

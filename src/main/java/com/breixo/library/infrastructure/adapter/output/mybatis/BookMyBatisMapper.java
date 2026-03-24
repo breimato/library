@@ -32,9 +32,7 @@ public interface BookMyBatisMapper {
                 author,
                 genre,
                 total_copies,
-                available_copies,
-                created_at,
-                updated_at
+                available_copies
             from books
             <where>
                 <if test="id != null">and id = #{id}</if>

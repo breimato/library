@@ -21,10 +21,10 @@ public interface UserStatusMapper {
     /**
      * To user status.
      *
-     * @param id the status string id.
+     * @param id the status integer id.
      * @return the user status.
      */
-    default UserStatus toUserStatus(final String id) {
-        return UserStatus.from(id);
+    default UserStatus toUserStatus(final Integer id) {
+        return UserStatus.values()[id];
     }
 }

@@ -20,13 +20,4 @@ public enum UserStatus {
     /** The id. */
     private final int id;
 
-    /**
-     * From.
-     *
-     * @param value the value.
-     * @return the user status.
-     */
-    public static UserStatus from(final String value) {
-        return UserStatus.valueOf(value.toUpperCase());
-    }
 }

@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
+import java.util.Optional;
+
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
@@ -64,7 +66,7 @@ class GetBookIdControllerTest {
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
 
         // When
-        when(this.bookRetrievalPersistencePort.execute(bookSearchCriteriaCommand)).thenReturn(book);
+        when(this.bookRetrievalPersistencePort.execute(bookSearchCriteriaCommand)).thenReturn(Optional.of(book));
         when(this.getBookResponseMapper.toGetBookIdV1Response(book)).thenReturn(getBookIdV1Response);
 
         this.mockMvc.perform(get(URL, id).accept(MediaType.APPLICATION_JSON))

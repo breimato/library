@@ -2,8 +2,6 @@ package com.breixo.library.infrastructure.adapter.output.entities;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /** The Class User Entity. */
 @Data
 public class UserEntity {
@@ -20,12 +18,6 @@ public class UserEntity {
     /** The phone. */
     private String phone;
 
-    /** The status. */
-    private String status;
-
-    /** The created at. */
-    private LocalDateTime createdAt;
-
-    /** The updated at. */
-    private LocalDateTime updatedAt;
+    /** The status id. */
+    private Integer statusId;
 }

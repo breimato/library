@@ -51,8 +51,6 @@ class BookEntityMapperTest {
         assertEquals(bookEntity.getGenre(), book.genre());
         assertEquals(bookEntity.getTotalCopies(), book.totalCopies());
         assertEquals(bookEntity.getAvailableCopies(), book.availableCopies());
-        assertEquals(bookEntity.getCreatedAt(), book.createdAt());
-        assertEquals(bookEntity.getUpdatedAt(), book.updatedAt());
     }
 
     /**
@@ -70,19 +68,19 @@ class BookEntityMapperTest {
     @Test
     void testToBookEntity_whenCreateBookCommandIsValid_thenReturnMappedBookEntity() {
         // Given
-        final var command = Instancio.create(CreateBookCommand.class);
+        final var createBookCommand = Instancio.create(CreateBookCommand.class);
 
         // When
-        final var bookEntity = this.bookEntityMapper.toBookEntity(command);
+        final var bookEntity = this.bookEntityMapper.toBookEntity(createBookCommand);
 
         // Then
         assertNotNull(bookEntity);
-        assertEquals(command.isbn().getValue(), bookEntity.getIsbn());
-        assertEquals(command.title(), bookEntity.getTitle());
-        assertEquals(command.author(), bookEntity.getAuthor());
-        assertEquals(command.genre(), bookEntity.getGenre());
-        assertEquals(command.totalCopies(), bookEntity.getTotalCopies());
-        assertEquals(command.availableCopies(), bookEntity.getAvailableCopies());
+        assertEquals(createBookCommand.isbn().getValue(), bookEntity.getIsbn());
+        assertEquals(createBookCommand.title(), bookEntity.getTitle());
+        assertEquals(createBookCommand.author(), bookEntity.getAuthor());
+        assertEquals(createBookCommand.genre(), bookEntity.getGenre());
+        assertEquals(createBookCommand.totalCopies(), bookEntity.getTotalCopies());
+        assertEquals(createBookCommand.availableCopies(), bookEntity.getAvailableCopies());
     }
 
     /**

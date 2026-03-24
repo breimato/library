@@ -4,6 +4,7 @@ import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.command.book.CreateBookCommand;
 import com.breixo.library.domain.port.output.book.BookCreationPersistencePort;
+import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
 
@@ -26,15 +27,31 @@ public class BookCreationPersistenceRepository implements BookCreationPersistenc
     /** {@inheritDoc} */
     @Override
     public Book execute(@Valid @NotNull final CreateBookCommand createBookCommand) {
+        final var bookEntity = this.insert(createBookCommand);
+        return this.find(bookEntity.getId());
+    }
 
+    /**
+     * Insert.
+     *
+     * @param createBookCommand the create book command.
+     * @return the book entity.
+     */
+    private BookEntity insert(final CreateBookCommand createBookCommand) {
         final var bookEntity = this.bookEntityMapper.toBookEntity(createBookCommand);
-
         this.bookMyBatisMapper.insert(bookEntity);
+        return bookEntity;
+    }
 
-        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(bookEntity.getId()).build();
-
-        final var createdBookEntity = this.bookMyBatisMapper.find(bookSearchCriteriaCommand).getFirst();
-
-        return this.bookEntityMapper.toBook(createdBookEntity);
+    /**
+     * Find.
+     *
+     * @param id the book identifier.
+     * @return the book.
+     */
+    private Book find(final Long id) {
+        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
+        final var bookEntity = this.bookMyBatisMapper.find(bookSearchCriteriaCommand).getFirst();
+        return this.bookEntityMapper.toBook(bookEntity);
     }
 }

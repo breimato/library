@@ -1,9 +1,8 @@
 package com.breixo.library.infrastructure.adapter.output.repository.book;
 
 import java.util.List;
+import java.util.Optional;
 
-import com.breixo.library.domain.exception.BookException;
-import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
@@ -18,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,24 +56,23 @@ class BookRetrievalRepositoryTest {
         // Then
         verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
         verify(this.bookEntityMapper, times(1)).toBook(bookEntity);
-        assertEquals(book, result);
+        assertEquals(Optional.of(book), result);
     }
 
     /**
-     * Test execute when book not found then throw book not found exception.
+     * Test execute when book not found then return empty optional.
      */
     @Test
-    void testExecute_whenBookNotFound_thenThrowBookNotFoundException() {
+    void testExecute_whenBookNotFound_thenReturnEmptyOptional() {
         // Given
         final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
 
         // When
         when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of());
-        final var bookException = assertThrows(BookException.class,
-                () -> this.bookRetrievalPersistenceRepository.execute(bookSearchCriteriaCommand));
+        final var result = this.bookRetrievalPersistenceRepository.execute(bookSearchCriteriaCommand);
 
         // Then
         verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
-        assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, bookException.getMessage());
+        assertTrue(result.isEmpty());
     }
 }

@@ -1,0 +1,13 @@
+description: "Patch User V1 Request"
+type: object
+properties:
+  name:
+    type: string
+    description: "User name"
+  phone:
+    type: string
+    description: "User phone"
+  status:
+    type: integer
+    format: int32
+    description: "User status"

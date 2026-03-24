@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.UserEntity;
@@ -28,9 +29,7 @@ public interface UserMyBatisMapper {
                 name,
                 email,
                 phone,
-                status,
-                created_at,
-                updated_at
+                status_id
             from users
             <where>
                 <if test="id != null">and id = #{id}</if>
@@ -46,8 +45,26 @@ public interface UserMyBatisMapper {
      * @param userEntity the user entity.
      */
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    @Insert("insert into users (name, email, phone, status) values (#{name}, #{email}, #{phone}, #{status}::user_status)")
+    @Insert("insert into users (name, email, phone, status_id) values (#{name}, #{email}, #{phone}, 1)")
     void insert(UserEntity userEntity);
+
+    /**
+     * Update.
+     *
+     * @param userEntity the user entity.
+     */
+    @Update("""
+            <script>
+            update users
+            <set>
+                <if test="name != null">name = #{name},</if>
+                <if test="phone != null">phone = #{phone},</if>
+                <if test="statusId != null">status_id = #{statusId},</if>
+            </set>
+            where id = #{id}
+            </script>
+            """)
+    void update(UserEntity userEntity);
 
     /**
      * Delete.
