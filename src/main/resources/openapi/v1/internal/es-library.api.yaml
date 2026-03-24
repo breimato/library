@@ -11,6 +11,8 @@ paths:
   /v1/library/books/{id}:
     $ref: './library/books-id-v1.api.yaml'
   # Users
+  /v1/library/users:
+    $ref: './library/users-v1.api.yaml'
   /v1/library/users/{id}:
     $ref: './library/users-id-v1.api.yaml'
 
@@ -26,6 +28,8 @@ components:
       $ref: './requests/PatchBookV1Request.yaml'
     UserV1:
       $ref: './components/UserV1.yaml'
+    PostUserV1Request:
+      $ref: './requests/PostUserV1Request.yaml'
     
   responses:
     BadRequest:

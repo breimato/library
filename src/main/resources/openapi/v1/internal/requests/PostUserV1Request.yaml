@@ -1,0 +1,15 @@
+description: "Post User V1 Request"
+type: object
+required:
+  - name
+  - email
+properties:
+  name:
+    type: string
+    description: "User name"
+  email:
+    type: string
+    description: "User email"
+  phone:
+    type: string
+    description: "User phone"

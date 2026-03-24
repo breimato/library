@@ -56,6 +56,7 @@ class PostBookRequestMapperTest {
      */
     @Test
     void testToCreateBookCommand_whenRequestIsNull_thenReturnNull() {
+        // When / Then
         assertNull(this.postBookRequestMapper.toCreateBookCommand(null));
     }
 }

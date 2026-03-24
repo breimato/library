@@ -23,7 +23,10 @@ class DateMapperTest {
      */
     @Test
     void testToOffsetDateTime_whenLocalDateTimeIsValid_thenReturnOffsetDateTime() {
+        // Given
         final var localDateTime = LocalDateTime.now();
+
+        // When / Then
         assertEquals(localDateTime.atOffset(ZoneOffset.UTC), this.dateMapper.toOffsetDateTime(localDateTime));
     }
 }

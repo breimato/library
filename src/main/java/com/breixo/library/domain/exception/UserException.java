@@ -17,4 +17,15 @@ public class UserException extends LibraryException {
     public UserException(final String code, final String message) {
         super(code, message, HttpStatus.NOT_FOUND);
     }
+
+    /**
+     * Instantiates a new user exception with a specific http status.
+     *
+     * @param code       the code
+     * @param message    the message
+     * @param httpStatus the http status
+     */
+    public UserException(final String code, final String message, final HttpStatus httpStatus) {
+        super(code, message, httpStatus);
+    }
 }

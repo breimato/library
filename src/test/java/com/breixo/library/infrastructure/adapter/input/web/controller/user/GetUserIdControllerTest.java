@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.user;
 
+import java.util.Optional;
+
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
@@ -64,7 +66,7 @@ class GetUserIdControllerTest {
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
 
         // When
-        when(this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)).thenReturn(user);
+        when(this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)).thenReturn(Optional.of(user));
         when(this.getUserResponseMapper.toGetUserIdV1Response(user)).thenReturn(getUserIdV1Response);
 
         this.mockMvc.perform(get(URL, id).accept(MediaType.APPLICATION_JSON))

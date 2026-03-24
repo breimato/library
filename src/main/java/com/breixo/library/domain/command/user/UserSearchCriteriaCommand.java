@@ -14,4 +14,7 @@ public class UserSearchCriteriaCommand {
 
     /** The id. */
     private final Long id;
+
+    /** The email. */
+    private final String email;
 }

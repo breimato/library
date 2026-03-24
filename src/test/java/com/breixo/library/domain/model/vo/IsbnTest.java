@@ -23,8 +23,10 @@ class IsbnTest {
      */
     @Test
     void testConstructor_whenIsbnIsValid_thenCreateIsbn() {
+        // When
         final var isbn = new Isbn(VALID_ISBN);
 
+        // Then
         assertEquals(VALID_ISBN, isbn.getValue());
     }
 
@@ -33,8 +35,10 @@ class IsbnTest {
      */
     @Test
     void testConstructor_whenIsbnHasHyphens_thenStripAndCreateIsbn() {
+        // When
         final var isbn = new Isbn(VALID_ISBN_WITH_HYPHENS);
 
+        // Then
         assertEquals(VALID_ISBN, isbn.getValue());
     }
 
@@ -43,8 +47,10 @@ class IsbnTest {
      */
     @Test
     void testConstructor_whenIsbnIsNull_thenThrowIsbnException() {
+        // When
         final var exception = assertThrows(IsbnException.class, () -> new Isbn(null));
 
+        // Then
         assertEquals(ExceptionMessageConstants.INVALID_ISBN_FORMAT_MESSAGE_ERROR, exception.getMessage());
     }
 
@@ -53,8 +59,10 @@ class IsbnTest {
      */
     @Test
     void testConstructor_whenIsbnHasWrongLength_thenThrowIsbnException() {
+        // When
         final var exception = assertThrows(IsbnException.class, () -> new Isbn("978013468599"));
 
+        // Then
         assertEquals(ExceptionMessageConstants.INVALID_ISBN_FORMAT_MESSAGE_ERROR, exception.getMessage());
     }
 
@@ -63,8 +71,10 @@ class IsbnTest {
      */
     @Test
     void testConstructor_whenIsbnContainsNonNumericCharacters_thenThrowIsbnException() {
+        // When
         final var exception = assertThrows(IsbnException.class, () -> new Isbn("97801346859AB"));
 
+        // Then
         assertEquals(ExceptionMessageConstants.INVALID_ISBN_FORMAT_MESSAGE_ERROR, exception.getMessage());
     }
 
@@ -73,8 +83,10 @@ class IsbnTest {
      */
     @Test
     void testConstructor_whenIsbnHasInvalidPrefix_thenThrowIsbnException() {
+        // When
         final var exception = assertThrows(IsbnException.class, () -> new Isbn("9770134685991"));
 
+        // Then
         assertEquals(ExceptionMessageConstants.INVALID_ISBN_FORMAT_MESSAGE_ERROR, exception.getMessage());
     }
 
@@ -83,8 +95,10 @@ class IsbnTest {
      */
     @Test
     void testConstructor_whenIsbnHasInvalidCheckDigit_thenThrowIsbnException() {
+        // When
         final var exception = assertThrows(IsbnException.class, () -> new Isbn("9780134685990"));
 
+        // Then
         assertEquals(ExceptionMessageConstants.INVALID_ISBN_CHECK_DIGIT_MESSAGE_ERROR, exception.getMessage());
     }
 
@@ -93,8 +107,10 @@ class IsbnTest {
      */
     @Test
     void testToString_whenIsbnIsValid_thenReturnValue() {
+        // Given
         final var isbn = new Isbn(VALID_ISBN);
 
+        // When / Then
         assertEquals(VALID_ISBN, isbn.toString());
     }
 }

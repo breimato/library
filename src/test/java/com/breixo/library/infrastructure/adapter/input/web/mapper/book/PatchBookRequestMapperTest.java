@@ -46,6 +46,7 @@ class PatchBookRequestMapperTest {
      */
     @Test
     void testToUpdateBookCommand_whenBothParamsAreNull_thenReturnNull() {
+        // When / Then
         assertNull(this.patchBookRequestMapper.toUpdateBookCommand(null, null));
     }
 

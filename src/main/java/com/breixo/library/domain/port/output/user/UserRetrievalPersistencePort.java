@@ -1,5 +1,7 @@
 package com.breixo.library.domain.port.output.user;
 
+import java.util.Optional;
+
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
 import com.breixo.library.domain.model.user.User;
 
@@ -13,7 +15,7 @@ public interface UserRetrievalPersistencePort {
      * Execute.
      *
      * @param userSearchCriteriaCommand the user search criteria command.
-     * @return the user.
+     * @return the user, or empty if not found.
      */
-    User execute(@Valid @NotNull UserSearchCriteriaCommand userSearchCriteriaCommand);
+    Optional<User> execute(@Valid @NotNull UserSearchCriteriaCommand userSearchCriteriaCommand);
 }

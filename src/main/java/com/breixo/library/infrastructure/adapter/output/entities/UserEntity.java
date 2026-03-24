@@ -2,7 +2,6 @@ package com.breixo.library.infrastructure.adapter.output.entities;
 
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /** The Class User Entity. */
@@ -20,9 +19,6 @@ public class UserEntity {
 
     /** The phone. */
     private String phone;
-
-    /** The membership expires. */
-    private LocalDate membershipExpires;
 
     /** The status. */
     private String status;

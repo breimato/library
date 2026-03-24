@@ -103,6 +103,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Apache Commons Collections -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.4</version>
+        </dependency>
+
         <!-- Instancio -->
         <dependency>
             <groupId>org.instancio</groupId>
@@ -131,7 +138,7 @@
                             <output>${project.build.directory}/generated-sources/openapi</output>
                             <apiPackage>com.breixo.library.infrastructure.adapter.input.web.api</apiPackage>
                             <modelPackage>com.breixo.library.infrastructure.adapter.input.web.dto</modelPackage>
-                            <modelNameMappings>BookV1=BookV1Dto,UserV1=UserV1Dto</modelNameMappings>
+                            <modelNameMappings>BookV1=BookV1Dto,UserV1=UserV1Dto,PostUserV1Request=PostUserV1RequestDto,PostUserV1Response=PostUserV1ResponseDto</modelNameMappings>
                             <configOptions>
                                 <interfaceOnly>true</interfaceOnly>
                                 <useSpringBoot3>true</useSpringBoot3>

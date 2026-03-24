@@ -70,6 +70,7 @@ class BookMapperTest {
      */
     @Test
     void testToBookV1_whenBookIsNull_thenReturnNull() {
+        // When / Then
         assertNull(this.bookMapper.toBookV1(null));
     }
 }

@@ -1,0 +1,5 @@
+description: "Post User V1 Response"
+type: object
+properties:
+  user:
+    $ref: '../components/UserV1.yaml'

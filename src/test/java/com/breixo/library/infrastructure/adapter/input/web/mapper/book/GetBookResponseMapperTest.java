@@ -53,6 +53,7 @@ class GetBookResponseMapperTest {
      */
     @Test
     void testToGetBookIdV1Response_whenBookIsNull_thenReturnNull() {
+        // When / Then
         assertNull(this.getBookResponseMapper.toGetBookIdV1Response(null));
     }
 }

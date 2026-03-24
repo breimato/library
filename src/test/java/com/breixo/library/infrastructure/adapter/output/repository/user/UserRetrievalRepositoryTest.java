@@ -1,10 +1,9 @@
 package com.breixo.library.infrastructure.adapter.output.repository.user;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
-import com.breixo.library.domain.exception.UserException;
-import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.infrastructure.adapter.output.entities.UserEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.UserEntityMapper;
@@ -18,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,24 +56,23 @@ class UserRetrievalRepositoryTest {
         // Then
         verify(this.userMyBatisMapper, times(1)).find(userSearchCriteriaCommand);
         verify(this.userEntityMapper, times(1)).toUser(userEntity);
-        assertEquals(user, result);
+        assertEquals(Optional.of(user), result);
     }
 
     /**
-     * Test execute when user not found then throw user not found exception.
+     * Test execute when user not found then return empty optional.
      */
     @Test
-    void testExecute_whenUserNotFound_thenThrowUserNotFoundException() {
+    void testExecute_whenUserNotFound_thenReturnEmptyOptional() {
         // Given
         final var userSearchCriteriaCommand = Instancio.create(UserSearchCriteriaCommand.class);
 
         // When
         when(this.userMyBatisMapper.find(userSearchCriteriaCommand)).thenReturn(List.of());
-        final var userException = assertThrows(UserException.class,
-                () -> this.userRetrievalPersistenceRepository.execute(userSearchCriteriaCommand));
+        final var result = this.userRetrievalPersistenceRepository.execute(userSearchCriteriaCommand);
 
         // Then
         verify(this.userMyBatisMapper, times(1)).find(userSearchCriteriaCommand);
-        assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR, userException.getMessage());
+        assertTrue(result.isEmpty());
     }
 }

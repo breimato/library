@@ -52,6 +52,7 @@ class PatchBookResponseMapperTest {
      */
     @Test
     void testToPatchBookV1Response_whenBookIsNull_thenReturnNull() {
+        // When / Then
         assertNull(this.patchBookResponseMapper.toPatchBookV1Response(null));
     }
 }

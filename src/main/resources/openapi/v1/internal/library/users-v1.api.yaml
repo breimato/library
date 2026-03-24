@@ -1,0 +1,31 @@
+post:
+  summary: "Create User V1"
+  description: "Create User V1"
+  operationId: "PostUserV1"
+  tags:
+    - post-user-v1
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/PostUserV1Request.yaml'
+  responses:
+    '201':
+      description: "201 Created"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/PostUserV1Response.yaml'
+    '409':
+      description: "Conflict - User email already exists"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

@@ -1,6 +1,8 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.user;
 
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
+import com.breixo.library.domain.exception.UserException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.api.GetUserIdV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetUserIdV1Response;
@@ -27,7 +29,10 @@ public class GetUserIdController implements GetUserIdV1Api {
 
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
 
-        final var user = this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand);
+        final var user = this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)
+                .orElseThrow(() -> new UserException(
+                        ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR));
 
         final var getUserIdV1Response = this.getUserResponseMapper.toGetUserIdV1Response(user);
 

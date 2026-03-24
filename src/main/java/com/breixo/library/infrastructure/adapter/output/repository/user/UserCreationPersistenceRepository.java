@@ -1,10 +1,9 @@
 package com.breixo.library.infrastructure.adapter.output.repository.user;
 
-import java.util.Optional;
-
+import com.breixo.library.domain.command.user.CreateUserCommand;
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
 import com.breixo.library.domain.model.user.User;
-import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
+import com.breixo.library.domain.port.output.user.UserCreationPersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mapper.UserEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.UserMyBatisMapper;
 
@@ -13,10 +12,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** The Class User Retrieval Persistence Repository. */
+/** The Class User Creation Persistence Repository. */
 @Component
 @RequiredArgsConstructor
-public class UserRetrievalPersistenceRepository implements UserRetrievalPersistencePort {
+public class UserCreationPersistenceRepository implements UserCreationPersistencePort {
 
     /** The user my batis mapper. */
     private final UserMyBatisMapper userMyBatisMapper;
@@ -26,16 +25,15 @@ public class UserRetrievalPersistenceRepository implements UserRetrievalPersiste
 
     /** {@inheritDoc} */
     @Override
-    public Optional<User> execute(@Valid @NotNull final UserSearchCriteriaCommand userSearchCriteriaCommand) {
+    public User execute(@Valid @NotNull final CreateUserCommand createUserCommand) {
 
-        final var userEntities = this.userMyBatisMapper.find(userSearchCriteriaCommand);
+        final var userEntity = this.userEntityMapper.toUserEntity(createUserCommand);
 
-        if (userEntities.isEmpty()) {
-            return Optional.empty();
-        }
+        this.userMyBatisMapper.insert(userEntity);
 
-        final var user = this.userEntityMapper.toUser(userEntities.getFirst());
+        final var idCriteria = UserSearchCriteriaCommand.builder().id(userEntity.getId()).build();
+        final var createdUserEntity = this.userMyBatisMapper.find(idCriteria).getFirst();
 
-        return Optional.of(user);
+        return this.userEntityMapper.toUser(createdUserEntity);
     }
 }

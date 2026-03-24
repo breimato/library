@@ -14,10 +14,6 @@ properties:
   phone:
     type: string
     description: "User phone"
-  membershipExpires:
-    type: string
-    format: date
-    description: "Membership expiration date"
   status:
     type: integer
     format: int32

@@ -52,6 +52,7 @@ class PostBookResponseMapperTest {
      */
     @Test
     void testToPostBookV1Response_whenBookIsNull_thenReturnNull() {
+        // When / Then
         assertNull(this.postBookResponseMapper.toPostBookV1Response(null));
     }
 }

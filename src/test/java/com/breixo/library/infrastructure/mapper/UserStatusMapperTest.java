@@ -22,6 +22,7 @@ class UserStatusMapperTest {
      */
     @Test
     void testToStatusValue_whenStatusIsActive_thenReturnZero() {
+        // When / Then
         assertEquals(UserStatus.ACTIVE.getId(), this.userStatusMapper.toStatusId(UserStatus.ACTIVE));
     }
 
@@ -30,6 +31,7 @@ class UserStatusMapperTest {
      */
     @Test
     void testToStatusValue_whenStatusIsSuspended_thenReturnOne() {
+        // When / Then
         assertEquals(UserStatus.SUSPENDED.getId(), this.userStatusMapper.toStatusId(UserStatus.SUSPENDED));
     }
 
@@ -38,6 +40,7 @@ class UserStatusMapperTest {
      */
     @Test
     void testToStatusValue_whenStatusIsBlocked_thenReturnTwo() {
+        // When / Then
         assertEquals(UserStatus.BLOCKED.getId(), this.userStatusMapper.toStatusId(UserStatus.BLOCKED));
     }
 
@@ -46,6 +49,7 @@ class UserStatusMapperTest {
      */
     @Test
     void testToUserStatus_whenIdIsActive_thenReturnActive() {
+        // When / Then
         assertEquals(UserStatus.ACTIVE, this.userStatusMapper.toUserStatus("active"));
     }
 
@@ -54,6 +58,7 @@ class UserStatusMapperTest {
      */
     @Test
     void testToUserStatus_whenIdIsSuspended_thenReturnSuspended() {
+        // When / Then
         assertEquals(UserStatus.SUSPENDED, this.userStatusMapper.toUserStatus("suspended"));
     }
 
@@ -62,6 +67,7 @@ class UserStatusMapperTest {
      */
     @Test
     void testToUserStatus_whenIdIsBlocked_thenReturnBlocked() {
+        // When / Then
         assertEquals(UserStatus.BLOCKED, this.userStatusMapper.toUserStatus("blocked"));
     }
 }

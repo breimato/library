@@ -60,6 +60,7 @@ class BookEntityMapperTest {
      */
     @Test
     void testToBook_whenBookEntityIsNull_thenReturnNull() {
+        // When / Then
         assertNull(this.bookEntityMapper.toBook(null));
     }
 
@@ -89,6 +90,7 @@ class BookEntityMapperTest {
      */
     @Test
     void testToBookEntity_whenCreateBookCommandIsNull_thenReturnNull() {
+        // When / Then
         assertNull(this.bookEntityMapper.toBookEntity(null));
     }
 }

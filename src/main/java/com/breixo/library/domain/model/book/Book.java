@@ -6,6 +6,7 @@ import com.breixo.library.domain.vo.Isbn;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
 /**
  * The Record Book.
@@ -20,6 +21,7 @@ import jakarta.validation.constraints.NotNull;
  * @param createdAt       The created at.
  * @param updatedAt       The updated at.
  */
+@Builder
 public record Book(@NotNull Long id, @NotNull Isbn isbn, @NotBlank String title, @NotBlank String author,
                    @NotBlank String genre, @NotNull Integer totalCopies, @NotNull Integer availableCopies,
                    @NotNull LocalDateTime createdAt, @NotNull LocalDateTime updatedAt) {

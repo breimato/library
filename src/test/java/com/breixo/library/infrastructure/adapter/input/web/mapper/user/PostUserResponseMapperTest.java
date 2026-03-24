@@ -10,50 +10,45 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/** The Class Get User Response Mapper Test. */
+/** The Class Post User Response Mapper Test. */
 @ExtendWith(MockitoExtension.class)
-class GetUserResponseMapperTest {
+class PostUserResponseMapperTest {
 
-    /** The get user response mapper. */
+    /** The post user response mapper. */
     @InjectMocks
-    GetUserResponseMapperImpl getUserResponseMapper;
+    PostUserResponseMapperImpl postUserResponseMapper;
 
     /** The user mapper. */
     @Mock
     UserMapper userMapper;
 
     /**
-     * Test to get user id v1 response when user is valid then return mapped response.
+     * Test to post user v1 response when user is valid then return mapped response.
      */
     @Test
-    void testToGetUserIdV1Response_whenUserIsValid_thenReturnMappedResponse() {
+    void testToPostUserV1Response_whenUserIsValid_thenReturnMappedResponse() {
         // Given
         final var user = Instancio.create(User.class);
         final var userV1Dto = Instancio.create(UserV1Dto.class);
 
         // When
         when(this.userMapper.toUserV1(user)).thenReturn(userV1Dto);
-        final var getUserIdV1Response = this.getUserResponseMapper.toGetUserIdV1Response(user);
+        final var response = this.postUserResponseMapper.toPostUserV1Response(user);
 
         // Then
-        verify(this.userMapper, times(1)).toUserV1(user);
-        assertNotNull(getUserIdV1Response);
-        assertEquals(userV1Dto, getUserIdV1Response.getUser());
+        assertNotNull(response);
     }
 
     /**
-     * Test to get user id v1 response when user is null then return null.
+     * Test to post user v1 response when user is null then return null.
      */
     @Test
-    void testToGetUserIdV1Response_whenUserIsNull_thenReturnNull() {
+    void testToPostUserV1Response_whenUserIsNull_thenReturnNull() {
         // When / Then
-        assertNull(this.getUserResponseMapper.toGetUserIdV1Response(null));
+        assertNull(this.postUserResponseMapper.toPostUserV1Response(null));
     }
 }

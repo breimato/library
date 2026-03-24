@@ -44,8 +44,9 @@ class UserMapperTest {
     void testToUserV1_whenStatusIsActive_thenReturnMappedDtoWithActiveStatus() {
         // Given
         final var base = Instancio.create(User.class);
-        final var user = new User(base.id(), base.name(), base.email(), base.phone(),
-                base.membershipExpires(), UserStatus.ACTIVE, base.createdAt(), base.updatedAt());
+        final var user = User.builder().id(base.id()).name(base.name()).email(base.email())
+                .phone(base.phone()).status(UserStatus.ACTIVE).createdAt(base.createdAt())
+                .updatedAt(base.updatedAt()).build();
 
         // When
         when(this.dateMapper.toOffsetDateTime(user.createdAt())).thenReturn(user.createdAt().atOffset(ZoneOffset.UTC));
@@ -61,7 +62,6 @@ class UserMapperTest {
         assertEquals(user.name(), userV1Dto.getName());
         assertEquals(user.email(), userV1Dto.getEmail());
         assertEquals(user.phone(), userV1Dto.getPhone());
-        assertEquals(user.membershipExpires(), userV1Dto.getMembershipExpires());
         assertEquals(UserStatus.ACTIVE.getId(), userV1Dto.getStatus());
         assertEquals(user.createdAt().atOffset(ZoneOffset.UTC), userV1Dto.getCreatedAt());
         assertEquals(user.updatedAt().atOffset(ZoneOffset.UTC), userV1Dto.getUpdatedAt());
@@ -74,8 +74,9 @@ class UserMapperTest {
     void testToUserV1_whenStatusIsSuspended_thenReturnMappedDtoWithSuspendedStatus() {
         // Given
         final var base = Instancio.create(User.class);
-        final var user = new User(base.id(), base.name(), base.email(), base.phone(),
-                base.membershipExpires(), UserStatus.SUSPENDED, base.createdAt(), base.updatedAt());
+        final var user = User.builder().id(base.id()).name(base.name()).email(base.email())
+                .phone(base.phone()).status(UserStatus.SUSPENDED).createdAt(base.createdAt())
+                .updatedAt(base.updatedAt()).build();
 
         // When
         when(this.dateMapper.toOffsetDateTime(user.createdAt())).thenReturn(user.createdAt().atOffset(ZoneOffset.UTC));
@@ -95,8 +96,9 @@ class UserMapperTest {
     void testToUserV1_whenStatusIsBlocked_thenReturnMappedDtoWithBlockedStatus() {
         // Given
         final var base = Instancio.create(User.class);
-        final var user = new User(base.id(), base.name(), base.email(), base.phone(),
-                base.membershipExpires(), UserStatus.BLOCKED, base.createdAt(), base.updatedAt());
+        final var user = User.builder().id(base.id()).name(base.name()).email(base.email())
+                .phone(base.phone()).status(UserStatus.BLOCKED).createdAt(base.createdAt())
+                .updatedAt(base.updatedAt()).build();
 
         // When
         when(this.dateMapper.toOffsetDateTime(user.createdAt())).thenReturn(user.createdAt().atOffset(ZoneOffset.UTC));
@@ -114,6 +116,7 @@ class UserMapperTest {
      */
     @Test
     void testToUserV1_whenUserIsNull_thenReturnNull() {
+        // When / Then
         assertNull(this.userMapper.toUserV1(null));
     }
 }

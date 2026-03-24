@@ -4,6 +4,7 @@ import com.breixo.library.domain.vo.Isbn;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
 /**
  * The Record Create Book Command.
@@ -15,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
  * @param totalCopies     The total copies.
  * @param availableCopies The available copies.
  */
+@Builder
 public record CreateBookCommand(@NotNull Isbn isbn, @NotBlank String title, @NotBlank String author,
                                 @NotBlank String genre, @NotNull Integer totalCopies,
                                 @NotNull Integer availableCopies) {

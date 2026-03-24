@@ -27,4 +27,10 @@ public class ExceptionMessageConstants {
 
     /** The Constant USER_NOT_FOUND_MESSAGE_ERROR. */
     public static final String USER_NOT_FOUND_MESSAGE_ERROR = "Error: User not found";
+
+    /** The Constant USER_EMAIL_ALREADY_EXISTS_CODE_ERROR. */
+    public static final String USER_EMAIL_ALREADY_EXISTS_CODE_ERROR = "LIB-USER-002";
+
+    /** The Constant USER_EMAIL_ALREADY_EXISTS_MESSAGE_ERROR. */
+    public static final String USER_EMAIL_ALREADY_EXISTS_MESSAGE_ERROR = "Error: User email already exists";
 }
