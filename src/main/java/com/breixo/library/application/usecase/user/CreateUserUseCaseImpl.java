@@ -32,7 +32,7 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
 
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().email(createUserCommand.email()).build();
 
-        final var emailAlreadyExists = this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand).isPresent();
+        final var emailAlreadyExists = this.userRetrievalPersistencePort.find(userSearchCriteriaCommand).isPresent();
 
         if (emailAlreadyExists) {
             throw new UserException(

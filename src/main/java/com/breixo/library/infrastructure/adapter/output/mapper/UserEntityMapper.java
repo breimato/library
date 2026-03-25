@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.mapper;
 
+import java.util.List;
+
 import com.breixo.library.domain.command.user.CreateUserCommand;
 import com.breixo.library.domain.command.user.UpdateUserCommand;
 import com.breixo.library.domain.model.user.User;
@@ -22,6 +24,14 @@ public interface UserEntityMapper {
      */
     @Mapping(source = "statusId", target = "status")
     User toUser(UserEntity userEntity);
+
+    /**
+     * To user list.
+     *
+     * @param userEntities the user entities.
+     * @return the user list.
+     */
+    List<User> toUserList(List<UserEntity> userEntities);
 
     /**
      * To user entity.

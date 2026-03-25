@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.mapper;
 
+import java.util.List;
+
 import com.breixo.library.domain.command.user.CreateUserCommand;
 import com.breixo.library.domain.command.user.UpdateUserCommand;
 import com.breixo.library.domain.model.user.UserStatus;
@@ -16,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /** The Class User Entity Mapper Test. */
@@ -115,5 +119,39 @@ class UserEntityMapperTest {
     void testToUserEntity_whenUpdateUserCommandIsNull_thenReturnNull() {
         // When / Then
         assertNull(this.userEntityMapper.toUserEntity((UpdateUserCommand) null));
+    }
+
+    /**
+     * Test to user list when user entities are valid then return mapped user list.
+     */
+    @Test
+    void testToUserList_whenUserEntitiesAreValid_thenReturnMappedUserList() {
+        // Given
+        final var userEntity = Instancio.create(UserEntity.class);
+        userEntity.setStatusId(UserStatus.ACTIVE.getId());
+        final var userEntities = List.of(userEntity);
+
+        // When
+        when(this.userStatusMapper.toUserStatus(userEntity.getStatusId())).thenReturn(UserStatus.ACTIVE);
+        final var users = this.userEntityMapper.toUserList(userEntities);
+
+        // Then
+        verify(this.userStatusMapper, times(1)).toUserStatus(userEntity.getStatusId());
+        assertNotNull(users);
+        assertEquals(1, users.size());
+        assertEquals(userEntity.getId(), users.getFirst().id());
+    }
+
+    /**
+     * Test to user list when user entities list is empty then return empty list.
+     */
+    @Test
+    void testToUserList_whenUserEntitiesListIsEmpty_thenReturnEmptyList() {
+        // When
+        final var users = this.userEntityMapper.toUserList(List.of());
+
+        // Then
+        assertNotNull(users);
+        assertEquals(0, users.size());
     }
 }

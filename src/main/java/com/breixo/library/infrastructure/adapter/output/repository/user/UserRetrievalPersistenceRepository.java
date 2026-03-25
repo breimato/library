@@ -1,5 +1,6 @@
 package com.breixo.library.infrastructure.adapter.output.repository.user;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
@@ -26,7 +27,7 @@ public class UserRetrievalPersistenceRepository implements UserRetrievalPersiste
 
     /** {@inheritDoc} */
     @Override
-    public Optional<User> execute(@Valid @NotNull final UserSearchCriteriaCommand userSearchCriteriaCommand) {
+    public Optional<User> find(@Valid @NotNull final UserSearchCriteriaCommand userSearchCriteriaCommand) {
 
         final var userEntities = this.userMyBatisMapper.find(userSearchCriteriaCommand);
 
@@ -37,5 +38,14 @@ public class UserRetrievalPersistenceRepository implements UserRetrievalPersiste
         final var user = this.userEntityMapper.toUser(userEntities.getFirst());
 
         return Optional.of(user);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<User> findAll() {
+
+        final var userEntities = this.userMyBatisMapper.findAll();
+
+        return this.userEntityMapper.toUserList(userEntities);
     }
 }

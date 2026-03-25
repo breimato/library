@@ -28,8 +28,8 @@ public class GetBooksController implements GetBooksV1Api {
 
         final var bookV1DtoList = this.bookMapper.toBookV1List(books);
 
-        final var response = GetBooksV1ResponseDto.builder().books(bookV1DtoList).build();
+        final var getBooksV1ResponseDto = GetBooksV1ResponseDto.builder().books(bookV1DtoList).build();
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(getBooksV1ResponseDto);
     }
 }

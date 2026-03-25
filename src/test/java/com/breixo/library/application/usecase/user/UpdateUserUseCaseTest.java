@@ -49,7 +49,7 @@ class UpdateUserUseCaseTest {
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(updateUserCommand.id()).build();
 
         // When
-        when(this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)).thenReturn(Optional.of(existingUser));
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.of(existingUser));
         when(this.userUpdatePersistencePort.execute(updateUserCommand)).thenReturn(updatedUser);
         final var result = this.updateUserUseCase.execute(updateUserCommand);
 
@@ -67,7 +67,7 @@ class UpdateUserUseCaseTest {
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(updateUserCommand.id()).build();
 
         // When
-        when(this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)).thenReturn(Optional.empty());
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.empty());
         final var exception = assertThrows(UserException.class,
                 () -> this.updateUserUseCase.execute(updateUserCommand));
 

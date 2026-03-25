@@ -40,6 +40,14 @@ public interface UserMyBatisMapper {
     List<UserEntity> find(UserSearchCriteriaCommand userSearchCriteriaCommand);
 
     /**
+     * Find all.
+     *
+     * @return the list of user entities.
+     */
+    @Select("select id, name, email, phone, status_id from users")
+    List<UserEntity> findAll();
+
+    /**
      * Insert.
      *
      * @param userEntity the user entity.

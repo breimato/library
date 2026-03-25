@@ -48,7 +48,7 @@ class CreateUserUseCaseTest {
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().email(createUserCommand.email()).build();
 
         // When
-        when(this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)).thenReturn(Optional.empty());
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.empty());
         when(this.userCreationPersistencePort.execute(createUserCommand)).thenReturn(user);
         final var result = this.createUserUseCase.execute(createUserCommand);
 
@@ -67,7 +67,7 @@ class CreateUserUseCaseTest {
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().email(createUserCommand.email()).build();
 
         // When
-        when(this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)).thenReturn(Optional.of(user));
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.of(user));
         final var exception = assertThrows(UserException.class,
                 () -> this.createUserUseCase.execute(createUserCommand));
 

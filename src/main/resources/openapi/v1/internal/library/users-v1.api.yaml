@@ -1,3 +1,22 @@
+get:
+  summary: "Get Users V1"
+  description: "Get all users"
+  operationId: "GetUsersV1"
+  tags:
+    - get-users-v1
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/GetUsersV1Response.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
 post:
   summary: "Create User V1"
   description: "Create User V1"

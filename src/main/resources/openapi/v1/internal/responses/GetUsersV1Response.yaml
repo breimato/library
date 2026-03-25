@@ -1,0 +1,7 @@
+description: "Get Users V1 Response"
+type: object
+properties:
+  users:
+    type: array
+    items:
+      $ref: '../components/UserV1.yaml'

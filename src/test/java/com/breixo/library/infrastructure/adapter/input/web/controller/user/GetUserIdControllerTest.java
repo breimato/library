@@ -71,7 +71,7 @@ class GetUserIdControllerTest {
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
 
         // When
-        when(this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)).thenReturn(Optional.of(user));
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.of(user));
         when(this.userResponseMapper.toUserV1Response(user)).thenReturn(userV1ResponseDto);
 
         this.mockMvc.perform(get(URL, id).accept(MediaType.APPLICATION_JSON))
@@ -79,7 +79,7 @@ class GetUserIdControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Then
-        verify(this.userRetrievalPersistencePort, times(1)).execute(userSearchCriteriaCommand);
+        verify(this.userRetrievalPersistencePort, times(1)).find(userSearchCriteriaCommand);
         verify(this.userResponseMapper, times(1)).toUserV1Response(user);
     }
 
@@ -93,12 +93,12 @@ class GetUserIdControllerTest {
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
 
         // When
-        when(this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)).thenReturn(Optional.empty());
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.empty());
         final var userException = assertThrows(UserException.class,
                 () -> this.getUserIdController.getUserIdV1(id));
 
         // Then
-        verify(this.userRetrievalPersistencePort, times(1)).execute(userSearchCriteriaCommand);
+        verify(this.userRetrievalPersistencePort, times(1)).find(userSearchCriteriaCommand);
         verifyNoInteractions(this.userResponseMapper);
         assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR, userException.getCode());
         assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR, userException.getMessage());

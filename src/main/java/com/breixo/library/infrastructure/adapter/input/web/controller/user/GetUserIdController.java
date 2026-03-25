@@ -29,7 +29,7 @@ public class GetUserIdController implements GetUserIdV1Api {
 
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
 
-        final var user = this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)
+        final var user = this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)
                 .orElseThrow(() -> new UserException(
                         ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
                         ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR));
