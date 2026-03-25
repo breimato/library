@@ -1,7 +1,5 @@
 package com.breixo.library.domain.exception;
 
-import org.springframework.http.HttpStatus;
-
 import lombok.Getter;
 
 /** The Class Library Exception. */
@@ -14,19 +12,14 @@ public abstract class LibraryException extends RuntimeException {
     /** The code. */
     private final String code;
 
-    /** The http status. */
-    private final HttpStatus httpStatus;
-
     /**
      * Instantiates a new library exception.
      *
-     * @param code the code
+     * @param code    the code
      * @param message the message
-     * @param httpStatus the http status
      */
-    protected LibraryException(final String code, final String message, final HttpStatus httpStatus) {
+    protected LibraryException(final String code, final String message) {
         super(message);
         this.code = code;
-        this.httpStatus = httpStatus;
     }
 }

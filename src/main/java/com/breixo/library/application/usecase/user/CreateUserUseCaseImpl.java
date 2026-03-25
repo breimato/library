@@ -12,7 +12,6 @@ import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 /** The Class Create User Use Case Impl. */
@@ -37,8 +36,7 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
         if (emailAlreadyExists) {
             throw new UserException(
                     ExceptionMessageConstants.USER_EMAIL_ALREADY_EXISTS_CODE_ERROR,
-                    ExceptionMessageConstants.USER_EMAIL_ALREADY_EXISTS_MESSAGE_ERROR,
-                    HttpStatus.CONFLICT);
+                    ExceptionMessageConstants.USER_EMAIL_ALREADY_EXISTS_MESSAGE_ERROR);
         }
 
         return this.userCreationPersistencePort.execute(createUserCommand);

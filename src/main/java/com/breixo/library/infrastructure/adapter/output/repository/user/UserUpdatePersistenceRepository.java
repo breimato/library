@@ -2,6 +2,8 @@ package com.breixo.library.infrastructure.adapter.output.repository.user;
 
 import com.breixo.library.domain.command.user.UpdateUserCommand;
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
+import com.breixo.library.domain.exception.UserException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.port.output.user.UserUpdatePersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mapper.UserEntityMapper;
@@ -37,7 +39,13 @@ public class UserUpdatePersistenceRepository implements UserUpdatePersistencePor
      */
     private void update(final UpdateUserCommand updateUserCommand) {
         final var userEntity = this.userEntityMapper.toUserEntity(updateUserCommand);
-        this.userMyBatisMapper.update(userEntity);
+        try {
+            this.userMyBatisMapper.update(userEntity);
+        } catch (final Exception exception) {
+            throw new UserException(
+                    ExceptionMessageConstants.USER_UPDATE_ERROR_CODE_ERROR,
+                    ExceptionMessageConstants.USER_UPDATE_ERROR_MESSAGE_ERROR);
+        }
     }
 
     /**
@@ -48,7 +56,7 @@ public class UserUpdatePersistenceRepository implements UserUpdatePersistencePor
      */
     private User find(final Long id) {
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
-        final var updatedUserEntities = this.userMyBatisMapper.find(userSearchCriteriaCommand);
-        return this.userEntityMapper.toUser(updatedUserEntities.getFirst());
+        final var userEntities = this.userMyBatisMapper.find(userSearchCriteriaCommand);
+        return this.userEntityMapper.toUser(userEntities.getFirst());
     }
 }

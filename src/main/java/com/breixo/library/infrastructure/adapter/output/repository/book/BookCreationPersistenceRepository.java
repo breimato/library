@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.repository.book;
 
+import com.breixo.library.domain.exception.BookException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.command.book.CreateBookCommand;
@@ -39,7 +41,13 @@ public class BookCreationPersistenceRepository implements BookCreationPersistenc
      */
     private BookEntity insert(final CreateBookCommand createBookCommand) {
         final var bookEntity = this.bookEntityMapper.toBookEntity(createBookCommand);
-        this.bookMyBatisMapper.insert(bookEntity);
+        try {
+            this.bookMyBatisMapper.insert(bookEntity);
+        } catch (final Exception exception) {
+            throw new BookException(
+                    ExceptionMessageConstants.BOOK_CREATION_ERROR_CODE_ERROR,
+                    ExceptionMessageConstants.BOOK_CREATION_ERROR_MESSAGE_ERROR);
+        }
         return bookEntity;
     }
 

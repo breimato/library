@@ -1,7 +1,5 @@
 package com.breixo.library.domain.exception;
 
-import org.springframework.http.HttpStatus;
-
 /** The Class Isbn Exception. */
 public class IsbnException extends LibraryException {
 
@@ -15,6 +13,6 @@ public class IsbnException extends LibraryException {
      * @param message the message.
      */
     public IsbnException(final String code, final String message) {
-        super(code, message, HttpStatus.BAD_REQUEST);
+        super(code, message);
     }
 }
