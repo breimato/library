@@ -32,6 +32,7 @@ public class UpdateBookUseCaseImpl implements UpdateBookUseCase {
 
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(updateBookCommand.id()).build();
         final var bookExists = this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand).isPresent();
+
         if (BooleanUtils.isFalse(bookExists)) {
             throw new BookException(
                     ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,

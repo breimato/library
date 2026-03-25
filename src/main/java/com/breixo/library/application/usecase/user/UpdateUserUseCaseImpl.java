@@ -32,6 +32,7 @@ public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
 
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(updateUserCommand.id()).build();
         final var userExists = this.userRetrievalPersistencePort.find(userSearchCriteriaCommand).isPresent();
+
         if (BooleanUtils.isFalse(userExists)) {
             throw new UserException(
                     ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,

@@ -38,9 +38,12 @@ public class UserUpdatePersistenceRepository implements UserUpdatePersistencePor
      * @param updateUserCommand the update user command.
      */
     private void update(final UpdateUserCommand updateUserCommand) {
+
         final var userEntity = this.userEntityMapper.toUserEntity(updateUserCommand);
+
         try {
             this.userMyBatisMapper.update(userEntity);
+
         } catch (final Exception exception) {
             throw new UserException(
                     ExceptionMessageConstants.USER_UPDATE_ERROR_CODE_ERROR,
@@ -55,8 +58,11 @@ public class UserUpdatePersistenceRepository implements UserUpdatePersistencePor
      * @return the user.
      */
     private User find(final Long id) {
+
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
+
         final var userEntities = this.userMyBatisMapper.find(userSearchCriteriaCommand);
+
         return this.userEntityMapper.toUser(userEntities.getFirst());
     }
 }

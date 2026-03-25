@@ -38,8 +38,10 @@ public class BookUpdatePersistenceRepository implements BookUpdatePersistencePor
      * @param updateBookCommand the update book command.
      */
     private void update(final UpdateBookCommand updateBookCommand) {
+
         try {
             this.bookMyBatisMapper.update(updateBookCommand);
+
         } catch (final Exception exception) {
             throw new BookException(
                     ExceptionMessageConstants.BOOK_UPDATE_ERROR_CODE_ERROR,
@@ -54,8 +56,11 @@ public class BookUpdatePersistenceRepository implements BookUpdatePersistencePor
      * @return the book.
      */
     private Book find(final Long id) {
+
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
+
         final var bookEntity = this.bookMyBatisMapper.find(bookSearchCriteriaCommand).getFirst();
+
         return this.bookEntityMapper.toBook(bookEntity);
     }
 }

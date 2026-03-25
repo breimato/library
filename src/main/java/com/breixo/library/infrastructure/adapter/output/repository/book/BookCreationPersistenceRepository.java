@@ -40,9 +40,12 @@ public class BookCreationPersistenceRepository implements BookCreationPersistenc
      * @return the book entity.
      */
     private BookEntity insert(final CreateBookCommand createBookCommand) {
+
         final var bookEntity = this.bookEntityMapper.toBookEntity(createBookCommand);
+
         try {
             this.bookMyBatisMapper.insert(bookEntity);
+
         } catch (final Exception exception) {
             throw new BookException(
                     ExceptionMessageConstants.BOOK_CREATION_ERROR_CODE_ERROR,
@@ -58,8 +61,11 @@ public class BookCreationPersistenceRepository implements BookCreationPersistenc
      * @return the book.
      */
     private Book find(final Long id) {
+
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
+
         final var bookEntity = this.bookMyBatisMapper.find(bookSearchCriteriaCommand).getFirst();
+
         return this.bookEntityMapper.toBook(bookEntity);
     }
 }
