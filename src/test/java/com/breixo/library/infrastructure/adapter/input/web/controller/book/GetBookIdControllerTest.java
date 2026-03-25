@@ -71,7 +71,7 @@ class GetBookIdControllerTest {
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
 
         // When
-        when(this.bookRetrievalPersistencePort.execute(bookSearchCriteriaCommand)).thenReturn(Optional.of(book));
+        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(Optional.of(book));
         when(this.bookResponseMapper.toBookV1Response(book)).thenReturn(bookV1ResponseDto);
 
         this.mockMvc.perform(get(URL, id).accept(MediaType.APPLICATION_JSON))
@@ -79,7 +79,7 @@ class GetBookIdControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Then
-        verify(this.bookRetrievalPersistencePort, times(1)).execute(bookSearchCriteriaCommand);
+        verify(this.bookRetrievalPersistencePort, times(1)).find(bookSearchCriteriaCommand);
         verify(this.bookResponseMapper, times(1)).toBookV1Response(book);
     }
 
@@ -93,12 +93,12 @@ class GetBookIdControllerTest {
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
 
         // When
-        when(this.bookRetrievalPersistencePort.execute(bookSearchCriteriaCommand)).thenReturn(Optional.empty());
+        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(Optional.empty());
         final var bookException = assertThrows(BookException.class,
                 () -> this.getBookIdController.getBookIdV1(id));
 
         // Then
-        verify(this.bookRetrievalPersistencePort, times(1)).execute(bookSearchCriteriaCommand);
+        verify(this.bookRetrievalPersistencePort, times(1)).find(bookSearchCriteriaCommand);
         verifyNoInteractions(this.bookResponseMapper);
         assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR, bookException.getCode());
         assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, bookException.getMessage());

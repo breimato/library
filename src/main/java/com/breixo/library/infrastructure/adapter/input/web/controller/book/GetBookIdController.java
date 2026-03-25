@@ -29,7 +29,7 @@ public class GetBookIdController implements GetBookIdV1Api {
 
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
 
-        final var book = this.bookRetrievalPersistencePort.execute(bookSearchCriteriaCommand)
+        final var book = this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)
                 .orElseThrow(() -> new BookException(
                         ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
                         ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR));

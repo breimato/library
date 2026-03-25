@@ -1,5 +1,6 @@
 package com.breixo.library.infrastructure.adapter.output.repository.book;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.breixo.library.domain.model.book.Book;
@@ -26,7 +27,7 @@ public class BookRetrievalPersistenceRepository implements BookRetrievalPersiste
 
     /** {@inheritDoc} */
     @Override
-    public Optional<Book> execute(@Valid @NotNull final BookSearchCriteriaCommand bookSearchCriteriaCommand) {
+    public Optional<Book> find(@Valid @NotNull final BookSearchCriteriaCommand bookSearchCriteriaCommand) {
 
         final var bookEntities = this.bookMyBatisMapper.find(bookSearchCriteriaCommand);
 
@@ -37,5 +38,14 @@ public class BookRetrievalPersistenceRepository implements BookRetrievalPersiste
         final var book = this.bookEntityMapper.toBook(bookEntities.getFirst());
 
         return Optional.of(book);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Book> findAll() {
+
+        final var bookEntities = this.bookMyBatisMapper.findAll();
+
+        return this.bookEntityMapper.toBookList(bookEntities);
     }
 }

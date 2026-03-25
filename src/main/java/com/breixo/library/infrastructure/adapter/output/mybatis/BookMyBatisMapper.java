@@ -46,6 +46,14 @@ public interface BookMyBatisMapper {
     List<BookEntity> find(BookSearchCriteriaCommand bookSearchCriteriaCommand);
 
     /**
+     * Find all.
+     *
+     * @return the list of all book entities.
+     */
+    @Select("select id, isbn, title, author, genre, total_copies, available_copies from books")
+    List<BookEntity> findAll();
+
+    /**
      * Insert.
      *
      * @param bookEntity the book entity.

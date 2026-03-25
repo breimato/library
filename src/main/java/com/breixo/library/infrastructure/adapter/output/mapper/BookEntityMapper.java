@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.mapper;
 
+import java.util.List;
+
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.CreateBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
@@ -18,6 +20,14 @@ public interface BookEntityMapper {
      * @return the book.
      */
     Book toBook(BookEntity bookEntity);
+
+    /**
+     * To book list.
+     *
+     * @param bookEntities the book entities.
+     * @return the book list.
+     */
+    List<Book> toBookList(List<BookEntity> bookEntities);
 
     /**
      * To book entity.

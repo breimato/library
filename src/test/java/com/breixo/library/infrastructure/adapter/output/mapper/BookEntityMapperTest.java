@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.mapper;
 
+import java.util.List;
+
 import com.breixo.library.domain.command.book.CreateBookCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
 import com.breixo.library.infrastructure.mapper.IsbnMapperImpl;
@@ -90,5 +92,37 @@ class BookEntityMapperTest {
     void testToBookEntity_whenCreateBookCommandIsNull_thenReturnNull() {
         // When / Then
         assertNull(this.bookEntityMapper.toBookEntity(null));
+    }
+
+    /**
+     * Test to book list when book entities are valid then return mapped book list.
+     */
+    @Test
+    void testToBookList_whenBookEntitiesAreValid_thenReturnMappedBookList() {
+        // Given
+        final var bookEntity = Instancio.create(BookEntity.class);
+        bookEntity.setIsbn(VALID_ISBN);
+        final var bookEntities = List.of(bookEntity);
+
+        // When
+        final var books = this.bookEntityMapper.toBookList(bookEntities);
+
+        // Then
+        assertNotNull(books);
+        assertEquals(1, books.size());
+        assertEquals(bookEntity.getId(), books.getFirst().id());
+    }
+
+    /**
+     * Test to book list when book entities list is empty then return empty list.
+     */
+    @Test
+    void testToBookList_whenBookEntitiesListIsEmpty_thenReturnEmptyList() {
+        // When
+        final var books = this.bookEntityMapper.toBookList(List.of());
+
+        // Then
+        assertNotNull(books);
+        assertEquals(0, books.size());
     }
 }

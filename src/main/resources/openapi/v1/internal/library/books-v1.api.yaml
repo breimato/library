@@ -1,3 +1,22 @@
+get:
+  summary: "Get Books V1"
+  description: "Get all books"
+  operationId: "GetBooksV1"
+  tags:
+    - get-books-v1
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/GetBooksV1Response.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
 post:
   summary: "Post Book V1"
   description: "Create a new book"

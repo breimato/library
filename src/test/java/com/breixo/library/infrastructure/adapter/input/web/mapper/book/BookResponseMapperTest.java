@@ -56,4 +56,5 @@ class BookResponseMapperTest {
         // When / Then
         assertNull(this.bookResponseMapper.toBookV1Response(null));
     }
+
 }

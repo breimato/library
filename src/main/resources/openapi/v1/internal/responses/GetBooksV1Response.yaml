@@ -1,0 +1,7 @@
+description: "Get Books V1 Response"
+type: object
+properties:
+  books:
+    type: array
+    items:
+      $ref: '../components/BookV1.yaml'

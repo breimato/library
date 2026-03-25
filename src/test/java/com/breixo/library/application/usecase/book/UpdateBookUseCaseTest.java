@@ -51,12 +51,12 @@ class UpdateBookUseCaseTest {
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(updateBookCommand.id()).build();
 
         // When
-        when(this.bookRetrievalPersistencePort.execute(bookSearchCriteriaCommand)).thenReturn(Optional.of(existingBook));
+        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(Optional.of(existingBook));
         when(this.bookUpdatePersistencePort.execute(updateBookCommand)).thenReturn(updatedBook);
         final var result = this.updateBookUseCase.execute(updateBookCommand);
 
         // Then
-        verify(this.bookRetrievalPersistencePort, times(1)).execute(bookSearchCriteriaCommand);
+        verify(this.bookRetrievalPersistencePort, times(1)).find(bookSearchCriteriaCommand);
         verify(this.bookUpdatePersistencePort, times(1)).execute(updateBookCommand);
         assertEquals(updatedBook, result);
     }
@@ -71,12 +71,12 @@ class UpdateBookUseCaseTest {
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(updateBookCommand.id()).build();
 
         // When
-        when(this.bookRetrievalPersistencePort.execute(bookSearchCriteriaCommand)).thenReturn(Optional.empty());
+        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(Optional.empty());
         final var exception = assertThrows(BookException.class,
                 () -> this.updateBookUseCase.execute(updateBookCommand));
 
         // Then
-        verify(this.bookRetrievalPersistencePort, times(1)).execute(bookSearchCriteriaCommand);
+        verify(this.bookRetrievalPersistencePort, times(1)).find(bookSearchCriteriaCommand);
         verify(this.bookUpdatePersistencePort, times(0)).execute(updateBookCommand);
         assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, exception.getMessage());
     }

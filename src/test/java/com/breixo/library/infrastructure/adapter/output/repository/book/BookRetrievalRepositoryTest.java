@@ -39,10 +39,10 @@ class BookRetrievalRepositoryTest {
     BookEntityMapper bookEntityMapper;
 
     /**
-     * Test execute when book found then return book.
+     * Test find when book found then return book.
      */
     @Test
-    void testExecute_whenBookFound_thenReturnBook() {
+    void testFind_whenBookFound_thenReturnBook() {
         // Given
         final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
         final var bookEntity = Instancio.create(BookEntity.class);
@@ -51,7 +51,7 @@ class BookRetrievalRepositoryTest {
         // When
         when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of(bookEntity));
         when(this.bookEntityMapper.toBook(bookEntity)).thenReturn(book);
-        final var result = this.bookRetrievalPersistenceRepository.execute(bookSearchCriteriaCommand);
+        final var result = this.bookRetrievalPersistenceRepository.find(bookSearchCriteriaCommand);
 
         // Then
         verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
@@ -60,19 +60,58 @@ class BookRetrievalRepositoryTest {
     }
 
     /**
-     * Test execute when book not found then return empty optional.
+     * Test find when book not found then return empty optional.
      */
     @Test
-    void testExecute_whenBookNotFound_thenReturnEmptyOptional() {
+    void testFind_whenBookNotFound_thenReturnEmptyOptional() {
         // Given
         final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
 
         // When
         when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of());
-        final var result = this.bookRetrievalPersistenceRepository.execute(bookSearchCriteriaCommand);
+        final var result = this.bookRetrievalPersistenceRepository.find(bookSearchCriteriaCommand);
 
         // Then
         verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
+        assertTrue(result.isEmpty());
+    }
+
+    /**
+     * Test find all when books exist then return books.
+     */
+    @Test
+    void testFindAll_whenBooksExist_thenReturnBooks() {
+        // Given
+        final var bookEntities = Instancio.createList(BookEntity.class);
+        final var books = Instancio.createList(Book.class);
+
+        // When
+        when(this.bookMyBatisMapper.findAll()).thenReturn(bookEntities);
+        when(this.bookEntityMapper.toBookList(bookEntities)).thenReturn(books);
+        final var result = this.bookRetrievalPersistenceRepository.findAll();
+
+        // Then
+        verify(this.bookMyBatisMapper, times(1)).findAll();
+        verify(this.bookEntityMapper, times(1)).toBookList(bookEntities);
+        assertEquals(books, result);
+    }
+
+    /**
+     * Test find all when no books exist then return empty list.
+     */
+    @Test
+    void testFindAll_whenNoBooksExist_thenReturnEmptyList() {
+        // Given
+        final var books = List.<Book>of();
+
+        // When
+        when(this.bookMyBatisMapper.findAll()).thenReturn(List.of());
+        when(this.bookEntityMapper.toBookList(List.of())).thenReturn(books);
+        final var result = this.bookRetrievalPersistenceRepository.findAll();
+
+        // Then
+        verify(this.bookMyBatisMapper, times(1)).findAll();
+        verify(this.bookEntityMapper, times(1)).toBookList(List.of());
         assertTrue(result.isEmpty());
     }
 }

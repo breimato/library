@@ -1,6 +1,7 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.book;
 
 import java.time.ZoneOffset;
+import java.util.List;
 
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
@@ -72,5 +73,40 @@ class BookMapperTest {
     void testToBookV1_whenBookIsNull_thenReturnNull() {
         // When / Then
         assertNull(this.bookMapper.toBookV1(null));
+    }
+
+    /**
+     * Test to book v 1 list when books are valid then return mapped dto list.
+     */
+    @Test
+    void testToBookV1List_whenBooksAreValid_thenReturnMappedDtoList() {
+        // Given
+        final var book = Instancio.create(Book.class);
+        final var books = List.of(book);
+
+        // When
+        when(this.dateMapper.toOffsetDateTime(book.createdAt())).thenReturn(book.createdAt().atOffset(ZoneOffset.UTC));
+        when(this.dateMapper.toOffsetDateTime(book.updatedAt())).thenReturn(book.updatedAt().atOffset(ZoneOffset.UTC));
+        final var bookV1DtoList = this.bookMapper.toBookV1List(books);
+
+        // Then
+        verify(this.dateMapper, times(1)).toOffsetDateTime(book.createdAt());
+        verify(this.dateMapper, times(1)).toOffsetDateTime(book.updatedAt());
+        assertNotNull(bookV1DtoList);
+        assertEquals(1, bookV1DtoList.size());
+        assertEquals(book.id(), bookV1DtoList.getFirst().getId());
+    }
+
+    /**
+     * Test to book v 1 list when books list is empty then return empty list.
+     */
+    @Test
+    void testToBookV1List_whenBooksListIsEmpty_thenReturnEmptyList() {
+        // When
+        final var bookV1DtoList = this.bookMapper.toBookV1List(List.of());
+
+        // Then
+        assertNotNull(bookV1DtoList);
+        assertEquals(0, bookV1DtoList.size());
     }
 }

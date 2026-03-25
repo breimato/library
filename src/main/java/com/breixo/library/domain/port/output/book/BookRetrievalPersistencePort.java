@@ -1,5 +1,6 @@
 package com.breixo.library.domain.port.output.book;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.breixo.library.domain.model.book.Book;
@@ -12,10 +13,17 @@ import jakarta.validation.constraints.NotNull;
 public interface BookRetrievalPersistencePort {
 
     /**
-     * Execute.
+     * Find.
      *
      * @param bookSearchCriteriaCommand the book search criteria command.
      * @return the book, or empty if not found.
      */
-    Optional<Book> execute(@Valid @NotNull BookSearchCriteriaCommand bookSearchCriteriaCommand);
+    Optional<Book> find(@Valid @NotNull BookSearchCriteriaCommand bookSearchCriteriaCommand);
+
+    /**
+     * Find all.
+     *
+     * @return the list of all books.
+     */
+    List<Book> findAll();
 }
