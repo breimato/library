@@ -125,4 +125,13 @@ class BookEntityMapperTest {
         assertNotNull(books);
         assertEquals(0, books.size());
     }
+
+    /**
+     * Test to book list when book entities list is null then return null.
+     */
+    @Test
+    void testToBookList_whenBookEntitiesListIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.bookEntityMapper.toBookList(null));
+    }
 }

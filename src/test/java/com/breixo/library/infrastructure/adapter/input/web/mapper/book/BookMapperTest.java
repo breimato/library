@@ -109,4 +109,13 @@ class BookMapperTest {
         assertNotNull(bookV1DtoList);
         assertEquals(0, bookV1DtoList.size());
     }
+
+    /**
+     * Test to book v 1 list when books list is null then return null.
+     */
+    @Test
+    void testToBookV1List_whenBooksListIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.bookMapper.toBookV1List(null));
+    }
 }

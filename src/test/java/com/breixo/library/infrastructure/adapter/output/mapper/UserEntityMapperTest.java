@@ -154,4 +154,13 @@ class UserEntityMapperTest {
         assertNotNull(users);
         assertEquals(0, users.size());
     }
+
+    /**
+     * Test to user list when user entities list is null then return null.
+     */
+    @Test
+    void testToUserList_whenUserEntitiesListIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.userEntityMapper.toUserList(null));
+    }
 }

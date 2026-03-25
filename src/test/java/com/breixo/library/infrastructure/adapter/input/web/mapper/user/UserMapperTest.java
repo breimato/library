@@ -93,4 +93,13 @@ class UserMapperTest {
         assertNotNull(userV1DtoList);
         assertEquals(0, userV1DtoList.size());
     }
+
+    /**
+     * Test to user v1 list when users list is null then return null.
+     */
+    @Test
+    void testToUserV1List_whenUsersListIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.userMapper.toUserV1List(null));
+    }
 }

@@ -16,7 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.breixo.library.domain.exception.BookException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,5 +63,24 @@ class BookUpdateRepositoryTest {
         verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
         verify(this.bookEntityMapper, times(1)).toBook(bookEntity);
         assertEquals(book, result);
+    }
+
+    /**
+     * Test execute when update throws exception then throw book exception.
+     */
+    @Test
+    void testExecute_whenUpdateThrowsException_thenThrowBookException() {
+        // Given
+        final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
+
+        // When
+        doThrow(new RuntimeException()).when(this.bookMyBatisMapper).update(updateBookCommand);
+        final var bookException = assertThrows(BookException.class,
+                () -> this.bookUpdatePersistenceRepository.execute(updateBookCommand));
+
+        // Then
+        verify(this.bookMyBatisMapper, times(1)).update(updateBookCommand);
+        assertEquals(ExceptionMessageConstants.BOOK_UPDATE_ERROR_CODE_ERROR, bookException.getCode());
+        assertEquals(ExceptionMessageConstants.BOOK_UPDATE_ERROR_MESSAGE_ERROR, bookException.getMessage());
     }
 }

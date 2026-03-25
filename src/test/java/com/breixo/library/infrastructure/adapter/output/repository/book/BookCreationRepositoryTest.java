@@ -16,7 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.breixo.library.domain.exception.BookException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -61,5 +66,27 @@ class BookCreationRepositoryTest {
         verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
         verify(this.bookEntityMapper, times(1)).toBook(createdBookEntity);
         assertEquals(book, result);
+    }
+
+    /**
+     * Test execute when insert throws exception then throw book exception.
+     */
+    @Test
+    void testExecute_whenInsertThrowsException_thenThrowBookException() {
+        // Given
+        final var createBookCommand = Instancio.create(CreateBookCommand.class);
+        final var bookEntity = Instancio.create(BookEntity.class);
+
+        // When
+        when(this.bookEntityMapper.toBookEntity(createBookCommand)).thenReturn(bookEntity);
+        doThrow(new RuntimeException()).when(this.bookMyBatisMapper).insert(bookEntity);
+        final var bookException = assertThrows(BookException.class,
+                () -> this.bookCreationPersistenceRepository.execute(createBookCommand));
+
+        // Then
+        verify(this.bookEntityMapper, times(1)).toBookEntity(createBookCommand);
+        verify(this.bookMyBatisMapper, times(1)).insert(bookEntity);
+        assertEquals(ExceptionMessageConstants.BOOK_CREATION_ERROR_CODE_ERROR, bookException.getCode());
+        assertEquals(ExceptionMessageConstants.BOOK_CREATION_ERROR_MESSAGE_ERROR, bookException.getMessage());
     }
 }
