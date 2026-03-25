@@ -16,7 +16,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../responses/PostUserV1Response.yaml'
+            $ref: '../responses/UserV1Response.yaml'
     '409':
       description: "Conflict - User email already exists"
       content:

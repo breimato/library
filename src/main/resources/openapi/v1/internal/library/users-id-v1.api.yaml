@@ -18,7 +18,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../responses/GetUserIdV1Response.yaml'
+            $ref: '../responses/UserV1Response.yaml'
     '404':
       description: "Not Found - User not found"
       content:
@@ -57,7 +57,7 @@ patch:
       content:
         application/json:
           schema:
-            $ref: '../responses/PatchUserV1Response.yaml'
+            $ref: '../responses/UserV1Response.yaml'
     '404':
       description: "Not Found - User not found"
       content:

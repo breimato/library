@@ -2,6 +2,7 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper.book;
 
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.infrastructure.adapter.input.web.dto.BookV1Dto;
+
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,43 +17,43 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/** The Class Patch Book Response Mapper Test. */
+/** The Class Book Response Mapper Test. */
 @ExtendWith(MockitoExtension.class)
-class PatchBookResponseMapperTest {
+class BookResponseMapperTest {
 
-    /** The patch book response mapper. */
+    /** The book response mapper. */
     @InjectMocks
-    PatchBookResponseMapperImpl patchBookResponseMapper;
+    BookResponseMapperImpl bookResponseMapper;
 
     /** The book mapper. */
     @Mock
     BookMapper bookMapper;
 
     /**
-     * Test to patch book v1 response when book is valid then return mapped response.
+     * Test to book v1 response when book is valid then return mapped response.
      */
     @Test
-    void testToPatchBookV1Response_whenBookIsValid_thenReturnMappedResponse() {
+    void testToBookV1Response_whenBookIsValid_thenReturnMappedResponse() {
         // Given
         final var book = Instancio.create(Book.class);
         final var bookV1Dto = Instancio.create(BookV1Dto.class);
 
         // When
         when(this.bookMapper.toBookV1(book)).thenReturn(bookV1Dto);
-        final var patchBookV1Response = this.patchBookResponseMapper.toPatchBookV1Response(book);
+        final var bookV1ResponseDto = this.bookResponseMapper.toBookV1Response(book);
 
         // Then
         verify(this.bookMapper, times(1)).toBookV1(book);
-        assertNotNull(patchBookV1Response);
-        assertEquals(bookV1Dto, patchBookV1Response.getBook());
+        assertNotNull(bookV1ResponseDto);
+        assertEquals(bookV1Dto, bookV1ResponseDto.getBook());
     }
 
     /**
-     * Test to patch book v1 response when book is null then return null.
+     * Test to book v1 response when book is null then return null.
      */
     @Test
-    void testToPatchBookV1Response_whenBookIsNull_thenReturnNull() {
+    void testToBookV1Response_whenBookIsNull_thenReturnNull() {
         // When / Then
-        assertNull(this.patchBookResponseMapper.toPatchBookV1Response(null));
+        assertNull(this.bookResponseMapper.toBookV1Response(null));
     }
 }

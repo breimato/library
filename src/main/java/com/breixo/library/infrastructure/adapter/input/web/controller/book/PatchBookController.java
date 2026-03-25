@@ -2,10 +2,10 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
 import com.breixo.library.domain.port.input.book.UpdateBookUseCase;
 import com.breixo.library.infrastructure.adapter.input.web.api.PatchBookV1Api;
+import com.breixo.library.infrastructure.adapter.input.web.dto.BookV1ResponseDto;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Request;
-import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Response;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.book.BookResponseMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.book.PatchBookRequestMapper;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.book.PatchBookResponseMapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,19 +22,19 @@ public class PatchBookController implements PatchBookV1Api {
     /** The patch book request mapper. */
     private final PatchBookRequestMapper patchBookRequestMapper;
 
-    /** The patch book response mapper. */
-    private final PatchBookResponseMapper patchBookResponseMapper;
+    /** The book response mapper. */
+    private final BookResponseMapper bookResponseMapper;
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<PatchBookV1Response> patchBookV1(final Long id, final PatchBookV1Request patchBookV1Request) {
+    public ResponseEntity<BookV1ResponseDto> patchBookV1(final Long id, final PatchBookV1Request patchBookV1Request) {
 
         final var updateBookCommand = this.patchBookRequestMapper.toUpdateBookCommand(id, patchBookV1Request);
 
         final var book = this.updateBookUseCase.execute(updateBookCommand);
 
-        final var patchBookV1Response = this.patchBookResponseMapper.toPatchBookV1Response(book);
+        final var bookV1ResponseDto = this.bookResponseMapper.toBookV1Response(book);
 
-        return ResponseEntity.ok(patchBookV1Response);
+        return ResponseEntity.ok(bookV1ResponseDto);
     }
 }

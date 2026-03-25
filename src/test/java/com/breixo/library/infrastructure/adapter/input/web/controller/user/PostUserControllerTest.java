@@ -4,9 +4,9 @@ import com.breixo.library.domain.command.user.CreateUserCommand;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.port.input.user.CreateUserUseCase;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PostUserV1RequestDto;
-import com.breixo.library.infrastructure.adapter.input.web.dto.PostUserV1ResponseDto;
+import com.breixo.library.infrastructure.adapter.input.web.dto.UserV1ResponseDto;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.user.PostUserRequestMapper;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.user.PostUserResponseMapper;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.user.UserResponseMapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.instancio.Instancio;
@@ -52,9 +52,9 @@ class PostUserControllerTest {
     @Mock
     PostUserRequestMapper postUserRequestMapper;
 
-    /** The post user response mapper. */
+    /** The user response mapper. */
     @Mock
-    PostUserResponseMapper postUserResponseMapper;
+    UserResponseMapper userResponseMapper;
 
     /** Sets the up. */
     @BeforeEach
@@ -71,12 +71,12 @@ class PostUserControllerTest {
         final var postUserV1RequestDto = Instancio.create(PostUserV1RequestDto.class);
         final var createUserCommand = Instancio.create(CreateUserCommand.class);
         final var user = Instancio.create(User.class);
-        final var postUserV1ResponseDto = Instancio.create(PostUserV1ResponseDto.class);
+        final var userV1ResponseDto = Instancio.create(UserV1ResponseDto.class);
 
         // When
         when(this.postUserRequestMapper.toCreateUserCommand(postUserV1RequestDto)).thenReturn(createUserCommand);
         when(this.createUserUseCase.execute(createUserCommand)).thenReturn(user);
-        when(this.postUserResponseMapper.toPostUserV1Response(user)).thenReturn(postUserV1ResponseDto);
+        when(this.userResponseMapper.toUserV1Response(user)).thenReturn(userV1ResponseDto);
 
         this.mockMvc.perform(post(URL)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -88,6 +88,6 @@ class PostUserControllerTest {
         // Then
         verify(this.postUserRequestMapper, times(1)).toCreateUserCommand(postUserV1RequestDto);
         verify(this.createUserUseCase, times(1)).execute(createUserCommand);
-        verify(this.postUserResponseMapper, times(1)).toPostUserV1Response(user);
+        verify(this.userResponseMapper, times(1)).toUserV1Response(user);
     }
 }

@@ -1,4 +1,4 @@
-description: "Post Book V1 Response"
+description: "Book V1 Response"
 type: object
 properties:
   book:

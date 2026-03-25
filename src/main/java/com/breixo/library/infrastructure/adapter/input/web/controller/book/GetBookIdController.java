@@ -5,8 +5,8 @@ import com.breixo.library.domain.exception.BookException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.api.GetBookIdV1Api;
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetBookIdV1Response;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.book.GetBookResponseMapper;
+import com.breixo.library.infrastructure.adapter.input.web.dto.BookV1ResponseDto;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.book.BookResponseMapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +20,12 @@ public class GetBookIdController implements GetBookIdV1Api {
     /** The book retrieval persistence port. */
     private final BookRetrievalPersistencePort bookRetrievalPersistencePort;
 
-    /** The get book response mapper. */
-    private final GetBookResponseMapper getBookResponseMapper;
+    /** The book response mapper. */
+    private final BookResponseMapper bookResponseMapper;
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<GetBookIdV1Response> getBookIdV1(final Long id) {
+    public ResponseEntity<BookV1ResponseDto> getBookIdV1(final Long id) {
 
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
 
@@ -34,8 +34,8 @@ public class GetBookIdController implements GetBookIdV1Api {
                         ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
                         ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR));
 
-        final var getBookIdV1Response = this.getBookResponseMapper.toGetBookIdV1Response(book);
+        final var bookV1ResponseDto = this.bookResponseMapper.toBookV1Response(book);
 
-        return ResponseEntity.ok(getBookIdV1Response);
+        return ResponseEntity.ok(bookV1ResponseDto);
     }
 }

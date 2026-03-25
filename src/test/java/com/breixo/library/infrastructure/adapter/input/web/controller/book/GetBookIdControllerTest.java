@@ -7,8 +7,8 @@ import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetBookIdV1Response;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.book.GetBookResponseMapper;
+import com.breixo.library.infrastructure.adapter.input.web.dto.BookV1ResponseDto;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.book.BookResponseMapper;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,9 +49,9 @@ class GetBookIdControllerTest {
     @Mock
     BookRetrievalPersistencePort bookRetrievalPersistencePort;
 
-    /** The get book response mapper. */
+    /** The book response mapper. */
     @Mock
-    GetBookResponseMapper getBookResponseMapper;
+    BookResponseMapper bookResponseMapper;
 
     /** Sets the up. */
     @BeforeEach
@@ -67,12 +67,12 @@ class GetBookIdControllerTest {
         // Given
         final var id = Instancio.create(Long.class);
         final var book = Instancio.create(Book.class);
-        final var getBookIdV1Response = Instancio.create(GetBookIdV1Response.class);
+        final var bookV1ResponseDto = Instancio.create(BookV1ResponseDto.class);
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
 
         // When
         when(this.bookRetrievalPersistencePort.execute(bookSearchCriteriaCommand)).thenReturn(Optional.of(book));
-        when(this.getBookResponseMapper.toGetBookIdV1Response(book)).thenReturn(getBookIdV1Response);
+        when(this.bookResponseMapper.toBookV1Response(book)).thenReturn(bookV1ResponseDto);
 
         this.mockMvc.perform(get(URL, id).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -80,7 +80,7 @@ class GetBookIdControllerTest {
 
         // Then
         verify(this.bookRetrievalPersistencePort, times(1)).execute(bookSearchCriteriaCommand);
-        verify(this.getBookResponseMapper, times(1)).toGetBookIdV1Response(book);
+        verify(this.bookResponseMapper, times(1)).toBookV1Response(book);
     }
 
     /**
@@ -99,7 +99,7 @@ class GetBookIdControllerTest {
 
         // Then
         verify(this.bookRetrievalPersistencePort, times(1)).execute(bookSearchCriteriaCommand);
-        verifyNoInteractions(this.getBookResponseMapper);
+        verifyNoInteractions(this.bookResponseMapper);
         assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR, bookException.getCode());
         assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, bookException.getMessage());
     }

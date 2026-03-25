@@ -5,8 +5,8 @@ import com.breixo.library.domain.exception.UserException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.api.GetUserIdV1Api;
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetUserIdV1Response;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.user.GetUserResponseMapper;
+import com.breixo.library.infrastructure.adapter.input.web.dto.UserV1ResponseDto;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.user.UserResponseMapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +20,12 @@ public class GetUserIdController implements GetUserIdV1Api {
     /** The user retrieval persistence port. */
     private final UserRetrievalPersistencePort userRetrievalPersistencePort;
 
-    /** The get user response mapper. */
-    private final GetUserResponseMapper getUserResponseMapper;
+    /** The user response mapper. */
+    private final UserResponseMapper userResponseMapper;
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<GetUserIdV1Response> getUserIdV1(final Long id) {
+    public ResponseEntity<UserV1ResponseDto> getUserIdV1(final Long id) {
 
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
 
@@ -34,8 +34,8 @@ public class GetUserIdController implements GetUserIdV1Api {
                         ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
                         ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR));
 
-        final var getUserIdV1Response = this.getUserResponseMapper.toGetUserIdV1Response(user);
+        final var userV1ResponseDto = this.userResponseMapper.toUserV1Response(user);
 
-        return ResponseEntity.ok(getUserIdV1Response);
+        return ResponseEntity.ok(userV1ResponseDto);
     }
 }

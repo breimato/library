@@ -18,7 +18,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../responses/GetBookIdV1Response.yaml'
+            $ref: '../responses/BookV1Response.yaml'
     '404':
       description: "Not Found - Book not found"
       content:
@@ -57,7 +57,7 @@ patch:
       content:
         application/json:
           schema:
-            $ref: '../responses/PatchBookV1Response.yaml'
+            $ref: '../responses/BookV1Response.yaml'
     '404':
       description: "Not Found - Book not found"
       content:

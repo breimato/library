@@ -1,4 +1,4 @@
-description: "Get User Id V1 Response"
+description: "User V1 Response"
 type: object
 properties:
   user:

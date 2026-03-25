@@ -16,7 +16,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../responses/PostBookV1Response.yaml'
+            $ref: '../responses/BookV1Response.yaml'
     '500':
       description: "Internal Server Error"
       content:

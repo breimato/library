@@ -3,9 +3,9 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.user;
 import com.breixo.library.domain.port.input.user.UpdateUserUseCase;
 import com.breixo.library.infrastructure.adapter.input.web.api.PatchUserV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchUserV1Request;
-import com.breixo.library.infrastructure.adapter.input.web.dto.PatchUserV1Response;
+import com.breixo.library.infrastructure.adapter.input.web.dto.UserV1ResponseDto;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.user.PatchUserRequestMapper;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.user.PatchUserResponseMapper;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.user.UserResponseMapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,19 +22,19 @@ public class PatchUserController implements PatchUserV1Api {
     /** The patch user request mapper. */
     private final PatchUserRequestMapper patchUserRequestMapper;
 
-    /** The patch user response mapper. */
-    private final PatchUserResponseMapper patchUserResponseMapper;
+    /** The user response mapper. */
+    private final UserResponseMapper userResponseMapper;
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<PatchUserV1Response> patchUserV1(final Long id, final PatchUserV1Request patchUserV1RequestDto) {
+    public ResponseEntity<UserV1ResponseDto> patchUserV1(final Long id, final PatchUserV1Request patchUserV1RequestDto) {
 
         final var updateUserCommand = this.patchUserRequestMapper.toUpdateUserCommand(id, patchUserV1RequestDto);
 
         final var user = this.updateUserUseCase.execute(updateUserCommand);
 
-        final var patchUserV1ResponseDto = this.patchUserResponseMapper.toPatchUserV1Response(user);
+        final var userV1ResponseDto = this.userResponseMapper.toUserV1Response(user);
 
-        return ResponseEntity.ok(patchUserV1ResponseDto);
+        return ResponseEntity.ok(userV1ResponseDto);
     }
 }

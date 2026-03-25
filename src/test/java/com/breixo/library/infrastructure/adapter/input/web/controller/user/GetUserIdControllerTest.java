@@ -7,8 +7,8 @@ import com.breixo.library.domain.exception.UserException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetUserIdV1Response;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.user.GetUserResponseMapper;
+import com.breixo.library.infrastructure.adapter.input.web.dto.UserV1ResponseDto;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.user.UserResponseMapper;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,9 +49,9 @@ class GetUserIdControllerTest {
     @Mock
     UserRetrievalPersistencePort userRetrievalPersistencePort;
 
-    /** The get user response mapper. */
+    /** The user response mapper. */
     @Mock
-    GetUserResponseMapper getUserResponseMapper;
+    UserResponseMapper userResponseMapper;
 
     /** Sets the up. */
     @BeforeEach
@@ -67,12 +67,12 @@ class GetUserIdControllerTest {
         // Given
         final var id = Instancio.create(Long.class);
         final var user = Instancio.create(User.class);
-        final var getUserIdV1Response = Instancio.create(GetUserIdV1Response.class);
+        final var userV1ResponseDto = Instancio.create(UserV1ResponseDto.class);
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
 
         // When
         when(this.userRetrievalPersistencePort.execute(userSearchCriteriaCommand)).thenReturn(Optional.of(user));
-        when(this.getUserResponseMapper.toGetUserIdV1Response(user)).thenReturn(getUserIdV1Response);
+        when(this.userResponseMapper.toUserV1Response(user)).thenReturn(userV1ResponseDto);
 
         this.mockMvc.perform(get(URL, id).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -80,7 +80,7 @@ class GetUserIdControllerTest {
 
         // Then
         verify(this.userRetrievalPersistencePort, times(1)).execute(userSearchCriteriaCommand);
-        verify(this.getUserResponseMapper, times(1)).toGetUserIdV1Response(user);
+        verify(this.userResponseMapper, times(1)).toUserV1Response(user);
     }
 
     /**
@@ -99,7 +99,7 @@ class GetUserIdControllerTest {
 
         // Then
         verify(this.userRetrievalPersistencePort, times(1)).execute(userSearchCriteriaCommand);
-        verifyNoInteractions(this.getUserResponseMapper);
+        verifyNoInteractions(this.userResponseMapper);
         assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR, userException.getCode());
         assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR, userException.getMessage());
     }

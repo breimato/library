@@ -3,10 +3,10 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.UpdateBookCommand;
 import com.breixo.library.domain.port.input.book.UpdateBookUseCase;
+import com.breixo.library.infrastructure.adapter.input.web.dto.BookV1ResponseDto;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Request;
-import com.breixo.library.infrastructure.adapter.input.web.dto.PatchBookV1Response;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.book.BookResponseMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.book.PatchBookRequestMapper;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.book.PatchBookResponseMapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.instancio.Instancio;
@@ -52,9 +52,9 @@ class PatchBookControllerTest {
     @Mock
     PatchBookRequestMapper patchBookRequestMapper;
 
-    /** The patch book response mapper. */
+    /** The book response mapper. */
     @Mock
-    PatchBookResponseMapper patchBookResponseMapper;
+    BookResponseMapper bookResponseMapper;
 
     /** Sets the up. */
     @BeforeEach
@@ -72,12 +72,12 @@ class PatchBookControllerTest {
         final var patchBookV1Request = Instancio.create(PatchBookV1Request.class);
         final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
         final var book = Instancio.create(Book.class);
-        final var patchBookV1Response = Instancio.create(PatchBookV1Response.class);
+        final var bookV1ResponseDto = Instancio.create(BookV1ResponseDto.class);
 
         // When
         when(this.patchBookRequestMapper.toUpdateBookCommand(id, patchBookV1Request)).thenReturn(updateBookCommand);
         when(this.updateBookUseCase.execute(updateBookCommand)).thenReturn(book);
-        when(this.patchBookResponseMapper.toPatchBookV1Response(book)).thenReturn(patchBookV1Response);
+        when(this.bookResponseMapper.toBookV1Response(book)).thenReturn(bookV1ResponseDto);
 
         this.mockMvc.perform(patch(URL, id)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -89,6 +89,6 @@ class PatchBookControllerTest {
         // Then
         verify(this.patchBookRequestMapper, times(1)).toUpdateBookCommand(id, patchBookV1Request);
         verify(this.updateBookUseCase, times(1)).execute(updateBookCommand);
-        verify(this.patchBookResponseMapper, times(1)).toPatchBookV1Response(book);
+        verify(this.bookResponseMapper, times(1)).toBookV1Response(book);
     }
 }

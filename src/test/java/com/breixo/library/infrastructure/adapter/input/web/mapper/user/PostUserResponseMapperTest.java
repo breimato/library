@@ -20,7 +20,7 @@ class PostUserResponseMapperTest {
 
     /** The post user response mapper. */
     @InjectMocks
-    PostUserResponseMapperImpl postUserResponseMapper;
+    UserResponseMapperImpl userResponseMapper;
 
     /** The user mapper. */
     @Mock
@@ -37,7 +37,7 @@ class PostUserResponseMapperTest {
 
         // When
         when(this.userMapper.toUserV1(user)).thenReturn(userV1Dto);
-        final var response = this.postUserResponseMapper.toPostUserV1Response(user);
+        final var response = this.userResponseMapper.toUserV1Response(user);
 
         // Then
         assertNotNull(response);
@@ -49,6 +49,6 @@ class PostUserResponseMapperTest {
     @Test
     void testToPostUserV1Response_whenUserIsNull_thenReturnNull() {
         // When / Then
-        assertNull(this.postUserResponseMapper.toPostUserV1Response(null));
+        assertNull(this.userResponseMapper.toUserV1Response(null));
     }
 }
