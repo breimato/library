@@ -1,6 +1,6 @@
 package com.breixo.library.application.usecase.loan;
 
-import com.breixo.library.domain.command.loan.LoanReturnCommand;
+import com.breixo.library.domain.command.loan.UpdateLoanReturnCommand;
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
@@ -28,7 +28,7 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
 
     /** {@inheritDoc} */
     @Override
-    public Loan execute(@Valid @NotNull final LoanReturnCommand loanReturnCommand) {
+    public Loan execute(@Valid @NotNull final UpdateLoanReturnCommand loanReturnCommand) {
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
                 .id(loanReturnCommand.id())
                 .build();

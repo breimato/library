@@ -2,7 +2,7 @@ package com.breixo.library.application.usecase.loan;
 
 import java.util.Optional;
 
-import com.breixo.library.domain.command.loan.LoanReturnCommand;
+import com.breixo.library.domain.command.loan.UpdateLoanReturnCommand;
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
@@ -45,7 +45,7 @@ class UpdateLoanReturnUseCaseTest {
     @Test
     void testExecute_whenLoanNotFound_thenThrowLoanException() {
         // Given
-        final var loanReturnCommand = Instancio.create(LoanReturnCommand.class);
+        final var loanReturnCommand = Instancio.create(UpdateLoanReturnCommand.class);
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
                 .id(loanReturnCommand.id())
                 .build();
@@ -67,7 +67,7 @@ class UpdateLoanReturnUseCaseTest {
     @Test
     void testExecute_whenLoanExists_thenUpdateAndReturnLoan() {
         // Given
-        final var loanReturnCommand = Instancio.create(LoanReturnCommand.class);
+        final var loanReturnCommand = Instancio.create(UpdateLoanReturnCommand.class);
         final var existingLoan = Instancio.create(Loan.class);
         final var updatedLoan = Instancio.create(Loan.class);
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
