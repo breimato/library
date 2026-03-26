@@ -69,4 +69,22 @@ public class ExceptionMessageConstants {
 
     /** The Constant BOOK_RETIRED_MESSAGE_ERROR. */
     public static final String BOOK_RETIRED_MESSAGE_ERROR = "Error: Book has been retired from the library";
+
+    /** The Constant LOAN_NOT_FOUND_CODE_ERROR. */
+    public static final String LOAN_NOT_FOUND_CODE_ERROR = "LIB-LOAN-004";
+
+    /** The Constant LOAN_NOT_FOUND_MESSAGE_ERROR. */
+    public static final String LOAN_NOT_FOUND_MESSAGE_ERROR = "Error: Loan not found";
+
+    /** The Constant LOAN_CREATION_ERROR_CODE_ERROR. */
+    public static final String LOAN_CREATION_ERROR_CODE_ERROR = "LIB-LOAN-005";
+
+    /** The Constant LOAN_CREATION_ERROR_MESSAGE_ERROR. */
+    public static final String LOAN_CREATION_ERROR_MESSAGE_ERROR = "Error: Loan creation failed";
+
+    /** The Constant LOAN_UPDATE_ERROR_CODE_ERROR. */
+    public static final String LOAN_UPDATE_ERROR_CODE_ERROR = "LIB-LOAN-006";
+
+    /** The Constant LOAN_UPDATE_ERROR_MESSAGE_ERROR. */
+    public static final String LOAN_UPDATE_ERROR_MESSAGE_ERROR = "Error: Loan update failed";
 }
