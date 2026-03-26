@@ -1,6 +1,6 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.loan;
 
-import com.breixo.library.domain.command.loan.ReturnLoanCommand;
+import com.breixo.library.domain.command.loan.LoanReturnCommand;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchLoanReturnV1Request;
 
 import org.mapstruct.Mapper;
@@ -11,13 +11,13 @@ import org.mapstruct.Mapping;
 public interface PatchLoanReturnRequestMapper {
 
     /**
-     * To return loan command.
+     * To loan return command.
      *
      * @param id                    the id
      * @param patchLoanReturnV1Request the patch loan return V1 request
-     * @return the return loan command
+     * @return the loan return command
      */
     @Mapping(source = "id", target = "id")
     @Mapping(source = "patchLoanReturnV1Request.returnDate", target = "returnDate")
-    ReturnLoanCommand toReturnLoanCommand(Integer id, PatchLoanReturnV1Request patchLoanReturnV1Request);
+    LoanReturnCommand toLoanReturnCommand(Integer id, PatchLoanReturnV1Request patchLoanReturnV1Request);
 }
