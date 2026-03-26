@@ -75,83 +75,100 @@ infrastructure/
 
 ```mermaid
 erDiagram
+    user_status {
+        smallint id PK
+        varchar name
+    }
+
+    loan_status {
+        smallint id PK
+        varchar name
+    }
+
+    reservation_status {
+        smallint id PK
+        varchar name
+    }
+
+    fine_status {
+        smallint id PK
+        varchar name
+    }
+
     users {
-        bigint id PK
+        int id PK
         varchar name
         varchar email
         varchar phone
-        int status_id FK
-        timestamp created_at
-        timestamp updated_at
-    }
-
-    user_statuses {
-        int id PK
-        varchar name
+        smallint status_id FK
+        timestamptz created_at
+        timestamptz updated_at
     }
 
     books {
-        bigint id PK
-        varchar isbn
+        int id PK
+        char isbn
         varchar title
         varchar author
         varchar genre
         smallint total_copies
         smallint available_copies
-        timestamp created_at
-        timestamp updated_at
+        timestamptz created_at
+        timestamptz updated_at
     }
 
     loans {
-        bigint id PK
-        bigint user_id FK
-        bigint book_id FK
-        date loan_date
+        int id PK
+        int user_id FK
+        int book_id FK
+        smallint status_id FK
         date due_date
         date return_date
-        varchar status
-        numeric fine_euros
-        timestamp created_at
-        timestamp updated_at
+        timestamptz created_at
+        timestamptz updated_at
     }
 
     reservations {
-        bigint id PK
-        bigint user_id FK
-        bigint book_id FK
-        timestamp reserved_at
-        timestamp expires_at
-        varchar status
-        timestamp created_at
-        timestamp updated_at
+        int id PK
+        int user_id FK
+        int book_id FK
+        int loan_id FK
+        smallint status_id FK
+        timestamptz expires_at
+        timestamptz created_at
+        timestamptz updated_at
     }
 
     fines {
-        bigint id PK
-        bigint loan_id FK
+        int id PK
+        int loan_id FK
+        smallint status_id FK
         numeric amount_euros
-        varchar status
-        timestamp paid_at
-        timestamp created_at
-        timestamp updated_at
+        timestamptz paid_at
+        timestamptz created_at
+        timestamptz updated_at
     }
 
+    users }o--|| user_status : "has"
+    loans }o--|| loan_status : "has"
+    reservations }o--|| reservation_status : "has"
+    fines }o--|| fine_status : "has"
     users ||--o{ loans : "borrows"
     books ||--o{ loans : "is borrowed in"
     users ||--o{ reservations : "reserves"
     books ||--o{ reservations : "is reserved in"
+    reservations }o--o| loans : "fulfilled by"
     loans ||--o| fines : "generates"
-    users }o--|| user_statuses : "has"
 ```
 
 ### Statuses
 
-| Entity | Values |
+| Table | Values |
 |---|---|
-| `user_statuses` | `active` · `suspended` · `blocked` |
-| `loan_status` | `active` · `returned` · `overdue` |
-| `reservation_status` | `pending` · `notified` · `fulfilled` · `expired` · `cancelled` |
-| `fine_status` | `pending` · `paid` · `waived` |
+| `user_status` | `0` active · `1` suspended · `2` blocked |
+| `loan_status` | `0` active · `1` returned · `2` overdue |
+| `reservation_status` | `0` pending · `1` notified · `2` fulfilled · `3` expired · `4` cancelled |
+| `fine_status` | `0` pending · `1` paid · `2` waived |
 
 ---
 
