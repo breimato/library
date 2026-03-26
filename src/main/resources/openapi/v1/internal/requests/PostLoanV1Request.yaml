@@ -1,0 +1,19 @@
+description: "Post Loan V1 Request"
+type: object
+required:
+  - userId
+  - bookId
+  - dueDate
+properties:
+  userId:
+    type: integer
+    format: int32
+    description: "User identifier"
+  bookId:
+    type: integer
+    format: int32
+    description: "Book identifier"
+  dueDate:
+    type: string
+    format: date
+    description: "Due date"

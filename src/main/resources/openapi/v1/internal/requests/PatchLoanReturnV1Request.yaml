@@ -1,0 +1,9 @@
+description: "Patch Loan Return V1 Request"
+type: object
+required:
+  - returnDate
+properties:
+  returnDate:
+    type: string
+    format: date
+    description: "Return date"

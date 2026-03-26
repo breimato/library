@@ -38,8 +38,8 @@ public class LoanRetrievalPersistenceRepository implements LoanRetrievalPersiste
 
     /** {@inheritDoc} */
     @Override
-    public List<Loan> findAll() {
-        final var loanEntities = this.loanMyBatisMapper.findAll();
+    public List<Loan> findAll(@Valid @NotNull final LoanSearchCriteriaCommand loanSearchCriteriaCommand) {
+        final var loanEntities = this.loanMyBatisMapper.find(loanSearchCriteriaCommand);
         return this.loanEntityMapper.toLoanList(loanEntities);
     }
 }

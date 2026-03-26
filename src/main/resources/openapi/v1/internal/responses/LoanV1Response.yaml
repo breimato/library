@@ -1,0 +1,5 @@
+description: "Loan V1 Response"
+type: object
+properties:
+  loan:
+    $ref: '../components/LoanV1.yaml'

@@ -23,7 +23,8 @@ public interface LoanRetrievalPersistencePort {
     /**
      * Find all.
      *
+     * @param loanSearchCriteriaCommand the loan search criteria command
      * @return the list of loans
      */
-    List<Loan> findAll();
+    List<Loan> findAll(@Valid @NotNull LoanSearchCriteriaCommand loanSearchCriteriaCommand);
 }
