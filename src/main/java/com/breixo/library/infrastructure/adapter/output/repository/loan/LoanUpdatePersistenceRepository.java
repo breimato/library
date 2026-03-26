@@ -1,7 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.repository.loan;
 
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
-import com.breixo.library.domain.command.loan.LoanReturnCommand;
+import com.breixo.library.domain.command.loan.UpdateLoanReturnCommand;
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.Loan;
@@ -27,7 +27,7 @@ public class LoanUpdatePersistenceRepository implements LoanUpdatePersistencePor
 
     /** {@inheritDoc} */
     @Override
-    public Loan execute(@Valid @NotNull final LoanReturnCommand loanReturnCommand) {
+    public Loan execute(@Valid @NotNull final UpdateLoanReturnCommand loanReturnCommand) {
         this.update(loanReturnCommand);
         return this.find(loanReturnCommand.id());
     }
@@ -37,7 +37,7 @@ public class LoanUpdatePersistenceRepository implements LoanUpdatePersistencePor
      *
      * @param loanReturnCommand the return loan command
      */
-    private void update(final LoanReturnCommand loanReturnCommand) {
+    private void update(final UpdateLoanReturnCommand loanReturnCommand) {
         try {
             this.loanMyBatisMapper.update(loanReturnCommand);
         } catch (final Exception exception) {

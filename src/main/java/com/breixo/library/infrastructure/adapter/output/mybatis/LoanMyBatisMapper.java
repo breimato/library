@@ -3,7 +3,7 @@ package com.breixo.library.infrastructure.adapter.output.mybatis;
 import java.util.List;
 
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
-import com.breixo.library.domain.command.loan.LoanReturnCommand;
+import com.breixo.library.domain.command.loan.UpdateLoanReturnCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.LoanEntity;
 
 import org.apache.ibatis.annotations.Delete;
@@ -79,7 +79,7 @@ public interface LoanMyBatisMapper {
                 status_id   = 1
             where id = #{id}
             """)
-    void update(LoanReturnCommand loanReturnCommand);
+    void update(UpdateLoanReturnCommand loanReturnCommand);
 
     /**
      * Delete.
