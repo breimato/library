@@ -51,4 +51,22 @@ public class ExceptionMessageConstants {
 
     /** The Constant USER_UPDATE_ERROR_MESSAGE_ERROR. */
     public static final String USER_UPDATE_ERROR_MESSAGE_ERROR = "Error: User update failed";
+
+    /** The Constant USER_BLOCKED_CODE_ERROR. */
+    public static final String USER_BLOCKED_CODE_ERROR = "LIB-LOAN-001";
+
+    /** The Constant USER_BLOCKED_MESSAGE_ERROR. */
+    public static final String USER_BLOCKED_MESSAGE_ERROR = "Error: User is blocked and cannot borrow books";
+
+    /** The Constant BOOK_COPIES_NOT_AVAILABLE_CODE_ERROR. */
+    public static final String BOOK_COPIES_NOT_AVAILABLE_CODE_ERROR = "LIB-LOAN-002";
+
+    /** The Constant BOOK_COPIES_NOT_AVAILABLE_MESSAGE_ERROR. */
+    public static final String BOOK_COPIES_NOT_AVAILABLE_MESSAGE_ERROR = "Error: No available copies for this book";
+
+    /** The Constant BOOK_RETIRED_CODE_ERROR. */
+    public static final String BOOK_RETIRED_CODE_ERROR = "LIB-LOAN-003";
+
+    /** The Constant BOOK_RETIRED_MESSAGE_ERROR. */
+    public static final String BOOK_RETIRED_MESSAGE_ERROR = "Error: Book has been retired from the library";
 }

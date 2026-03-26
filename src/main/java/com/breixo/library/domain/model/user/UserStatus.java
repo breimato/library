@@ -18,6 +18,6 @@ public enum UserStatus {
     BLOCKED(2);
 
     /** The id. */
-    private final int id;
+    private final Integer id;
 
 }
