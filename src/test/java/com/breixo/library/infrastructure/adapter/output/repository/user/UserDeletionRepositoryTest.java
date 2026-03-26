@@ -30,7 +30,7 @@ class UserDeletionRepositoryTest {
     @Test
     void testExecute_whenCalled_thenDeleteUser() {
         // Given
-        final var id = Instancio.create(Long.class);
+        final var id = Instancio.create(Integer.class);
 
         // When
         this.userDeletionPersistenceRepository.execute(id);

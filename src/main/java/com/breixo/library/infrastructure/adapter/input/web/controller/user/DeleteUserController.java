@@ -17,7 +17,7 @@ public class DeleteUserController implements DeleteUserV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<Void> deleteUserV1(final Long id) {
+    public ResponseEntity<Void> deleteUserV1(final Integer id) {
 
         this.userDeletionPersistencePort.execute(id);
 

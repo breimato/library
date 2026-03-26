@@ -7,7 +7,7 @@ import lombok.Data;
 public class BookEntity {
 
     /** The id. */
-    private Long id;
+    private Integer id;
 
     /** The isbn. */
     private String isbn;

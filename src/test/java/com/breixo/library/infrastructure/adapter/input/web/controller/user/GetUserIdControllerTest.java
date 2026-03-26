@@ -65,7 +65,7 @@ class GetUserIdControllerTest {
     @Test
     void testGetUserIdV1_whenUserExists_thenReturnOkResponse() throws Exception {
         // Given
-        final var id = Instancio.create(Long.class);
+        final var id = Instancio.create(Integer.class);
         final var user = Instancio.create(User.class);
         final var userV1ResponseDto = Instancio.create(UserV1ResponseDto.class);
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
@@ -89,7 +89,7 @@ class GetUserIdControllerTest {
     @Test
     void testGetUserIdV1_whenUserNotFound_thenThrowUserException() {
         // Given
-        final var id = Instancio.create(Long.class);
+        final var id = Instancio.create(Integer.class);
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
 
         // When

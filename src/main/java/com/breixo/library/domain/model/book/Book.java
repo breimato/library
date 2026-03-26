@@ -22,7 +22,7 @@ import lombok.Builder;
  * @param updatedAt       The updated at.
  */
 @Builder
-public record Book(@NotNull Long id, @NotNull Isbn isbn, @NotBlank String title, @NotBlank String author,
+public record Book(@NotNull Integer id, @NotNull Isbn isbn, @NotBlank String title, @NotBlank String author,
                    @NotBlank String genre, @NotNull Integer totalCopies, @NotNull Integer availableCopies,
                    @NotNull LocalDateTime createdAt, @NotNull LocalDateTime updatedAt) {
 

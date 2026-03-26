@@ -10,7 +10,7 @@ get:
       required: true
       schema:
         type: integer
-        format: int64
+        format: int32
       description: "Book identifier"
   responses:
     '200':
@@ -43,7 +43,7 @@ patch:
       required: true
       schema:
         type: integer
-        format: int64
+        format: int32
       description: "Book identifier"
   requestBody:
     required: true
@@ -82,7 +82,7 @@ delete:
       required: true
       schema:
         type: integer
-        format: int64
+        format: int32
       description: "Book identifier"
   responses:
     '204':

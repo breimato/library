@@ -57,7 +57,7 @@ public class UserUpdatePersistenceRepository implements UserUpdatePersistencePor
      * @param id the user identifier.
      * @return the user.
      */
-    private User find(final Long id) {
+    private User find(final Integer id) {
 
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
 

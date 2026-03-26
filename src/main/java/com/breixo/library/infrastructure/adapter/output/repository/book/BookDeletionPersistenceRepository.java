@@ -17,7 +17,7 @@ public class BookDeletionPersistenceRepository implements BookDeletionPersistenc
 
     /** {@inheritDoc} */
     @Override
-    public void execute(@NotNull final Long id) {
+    public void execute(@NotNull final Integer id) {
         this.bookMyBatisMapper.delete(id);
     }
 }

@@ -60,7 +60,7 @@ public class BookCreationPersistenceRepository implements BookCreationPersistenc
      * @param id the book identifier.
      * @return the book.
      */
-    private Book find(final Long id) {
+    private Book find(final Integer id) {
 
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
 

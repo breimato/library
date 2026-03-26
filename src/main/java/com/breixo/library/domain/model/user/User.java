@@ -14,7 +14,7 @@ import lombok.Builder;
  * @param status The status.
  */
 @Builder
-public record User(@NotNull Long id, @NotBlank String name, @NotBlank String email, String phone,
+public record User(@NotNull Integer id, @NotBlank String name, @NotBlank String email, String phone,
                    @NotNull UserStatus status) {
 
 }

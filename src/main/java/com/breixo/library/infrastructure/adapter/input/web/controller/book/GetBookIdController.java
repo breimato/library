@@ -25,7 +25,7 @@ public class GetBookIdController implements GetBookIdV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<BookV1ResponseDto> getBookIdV1(final Long id) {
+    public ResponseEntity<BookV1ResponseDto> getBookIdV1(final Integer id) {
 
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
 

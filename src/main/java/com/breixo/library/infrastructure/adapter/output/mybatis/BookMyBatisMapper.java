@@ -91,5 +91,5 @@ public interface BookMyBatisMapper {
      * @param id the book identifier.
      */
     @Delete("delete from books where id = #{id}")
-    void delete(Long id);
+    void delete(Integer id);
 }

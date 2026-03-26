@@ -17,7 +17,7 @@ public class UserDeletionPersistenceRepository implements UserDeletionPersistenc
 
     /** {@inheritDoc} */
     @Override
-    public void execute(@NotNull final Long id) {
+    public void execute(@NotNull final Integer id) {
         this.userMyBatisMapper.delete(id);
     }
 }

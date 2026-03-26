@@ -13,7 +13,7 @@ import lombok.Getter;
 public class BookSearchCriteriaCommand {
 
     /** The id. */
-    private final Long id;
+    private final Integer id;
 
     /** The isbn. */
     private final String isbn;

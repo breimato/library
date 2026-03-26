@@ -48,7 +48,7 @@ class DeleteUserControllerTest {
     @Test
     void testDeleteUserV1_whenCalled_thenReturnNoContentResponse() throws Exception {
         // Given
-        final var id = Instancio.create(Long.class);
+        final var id = Instancio.create(Integer.class);
 
         // When
         this.mockMvc.perform(delete(URL, id).accept(MediaType.APPLICATION_JSON))

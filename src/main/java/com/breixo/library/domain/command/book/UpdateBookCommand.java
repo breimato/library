@@ -14,7 +14,7 @@ import lombok.Builder;
  * @param availableCopies The available copies.
  */
 @Builder
-public record UpdateBookCommand(@NotNull Long id, String title, String author, String genre,
+public record UpdateBookCommand(@NotNull Integer id, String title, String author, String genre,
                                 Integer totalCopies, Integer availableCopies) {
 
 }

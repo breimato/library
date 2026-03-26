@@ -68,7 +68,7 @@ class PatchUserControllerTest {
     @Test
     void testPatchUserV1_whenUserExists_thenReturnOkResponse() throws Exception {
         // Given
-        final var id = Instancio.create(Long.class);
+        final var id = Instancio.create(Integer.class);
         final var patchUserV1RequestDto = Instancio.create(PatchUserV1Request.class);
         final var updateUserCommand = Instancio.create(UpdateUserCommand.class);
         final var user = Instancio.create(User.class);

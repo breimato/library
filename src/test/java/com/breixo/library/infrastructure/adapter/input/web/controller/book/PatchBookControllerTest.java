@@ -68,7 +68,7 @@ class PatchBookControllerTest {
     @Test
     void testPatchBookV1_whenBookExists_thenReturnOkResponse() throws Exception {
         // Given
-        final var id = Instancio.create(Long.class);
+        final var id = Instancio.create(Integer.class);
         final var patchBookV1Request = Instancio.create(PatchBookV1Request.class);
         final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
         final var book = Instancio.create(Book.class);

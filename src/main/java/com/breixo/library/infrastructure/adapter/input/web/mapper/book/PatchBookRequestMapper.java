@@ -23,6 +23,6 @@ public interface PatchBookRequestMapper {
     @Mapping(source = "patchBookV1Request.genre", target = "genre")
     @Mapping(source = "patchBookV1Request.totalCopies", target = "totalCopies")
     @Mapping(source = "patchBookV1Request.availableCopies", target = "availableCopies")
-    UpdateBookCommand toUpdateBookCommand(Long id, PatchBookV1Request patchBookV1Request);
+    UpdateBookCommand toUpdateBookCommand(Integer id, PatchBookV1Request patchBookV1Request);
 
 }

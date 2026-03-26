@@ -10,5 +10,5 @@ public interface UserDeletionPersistencePort {
      *
      * @param id the user identifier.
      */
-    void execute(@NotNull Long id);
+    void execute(@NotNull Integer id);
 }

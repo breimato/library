@@ -25,7 +25,7 @@ public class GetUserIdController implements GetUserIdV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<UserV1ResponseDto> getUserIdV1(final Long id) {
+    public ResponseEntity<UserV1ResponseDto> getUserIdV1(final Integer id) {
 
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
 

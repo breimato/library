@@ -30,7 +30,7 @@ class BookDeletionRepositoryTest {
     @Test
     void testExecute_whenCalled_thenDeleteBook() {
         // Given
-        final var id = Instancio.create(Long.class);
+        final var id = Instancio.create(Integer.class);
 
         // When
         this.bookDeletionPersistenceRepository.execute(id);

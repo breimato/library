@@ -27,7 +27,7 @@ public class PatchUserController implements PatchUserV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<UserV1ResponseDto> patchUserV1(final Long id, final PatchUserV1Request patchUserV1RequestDto) {
+    public ResponseEntity<UserV1ResponseDto> patchUserV1(final Integer id, final PatchUserV1Request patchUserV1RequestDto) {
 
         final var updateUserCommand = this.patchUserRequestMapper.toUpdateUserCommand(id, patchUserV1RequestDto);
 

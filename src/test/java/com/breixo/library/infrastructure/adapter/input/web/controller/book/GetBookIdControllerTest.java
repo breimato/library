@@ -65,7 +65,7 @@ class GetBookIdControllerTest {
     @Test
     void testGetBookIdV1_whenBookExists_thenReturnOkResponse() throws Exception {
         // Given
-        final var id = Instancio.create(Long.class);
+        final var id = Instancio.create(Integer.class);
         final var book = Instancio.create(Book.class);
         final var bookV1ResponseDto = Instancio.create(BookV1ResponseDto.class);
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
@@ -89,7 +89,7 @@ class GetBookIdControllerTest {
     @Test
     void testGetBookIdV1_whenBookNotFound_thenThrowBookException() {
         // Given
-        final var id = Instancio.create(Long.class);
+        final var id = Instancio.create(Integer.class);
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
 
         // When

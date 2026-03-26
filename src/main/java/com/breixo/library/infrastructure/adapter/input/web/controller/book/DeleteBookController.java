@@ -17,7 +17,7 @@ public class DeleteBookController implements DeleteBookV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<Void> deleteBookV1(final Long id) {
+    public ResponseEntity<Void> deleteBookV1(final Integer id) {
 
         this.bookDeletionPersistencePort.execute(id);
 

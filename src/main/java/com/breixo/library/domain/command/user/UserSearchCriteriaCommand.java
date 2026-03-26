@@ -13,7 +13,7 @@ import lombok.Getter;
 public class UserSearchCriteriaCommand {
 
     /** The id. */
-    private final Long id;
+    private final Integer id;
 
     /** The email. */
     private final String email;

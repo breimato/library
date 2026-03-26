@@ -80,5 +80,5 @@ public interface UserMyBatisMapper {
      * @param id the user identifier.
      */
     @Delete("delete from users where id = #{id}")
-    void delete(Long id);
+    void delete(Integer id);
 }

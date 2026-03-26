@@ -14,6 +14,6 @@ import lombok.Builder;
  * @param status The status.
  */
 @Builder
-public record UpdateUserCommand(@NotNull Long id, String name, String phone, UserStatus status) {
+public record UpdateUserCommand(@NotNull Integer id, String name, String phone, UserStatus status) {
 
 }

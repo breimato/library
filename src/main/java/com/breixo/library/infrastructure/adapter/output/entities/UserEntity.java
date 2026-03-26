@@ -7,7 +7,7 @@ import lombok.Data;
 public class UserEntity {
 
     /** The id. */
-    private Long id;
+    private Integer id;
 
     /** The name. */
     private String name;
