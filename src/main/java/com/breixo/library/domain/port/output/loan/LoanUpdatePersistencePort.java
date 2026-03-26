@@ -1,6 +1,6 @@
 package com.breixo.library.domain.port.output.loan;
 
-import com.breixo.library.domain.command.loan.LoanReturnCommand;
+import com.breixo.library.domain.command.loan.UpdateLoanReturnCommand;
 import com.breixo.library.domain.model.loan.Loan;
 
 import jakarta.validation.Valid;
@@ -15,5 +15,5 @@ public interface LoanUpdatePersistencePort {
      * @param loanReturnCommand the loan return command
      * @return the loan
      */
-    Loan execute(@Valid @NotNull LoanReturnCommand loanReturnCommand);
+    Loan execute(@Valid @NotNull UpdateLoanReturnCommand loanReturnCommand);
 }

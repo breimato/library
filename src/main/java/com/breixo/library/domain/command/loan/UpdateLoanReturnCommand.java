@@ -6,11 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 /**
- * The Record Loan Return Command.
+ * The Record Update Loan Return Command.
  *
  * @param id         The id.
  * @param returnDate The return date.
  */
 @Builder
-public record LoanReturnCommand(@NotNull Integer id, @NotNull LocalDate returnDate) {
+public record UpdateLoanReturnCommand(@NotNull Integer id, @NotNull LocalDate returnDate) {
 }
