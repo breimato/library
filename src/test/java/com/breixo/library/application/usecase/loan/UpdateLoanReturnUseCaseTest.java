@@ -2,8 +2,8 @@ package com.breixo.library.application.usecase.loan;
 
 import java.util.Optional;
 
+import com.breixo.library.domain.command.loan.LoanReturnCommand;
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
-import com.breixo.library.domain.command.loan.ReturnLoanCommand;
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.Loan;
@@ -23,13 +23,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/** The Class Loan Return Use Case Test. */
+/** The Class Update Loan Return Use Case Test. */
 @ExtendWith(MockitoExtension.class)
-class LoanReturnUseCaseTest {
+class UpdateLoanReturnUseCaseTest {
 
-    /** The loan return use case. */
+    /** The update loan return use case. */
     @InjectMocks
-    LoanReturnUseCaseImpl loanReturnUseCase;
+    UpdateLoanReturnUseCaseImpl updateLoanReturnUseCase;
 
     /** The loan retrieval persistence port. */
     @Mock
@@ -45,19 +45,19 @@ class LoanReturnUseCaseTest {
     @Test
     void testExecute_whenLoanNotFound_thenThrowLoanException() {
         // Given
-        final var returnLoanCommand = Instancio.create(ReturnLoanCommand.class);
+        final var loanReturnCommand = Instancio.create(LoanReturnCommand.class);
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
-                .id(returnLoanCommand.id())
+                .id(loanReturnCommand.id())
                 .build();
 
         // When
         when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(Optional.empty());
         final var exception = assertThrows(LoanException.class,
-                () -> this.loanReturnUseCase.execute(returnLoanCommand));
+                () -> this.updateLoanReturnUseCase.execute(loanReturnCommand));
 
         // Then
         verify(this.loanRetrievalPersistencePort, times(1)).find(loanSearchCriteriaCommand);
-        verify(this.loanUpdatePersistencePort, times(0)).execute(returnLoanCommand);
+        verify(this.loanUpdatePersistencePort, times(0)).execute(loanReturnCommand);
         assertEquals(ExceptionMessageConstants.LOAN_NOT_FOUND_MESSAGE_ERROR, exception.getMessage());
     }
 
@@ -67,22 +67,22 @@ class LoanReturnUseCaseTest {
     @Test
     void testExecute_whenLoanExists_thenUpdateAndReturnLoan() {
         // Given
-        final var returnLoanCommand = Instancio.create(ReturnLoanCommand.class);
+        final var loanReturnCommand = Instancio.create(LoanReturnCommand.class);
         final var existingLoan = Instancio.create(Loan.class);
         final var updatedLoan = Instancio.create(Loan.class);
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
-                .id(returnLoanCommand.id())
+                .id(loanReturnCommand.id())
                 .build();
 
         // When
         when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand))
                 .thenReturn(Optional.of(existingLoan));
-        when(this.loanUpdatePersistencePort.execute(returnLoanCommand)).thenReturn(updatedLoan);
-        final var result = this.loanReturnUseCase.execute(returnLoanCommand);
+        when(this.loanUpdatePersistencePort.execute(loanReturnCommand)).thenReturn(updatedLoan);
+        final var result = this.updateLoanReturnUseCase.execute(loanReturnCommand);
 
         // Then
         verify(this.loanRetrievalPersistencePort, times(1)).find(loanSearchCriteriaCommand);
-        verify(this.loanUpdatePersistencePort, times(1)).execute(returnLoanCommand);
+        verify(this.loanUpdatePersistencePort, times(1)).execute(loanReturnCommand);
         assertEquals(updatedLoan, result);
     }
 }

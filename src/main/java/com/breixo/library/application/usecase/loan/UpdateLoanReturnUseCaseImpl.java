@@ -1,11 +1,11 @@
 package com.breixo.library.application.usecase.loan;
 
+import com.breixo.library.domain.command.loan.LoanReturnCommand;
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
-import com.breixo.library.domain.command.loan.ReturnLoanCommand;
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.Loan;
-import com.breixo.library.domain.port.input.loan.LoanReturnUseCase;
+import com.breixo.library.domain.port.input.loan.UpdateLoanReturnUseCase;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanUpdatePersistencePort;
 
@@ -15,10 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Component;
 
-/** The Class Loan Return Use Case Impl. */
+/** The Class Update Loan Return Use Case Impl. */
 @Component
 @RequiredArgsConstructor
-public class LoanReturnUseCaseImpl implements LoanReturnUseCase {
+public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
 
     /** The loan retrieval persistence port. */
     private final LoanRetrievalPersistencePort loanRetrievalPersistencePort;
@@ -28,9 +28,9 @@ public class LoanReturnUseCaseImpl implements LoanReturnUseCase {
 
     /** {@inheritDoc} */
     @Override
-    public Loan execute(@Valid @NotNull final ReturnLoanCommand returnLoanCommand) {
+    public Loan execute(@Valid @NotNull final LoanReturnCommand loanReturnCommand) {
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
-                .id(returnLoanCommand.id())
+                .id(loanReturnCommand.id())
                 .build();
         final var loanExists = this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand).isPresent();
 
@@ -40,6 +40,6 @@ public class LoanReturnUseCaseImpl implements LoanReturnUseCase {
                     ExceptionMessageConstants.LOAN_NOT_FOUND_MESSAGE_ERROR);
         }
 
-        return this.loanUpdatePersistencePort.execute(returnLoanCommand);
+        return this.loanUpdatePersistencePort.execute(loanReturnCommand);
     }
 }
