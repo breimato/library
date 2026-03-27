@@ -18,7 +18,9 @@ public class DeleteLoanController implements DeleteLoanV1Api {
     /** {@inheritDoc} */
     @Override
     public ResponseEntity<Void> deleteLoanV1(final Integer id) {
+
         this.loanDeletionPersistencePort.execute(id);
+
         return ResponseEntity.noContent().build();
     }
 }

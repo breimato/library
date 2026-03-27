@@ -26,12 +26,16 @@ public class GetLoanIdController implements GetLoanIdV1Api {
     /** {@inheritDoc} */
     @Override
     public ResponseEntity<LoanV1ResponseDto> getLoanIdV1(final Integer id) {
+
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder().id(id).build();
+
         final var loan = this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)
                 .orElseThrow(() -> new LoanException(
                         ExceptionMessageConstants.LOAN_NOT_FOUND_CODE_ERROR,
                         ExceptionMessageConstants.LOAN_NOT_FOUND_MESSAGE_ERROR));
+
         final var loanV1ResponseDto = this.loanResponseMapper.toLoanV1Response(loan);
+
         return ResponseEntity.ok(loanV1ResponseDto);
     }
 }

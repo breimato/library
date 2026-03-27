@@ -27,11 +27,15 @@ public class PatchLoanReturnController implements PatchLoanReturnV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<LoanV1ResponseDto> patchLoanReturnV1(final Integer id,
-                                                               final PatchLoanReturnV1Request patchLoanReturnV1Request) {
+    public ResponseEntity<LoanV1ResponseDto> patchLoanReturnV1(
+            final Integer id, final PatchLoanReturnV1Request patchLoanReturnV1Request) {
+
         final var updateLoanReturnCommand = this.patchLoanReturnRequestMapper.toUpdateLoanReturnCommand(id, patchLoanReturnV1Request);
+
         final var loan = this.updateLoanReturnUseCase.execute(updateLoanReturnCommand);
+
         final var loanV1ResponseDto = this.loanResponseMapper.toLoanV1Response(loan);
+
         return ResponseEntity.ok(loanV1ResponseDto);
     }
 }
