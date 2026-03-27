@@ -12,8 +12,8 @@ public interface LoanUpdatePersistencePort {
     /**
      * Execute.
      *
-     * @param loanReturnCommand the loan return command
+     * @param updateLoanReturnCommand the update loan return command
      * @return the loan
      */
-    Loan execute(@Valid @NotNull UpdateLoanReturnCommand loanReturnCommand);
+    Loan execute(@Valid @NotNull UpdateLoanReturnCommand updateLoanReturnCommand);
 }

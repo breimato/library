@@ -27,19 +27,19 @@ public class LoanUpdatePersistenceRepository implements LoanUpdatePersistencePor
 
     /** {@inheritDoc} */
     @Override
-    public Loan execute(@Valid @NotNull final UpdateLoanReturnCommand loanReturnCommand) {
-        this.update(loanReturnCommand);
-        return this.find(loanReturnCommand.id());
+    public Loan execute(@Valid @NotNull final UpdateLoanReturnCommand updateLoanReturnCommand) {
+        this.update(updateLoanReturnCommand);
+        return this.find(updateLoanReturnCommand.id());
     }
 
     /**
      * Update.
      *
-     * @param loanReturnCommand the return loan command
+     * @param updateLoanReturnCommand the update return loan command
      */
-    private void update(final UpdateLoanReturnCommand loanReturnCommand) {
+    private void update(final UpdateLoanReturnCommand updateLoanReturnCommand) {
         try {
-            this.loanMyBatisMapper.update(loanReturnCommand);
+            this.loanMyBatisMapper.update(updateLoanReturnCommand);
         } catch (final Exception exception) {
             throw new LoanException(
                     ExceptionMessageConstants.LOAN_UPDATE_ERROR_CODE_ERROR,
