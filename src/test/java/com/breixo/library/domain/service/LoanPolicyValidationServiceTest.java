@@ -4,7 +4,7 @@ import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.model.user.User;
-import com.breixo.library.domain.model.user.UserStatus;
+import com.breixo.library.domain.model.user.enums.UserStatus;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
@@ -43,11 +43,11 @@ class LoanPolicyValidationServiceTest {
         final var book = Instancio.create(Book.class);
 
         // When
-        final var exception = assertThrows(LoanException.class,
+        final var loanException = assertThrows(LoanException.class,
                 () -> this.loanPolicyValidationService.checkCanBorrow(blockedUser, book));
 
         // Then
-        assertEquals(ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR, exception.getMessage());
+        assertEquals(ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR, loanException.getMessage());
     }
 
     /**
@@ -80,11 +80,11 @@ class LoanPolicyValidationServiceTest {
                 .build();
 
         // When
-        final var exception = assertThrows(LoanException.class,
+        final var loanException = assertThrows(LoanException.class,
                 () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, retiredBook));
 
         // Then
-        assertEquals(ExceptionMessageConstants.BOOK_RETIRED_MESSAGE_ERROR, exception.getMessage());
+        assertEquals(ExceptionMessageConstants.BOOK_RETIRED_MESSAGE_ERROR, loanException.getMessage());
     }
 
     /**
@@ -117,11 +117,11 @@ class LoanPolicyValidationServiceTest {
                 .build();
 
         // When
-        final var exception = assertThrows(LoanException.class,
+        final var loanException = assertThrows(LoanException.class,
                 () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, unavailableBook));
 
         // Then
-        assertEquals(ExceptionMessageConstants.BOOK_COPIES_NOT_AVAILABLE_MESSAGE_ERROR, exception.getMessage());
+        assertEquals(ExceptionMessageConstants.BOOK_COPIES_NOT_AVAILABLE_MESSAGE_ERROR, loanException.getMessage());
     }
 
     /**

@@ -4,7 +4,7 @@ import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.model.user.User;
-import com.breixo.library.domain.model.user.UserStatus;
+import com.breixo.library.domain.model.user.enums.UserStatus;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

@@ -65,17 +65,19 @@ class CreateLoanUseCaseTest {
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder()
                 .id(createLoanCommand.userId())
                 .build();
+        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder()
+                .id(createLoanCommand.bookId())
+                .build();
 
         // When
         when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.empty());
-        final var exception = assertThrows(UserException.class,
+        final var userException = assertThrows(UserException.class,
                 () -> this.createLoanUseCase.execute(createLoanCommand));
 
         // Then
         verify(this.userRetrievalPersistencePort, times(1)).find(userSearchCriteriaCommand);
-        verify(this.bookRetrievalPersistencePort, times(0)).find(BookSearchCriteriaCommand.builder()
-                .id(createLoanCommand.bookId()).build());
-        assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR, exception.getMessage());
+        verify(this.bookRetrievalPersistencePort, times(0)).find(bookSearchCriteriaCommand);
+        assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR, userException.getMessage());
     }
 
     /**
@@ -96,13 +98,13 @@ class CreateLoanUseCaseTest {
         // When
         when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.of(user));
         when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(Optional.empty());
-        final var exception = assertThrows(BookException.class,
+        final var bookException = assertThrows(BookException.class,
                 () -> this.createLoanUseCase.execute(createLoanCommand));
 
         // Then
         verify(this.userRetrievalPersistencePort, times(1)).find(userSearchCriteriaCommand);
         verify(this.bookRetrievalPersistencePort, times(1)).find(bookSearchCriteriaCommand);
-        assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, exception.getMessage());
+        assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, bookException.getMessage());
     }
 
     /**
@@ -128,13 +130,13 @@ class CreateLoanUseCaseTest {
         when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.of(user));
         when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(Optional.of(book));
         doThrow(loanException).when(this.loanPolicyValidationService).checkCanBorrow(user, book);
-        final var exception = assertThrows(LoanException.class,
+        final var thrownLoanException = assertThrows(LoanException.class,
                 () -> this.createLoanUseCase.execute(createLoanCommand));
 
         // Then
         verify(this.loanPolicyValidationService, times(1)).checkCanBorrow(user, book);
         verify(this.loanCreationPersistencePort, times(0)).execute(createLoanCommand);
-        assertEquals(ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR, exception.getMessage());
+        assertEquals(ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR, thrownLoanException.getMessage());
     }
 
     /**

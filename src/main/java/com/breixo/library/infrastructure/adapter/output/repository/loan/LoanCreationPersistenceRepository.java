@@ -40,12 +40,12 @@ public class LoanCreationPersistenceRepository implements LoanCreationPersistenc
      * @return the loan entity
      */
     private LoanEntity insert(final CreateLoanCommand createLoanCommand) {
-        final var loanEntity = new LoanEntity();
-        loanEntity.setUserId(createLoanCommand.userId());
-        loanEntity.setBookId(createLoanCommand.bookId());
-        loanEntity.setDueDate(createLoanCommand.dueDate());
+
+        final var loanEntity = this.loanEntityMapper.toLoanEntity(createLoanCommand);
+
         try {
             this.loanMyBatisMapper.insert(loanEntity);
+
         } catch (final Exception exception) {
             throw new LoanException(
                     ExceptionMessageConstants.LOAN_CREATION_ERROR_CODE_ERROR,

@@ -1,4 +1,4 @@
-package com.breixo.library.domain.model.loan;
+package com.breixo.library.domain.model.loan.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

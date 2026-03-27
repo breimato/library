@@ -1,6 +1,6 @@
 package com.breixo.library.infrastructure.mapper;
 
-import com.breixo.library.domain.model.loan.LoanStatus;
+import com.breixo.library.domain.model.loan.enums.LoanStatus;
 
 import org.mapstruct.Mapper;
 

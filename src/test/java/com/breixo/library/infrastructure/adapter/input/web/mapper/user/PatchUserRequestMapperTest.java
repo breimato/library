@@ -1,6 +1,6 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.user;
 
-import com.breixo.library.domain.model.user.UserStatus;
+import com.breixo.library.domain.model.user.enums.UserStatus;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchUserV1Request;
 import com.breixo.library.infrastructure.mapper.UserStatusMapper;
 

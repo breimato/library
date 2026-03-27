@@ -45,20 +45,20 @@ class UpdateLoanReturnUseCaseTest {
     @Test
     void testExecute_whenLoanNotFound_thenThrowLoanException() {
         // Given
-        final var loanReturnCommand = Instancio.create(UpdateLoanReturnCommand.class);
+        final var updateLoanReturnCommand = Instancio.create(UpdateLoanReturnCommand.class);
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
-                .id(loanReturnCommand.id())
+                .id(updateLoanReturnCommand.id())
                 .build();
 
         // When
         when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(Optional.empty());
-        final var exception = assertThrows(LoanException.class,
-                () -> this.updateLoanReturnUseCase.execute(loanReturnCommand));
+        final var loanException = assertThrows(LoanException.class,
+                () -> this.updateLoanReturnUseCase.execute(updateLoanReturnCommand));
 
         // Then
         verify(this.loanRetrievalPersistencePort, times(1)).find(loanSearchCriteriaCommand);
-        verify(this.loanUpdatePersistencePort, times(0)).execute(loanReturnCommand);
-        assertEquals(ExceptionMessageConstants.LOAN_NOT_FOUND_MESSAGE_ERROR, exception.getMessage());
+        verify(this.loanUpdatePersistencePort, times(0)).execute(updateLoanReturnCommand);
+        assertEquals(ExceptionMessageConstants.LOAN_NOT_FOUND_MESSAGE_ERROR, loanException.getMessage());
     }
 
     /**
@@ -67,22 +67,22 @@ class UpdateLoanReturnUseCaseTest {
     @Test
     void testExecute_whenLoanExists_thenUpdateAndReturnLoan() {
         // Given
-        final var loanReturnCommand = Instancio.create(UpdateLoanReturnCommand.class);
-        final var existingLoan = Instancio.create(Loan.class);
-        final var updatedLoan = Instancio.create(Loan.class);
+        final var updateLoanReturnCommand = Instancio.create(UpdateLoanReturnCommand.class);
+        final var loanOne = Instancio.create(Loan.class);
+        final var loanTwo = Instancio.create(Loan.class);
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
-                .id(loanReturnCommand.id())
+                .id(updateLoanReturnCommand.id())
                 .build();
 
         // When
         when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand))
-                .thenReturn(Optional.of(existingLoan));
-        when(this.loanUpdatePersistencePort.execute(loanReturnCommand)).thenReturn(updatedLoan);
-        final var result = this.updateLoanReturnUseCase.execute(loanReturnCommand);
+                .thenReturn(Optional.of(loanOne));
+        when(this.loanUpdatePersistencePort.execute(updateLoanReturnCommand)).thenReturn(loanTwo);
+        final var loan = this.updateLoanReturnUseCase.execute(updateLoanReturnCommand);
 
         // Then
         verify(this.loanRetrievalPersistencePort, times(1)).find(loanSearchCriteriaCommand);
-        verify(this.loanUpdatePersistencePort, times(1)).execute(loanReturnCommand);
-        assertEquals(updatedLoan, result);
+        verify(this.loanUpdatePersistencePort, times(1)).execute(updateLoanReturnCommand);
+        assertEquals(loanTwo, loan);
     }
 }

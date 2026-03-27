@@ -1,6 +1,5 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.loan;
 
-import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.port.input.loan.CreateLoanUseCase;
 import com.breixo.library.infrastructure.adapter.input.web.api.PostLoanV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.LoanV1ResponseDto;

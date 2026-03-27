@@ -12,6 +12,7 @@ import com.breixo.library.infrastructure.adapter.output.mybatis.LoanMyBatisMappe
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 /** The Class Loan Retrieval Persistence Repository. */
@@ -29,7 +30,7 @@ public class LoanRetrievalPersistenceRepository implements LoanRetrievalPersiste
     @Override
     public Optional<Loan> find(@Valid @NotNull final LoanSearchCriteriaCommand loanSearchCriteriaCommand) {
         final var loanEntities = this.loanMyBatisMapper.find(loanSearchCriteriaCommand);
-        if (loanEntities.isEmpty()) {
+        if (CollectionUtils.isEmpty(loanEntities)) {
             return Optional.empty();
         }
         final var loan = this.loanEntityMapper.toLoan(loanEntities.getFirst());

@@ -3,6 +3,7 @@ package com.breixo.library.domain.model.loan;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.breixo.library.domain.model.loan.enums.LoanStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 

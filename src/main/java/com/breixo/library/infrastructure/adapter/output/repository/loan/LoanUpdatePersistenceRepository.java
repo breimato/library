@@ -38,8 +38,10 @@ public class LoanUpdatePersistenceRepository implements LoanUpdatePersistencePor
      * @param updateLoanReturnCommand the update return loan command
      */
     private void update(final UpdateLoanReturnCommand updateLoanReturnCommand) {
+
         try {
             this.loanMyBatisMapper.update(updateLoanReturnCommand);
+
         } catch (final Exception exception) {
             throw new LoanException(
                     ExceptionMessageConstants.LOAN_UPDATE_ERROR_CODE_ERROR,
@@ -54,8 +56,11 @@ public class LoanUpdatePersistenceRepository implements LoanUpdatePersistencePor
      * @return the loan
      */
     private Loan find(final Integer id) {
+
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder().id(id).build();
+
         final var loanEntity = this.loanMyBatisMapper.find(loanSearchCriteriaCommand).getFirst();
+
         return this.loanEntityMapper.toLoan(loanEntity);
     }
 }

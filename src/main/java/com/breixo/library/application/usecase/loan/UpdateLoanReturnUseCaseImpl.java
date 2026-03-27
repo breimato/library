@@ -28,10 +28,10 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
 
     /** {@inheritDoc} */
     @Override
-    public Loan execute(@Valid @NotNull final UpdateLoanReturnCommand loanReturnCommand) {
-        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
-                .id(loanReturnCommand.id())
-                .build();
+    public Loan execute(@Valid @NotNull final UpdateLoanReturnCommand updateLoanReturnCommand) {
+
+        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder().id(updateLoanReturnCommand.id()).build();
+
         final var loanExists = this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand).isPresent();
 
         if (BooleanUtils.isFalse(loanExists)) {
@@ -40,6 +40,6 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
                     ExceptionMessageConstants.LOAN_NOT_FOUND_MESSAGE_ERROR);
         }
 
-        return this.loanUpdatePersistencePort.execute(loanReturnCommand);
+        return this.loanUpdatePersistencePort.execute(updateLoanReturnCommand);
     }
 }

@@ -2,6 +2,7 @@ package com.breixo.library.infrastructure.adapter.output.mapper;
 
 import java.util.List;
 
+import com.breixo.library.domain.command.loan.CreateLoanCommand;
 import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.infrastructure.adapter.output.entities.LoanEntity;
 import com.breixo.library.infrastructure.mapper.LoanStatusMapper;
@@ -29,4 +30,12 @@ public interface LoanEntityMapper {
      * @return the list of loans
      */
     List<Loan> toLoanList(List<LoanEntity> loanEntities);
+
+    /**
+     * To loan entity.
+     *
+     * @param createLoanCommand the create loan command
+     * @return the loan entity
+     */
+    LoanEntity toLoanEntity(CreateLoanCommand createLoanCommand);
 }
