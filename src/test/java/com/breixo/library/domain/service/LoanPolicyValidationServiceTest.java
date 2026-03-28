@@ -75,8 +75,6 @@ class LoanPolicyValidationServiceTest {
                 .genre(book.genre())
                 .totalCopies(0)
                 .availableCopies(0)
-                .createdAt(book.createdAt())
-                .updatedAt(book.updatedAt())
                 .build();
 
         // When
@@ -112,8 +110,6 @@ class LoanPolicyValidationServiceTest {
                 .genre(book.genre())
                 .totalCopies(book.totalCopies())
                 .availableCopies(0)
-                .createdAt(book.createdAt())
-                .updatedAt(book.updatedAt())
                 .build();
 
         // When
@@ -149,8 +145,6 @@ class LoanPolicyValidationServiceTest {
                 .genre(book.genre())
                 .totalCopies(book.totalCopies() > 0 ? book.totalCopies() : 1)
                 .availableCopies(book.availableCopies() > 0 ? book.availableCopies() : 1)
-                .createdAt(book.createdAt())
-                .updatedAt(book.updatedAt())
                 .build();
 
         // When / Then

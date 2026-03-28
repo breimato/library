@@ -55,8 +55,6 @@ class LoanEntityMapperTest {
         assertEquals(loanEntity.getDueDate(), loan.dueDate());
         assertEquals(loanEntity.getReturnDate(), loan.returnDate());
         assertEquals(loanStatus, loan.status());
-        assertEquals(loanEntity.getCreatedAt(), loan.createdAt());
-        assertEquals(loanEntity.getUpdatedAt(), loan.updatedAt());
     }
 
     /**

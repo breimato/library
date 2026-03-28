@@ -1,10 +1,8 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.loan;
 
-import java.time.ZoneOffset;
 import java.util.List;
 
 import com.breixo.library.domain.model.loan.Loan;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
 import com.breixo.library.infrastructure.mapper.LoanStatusMapper;
 
 import org.instancio.Instancio;
@@ -29,10 +27,6 @@ class LoanMapperTest {
     @InjectMocks
     LoanMapperImpl loanMapper;
 
-    /** The date mapper. */
-    @Mock
-    DateMapper dateMapper;
-
     /** The loan status mapper. */
     @Mock
     LoanStatusMapper loanStatusMapper;
@@ -47,17 +41,11 @@ class LoanMapperTest {
         final var statusId = Instancio.create(Integer.class);
 
         // When
-        when(this.dateMapper.toOffsetDateTime(loan.createdAt())).thenReturn(loan.createdAt().atOffset(ZoneOffset.UTC));
-        when(this.dateMapper.toOffsetDateTime(loan.updatedAt())).thenReturn(loan.updatedAt().atOffset(ZoneOffset.UTC));
         when(this.loanStatusMapper.toStatusId(loan.status())).thenReturn(statusId);
-
         final var loanV1Dto = this.loanMapper.toLoanV1(loan);
 
         // Then
-        verify(this.dateMapper, times(1)).toOffsetDateTime(loan.createdAt());
-        verify(this.dateMapper, times(1)).toOffsetDateTime(loan.updatedAt());
         verify(this.loanStatusMapper, times(1)).toStatusId(loan.status());
-
         assertNotNull(loanV1Dto);
         assertEquals(loan.id(), loanV1Dto.getId());
         assertEquals(loan.userId(), loanV1Dto.getUserId());
@@ -65,8 +53,6 @@ class LoanMapperTest {
         assertEquals(loan.dueDate(), loanV1Dto.getDueDate());
         assertEquals(loan.returnDate(), loanV1Dto.getReturnDate());
         assertEquals(statusId, loanV1Dto.getStatus());
-        assertEquals(loan.createdAt().atOffset(ZoneOffset.UTC), loanV1Dto.getCreatedAt());
-        assertEquals(loan.updatedAt().atOffset(ZoneOffset.UTC), loanV1Dto.getUpdatedAt());
     }
 
     /**
@@ -89,10 +75,7 @@ class LoanMapperTest {
         final var statusId = Instancio.create(Integer.class);
 
         // When
-        when(this.dateMapper.toOffsetDateTime(loan.createdAt())).thenReturn(loan.createdAt().atOffset(ZoneOffset.UTC));
-        when(this.dateMapper.toOffsetDateTime(loan.updatedAt())).thenReturn(loan.updatedAt().atOffset(ZoneOffset.UTC));
         when(this.loanStatusMapper.toStatusId(loan.status())).thenReturn(statusId);
-
         final var loanV1DtoList = this.loanMapper.toLoanV1List(loans);
 
         // Then

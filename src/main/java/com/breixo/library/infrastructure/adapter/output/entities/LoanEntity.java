@@ -1,7 +1,6 @@
 package com.breixo.library.infrastructure.adapter.output.entities;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -26,10 +25,4 @@ public class LoanEntity {
 
     /** The status id. */
     private Integer statusId;
-
-    /** The created at. */
-    private LocalDateTime createdAt;
-
-    /** The updated at. */
-    private LocalDateTime updatedAt;
 }

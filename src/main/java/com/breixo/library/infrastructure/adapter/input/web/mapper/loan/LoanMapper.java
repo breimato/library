@@ -4,14 +4,13 @@ import java.util.List;
 
 import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.infrastructure.adapter.input.web.dto.LoanV1Dto;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
 import com.breixo.library.infrastructure.mapper.LoanStatusMapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /** The Interface Loan Mapper. */
-@Mapper(componentModel = "spring", uses = {DateMapper.class, LoanStatusMapper.class})
+@Mapper(componentModel = "spring", uses = LoanStatusMapper.class)
 public interface LoanMapper {
 
     /**
