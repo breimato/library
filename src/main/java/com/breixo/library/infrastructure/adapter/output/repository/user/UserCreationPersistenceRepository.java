@@ -1,6 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.repository.user;
 
 import com.breixo.library.domain.command.user.CreateUserCommand;
+import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.port.output.user.UserCreationPersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mapper.UserEntityMapper;
@@ -30,6 +31,10 @@ public class UserCreationPersistenceRepository implements UserCreationPersistenc
 
         this.userMyBatisMapper.insert(userEntity);
 
-        return this.userEntityMapper.toUser(userEntity);
+        final var saved = this.userMyBatisMapper
+                .find(UserSearchCriteriaCommand.builder().id(userEntity.getId()).build())
+                .getFirst();
+
+        return this.userEntityMapper.toUser(saved);
     }
 }
