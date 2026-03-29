@@ -26,6 +26,19 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
     public void checkCanBorrow(@Valid @NotNull final User user, @Valid @NotNull final Book book,
             @NotNull final List<Loan> loanList) {
 
+        this.validateUserStatus(user);
+        this.validateUserLoans(loanList);
+        this.validateBookAvailability(book, loanList);
+    }
+
+
+    /**
+     * Validate user status.
+     *
+     * @param user the user
+     */
+    private void validateUserStatus(final User user) {
+
         if (UserStatus.BLOCKED.getId().equals(user.status().getId())) {
             throw new LoanException(
                     ExceptionMessageConstants.USER_BLOCKED_CODE_ERROR,
@@ -36,6 +49,16 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
                     ExceptionMessageConstants.USER_SUSPENDED_CODE_ERROR,
                     ExceptionMessageConstants.USER_SUSPENDED_MESSAGE_ERROR);
         }
+    }
+
+
+    /**
+     * Validate user loans.
+     *
+     * @param loanList the loan list
+     */
+    private void validateUserLoans(final List<Loan> loanList) {
+
         if (loanList.stream().anyMatch(loan -> LoanStatus.OVERDUE.getId().equals(loan.status().getId()))) {
             throw new LoanException(
                     ExceptionMessageConstants.USER_HAS_OVERDUE_LOANS_CODE_ERROR,
@@ -46,6 +69,17 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
                     ExceptionMessageConstants.USER_ACTIVE_LOANS_LIMIT_REACHED_CODE_ERROR,
                     ExceptionMessageConstants.USER_ACTIVE_LOANS_LIMIT_REACHED_MESSAGE_ERROR);
         }
+    }
+
+
+    /**
+     * Validate book availability.
+     *
+     * @param book     the book
+     * @param loanList the loan list
+     */
+    private void validateBookAvailability(final Book book, final List<Loan> loanList) {
+
         if (loanList.stream().anyMatch(loan -> loan.bookId().equals(book.id())
                 && LoanStatus.ACTIVE.getId().equals(loan.status().getId()))) {
             throw new LoanException(

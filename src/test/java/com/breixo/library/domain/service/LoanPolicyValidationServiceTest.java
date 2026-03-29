@@ -11,6 +11,7 @@ import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.model.user.enums.UserStatus;
 
 import org.instancio.Instancio;
+import static org.instancio.Select.field;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -134,40 +135,14 @@ class LoanPolicyValidationServiceTest {
 
         final var book = Instancio.create(Book.class);
 
-        final var loan1 = Instancio.create(Loan.class);
-        final var activeLoan1 = Loan.builder()
-                .id(loan1.id())
-                .userId(loan1.userId())
-                .bookId(loan1.bookId())
-                .dueDate(loan1.dueDate())
-                .returnDate(loan1.returnDate())
-                .status(LoanStatus.ACTIVE)
-                .build();
-
-        final var loan2 = Instancio.create(Loan.class);
-        final var activeLoan2 = Loan.builder()
-                .id(loan2.id())
-                .userId(loan2.userId())
-                .bookId(loan2.bookId())
-                .dueDate(loan2.dueDate())
-                .returnDate(loan2.returnDate())
-                .status(LoanStatus.ACTIVE)
-                .build();
-
-        final var loan3 = Instancio.create(Loan.class);
-        final var activeLoan3 = Loan.builder()
-                .id(loan3.id())
-                .userId(loan3.userId())
-                .bookId(loan3.bookId())
-                .dueDate(loan3.dueDate())
-                .returnDate(loan3.returnDate())
-                .status(LoanStatus.ACTIVE)
-                .build();
+        final var loanList = Instancio.ofList(Loan.class)
+                .size(3)
+                .set(field(Loan.class, "status"), LoanStatus.ACTIVE)
+                .create();
 
         // When
         final var loanException = assertThrows(LoanException.class,
-                () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, book,
-                        List.of(activeLoan1, activeLoan2, activeLoan3)));
+                () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, book, loanList));
 
         // Then
         assertEquals(ExceptionMessageConstants.USER_ACTIVE_LOANS_LIMIT_REACHED_MESSAGE_ERROR, loanException.getMessage());
