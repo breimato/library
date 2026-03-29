@@ -37,6 +37,7 @@ class BookEntityMapperTest {
      */
     @Test
     void testToBook_whenBookEntityIsValid_thenReturnMappedBook() {
+        
         // Given
         final var bookEntity = Instancio.create(BookEntity.class);
         bookEntity.setIsbn(VALID_ISBN);
@@ -69,6 +70,7 @@ class BookEntityMapperTest {
      */
     @Test
     void testToBookEntity_whenCreateBookCommandIsValid_thenReturnMappedBookEntity() {
+        
         // Given
         final var createBookCommand = Instancio.create(CreateBookCommand.class);
 
@@ -99,6 +101,7 @@ class BookEntityMapperTest {
      */
     @Test
     void testToBookList_whenBookEntitiesAreValid_thenReturnMappedBookList() {
+        
         // Given
         final var bookEntity = Instancio.create(BookEntity.class);
         bookEntity.setIsbn(VALID_ISBN);

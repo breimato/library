@@ -34,6 +34,7 @@ class PostBookRequestMapperTest {
      */
     @Test
     void testToCreateBookCommand_whenRequestIsValid_thenReturnMappedCommand() {
+        
         // Given
         final var postBookV1Request = Instancio.create(PostBookV1Request.class);
         postBookV1Request.setIsbn(VALID_ISBN);

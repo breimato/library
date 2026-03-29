@@ -25,6 +25,7 @@ class PostUserRequestMapperTest {
      */
     @Test
     void testToCreateUserCommand_whenRequestIsValid_thenReturnMappedCommand() {
+        
         // Given
         final var request = Instancio.create(PostUserV1RequestDto.class);
 

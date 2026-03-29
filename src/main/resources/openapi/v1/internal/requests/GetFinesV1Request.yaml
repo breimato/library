@@ -1,0 +1,15 @@
+description: "Get Fines V1 Request"
+type: object
+properties:
+  id:
+    type: integer
+    format: int32
+    description: "Filter by identifier"
+  loanId:
+    type: integer
+    format: int32
+    description: "Filter by loan identifier"
+  status:
+    type: integer
+    format: int32
+    description: "Filter by status"

@@ -30,6 +30,7 @@ class OverdueLoanSchedulerTest {
      */
     @Test
     void testMarkOverdueLoans_whenCalled_thenDelegatesToPort() {
+        
         // Given
         final var updatedCount = Instancio.create(Integer.class);
 

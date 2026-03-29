@@ -1,6 +1,6 @@
 package com.breixo.library.application.usecase.book;
 
-import java.util.Optional;
+import java.util.List;
 
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.command.book.UpdateBookCommand;
@@ -44,6 +44,7 @@ class UpdateBookUseCaseTest {
      */
     @Test
     void testExecute_whenBookExists_thenUpdateAndReturnBook() {
+        
         // Given
         final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
         final var existingBook = Instancio.create(Book.class);
@@ -51,7 +52,7 @@ class UpdateBookUseCaseTest {
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(updateBookCommand.id()).build();
 
         // When
-        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(Optional.of(existingBook));
+        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(List.of(existingBook));
         when(this.bookUpdatePersistencePort.execute(updateBookCommand)).thenReturn(updatedBook);
         final var result = this.updateBookUseCase.execute(updateBookCommand);
 
@@ -66,12 +67,13 @@ class UpdateBookUseCaseTest {
      */
     @Test
     void testExecute_whenBookNotFound_thenThrowBookException() {
+        
         // Given
         final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(updateBookCommand.id()).build();
 
         // When
-        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(Optional.empty());
+        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(List.of());
         final var exception = assertThrows(BookException.class,
                 () -> this.updateBookUseCase.execute(updateBookCommand));
 

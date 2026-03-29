@@ -39,6 +39,7 @@ class UserEntityMapperTest {
      */
     @Test
     void testToUser_whenUserEntityIsValid_thenReturnMappedUser() {
+        
         // Given
         final var userEntity = Instancio.create(UserEntity.class);
         userEntity.setStatusId(UserStatus.ACTIVE.getId());
@@ -70,6 +71,7 @@ class UserEntityMapperTest {
      */
     @Test
     void testToUserEntity_whenCreateUserCommandIsValid_thenReturnMappedUserEntity() {
+        
         // Given
         final var createUserCommand = Instancio.create(CreateUserCommand.class);
 
@@ -97,6 +99,7 @@ class UserEntityMapperTest {
      */
     @Test
     void testToUserEntity_whenUpdateUserCommandIsValid_thenReturnMappedUserEntity() {
+        
         // Given
         final var updateUserCommand = Instancio.create(UpdateUserCommand.class);
 
@@ -126,6 +129,7 @@ class UserEntityMapperTest {
      */
     @Test
     void testToUserList_whenUserEntitiesAreValid_thenReturnMappedUserList() {
+        
         // Given
         final var userEntity = Instancio.create(UserEntity.class);
         userEntity.setStatusId(UserStatus.ACTIVE.getId());

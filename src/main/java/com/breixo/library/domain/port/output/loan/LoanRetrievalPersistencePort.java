@@ -1,7 +1,6 @@
 package com.breixo.library.domain.port.output.loan;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
 import com.breixo.library.domain.model.loan.Loan;
@@ -16,15 +15,7 @@ public interface LoanRetrievalPersistencePort {
      * Find.
      *
      * @param loanSearchCriteriaCommand the loan search criteria command
-     * @return the optional loan
-     */
-    Optional<Loan> find(@Valid @NotNull LoanSearchCriteriaCommand loanSearchCriteriaCommand);
-
-    /**
-     * Find all.
-     *
-     * @param loanSearchCriteriaCommand the loan search criteria command
      * @return the list of loans
      */
-    List<Loan> findAll(@Valid @NotNull LoanSearchCriteriaCommand loanSearchCriteriaCommand);
+    List<Loan> find(@Valid @NotNull LoanSearchCriteriaCommand loanSearchCriteriaCommand);
 }

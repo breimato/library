@@ -36,6 +36,7 @@ class UserMapperTest {
      */
     @Test
     void testToUserV1_whenUserIsValid_thenReturnMappedDto() {
+        
         // Given
         final var user = Instancio.create(User.class);
 
@@ -66,6 +67,7 @@ class UserMapperTest {
      */
     @Test
     void testToUserV1List_whenUsersAreValid_thenReturnMappedDtoList() {
+        
         // Given
         final var user = Instancio.create(User.class);
         final var users = List.of(user);

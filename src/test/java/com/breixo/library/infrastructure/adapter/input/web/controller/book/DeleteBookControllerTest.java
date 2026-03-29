@@ -47,6 +47,7 @@ class DeleteBookControllerTest {
      */
     @Test
     void testDeleteBookV1_whenCalled_thenReturnNoContentResponse() throws Exception {
+        
         // Given
         final var id = Instancio.create(Integer.class);
 

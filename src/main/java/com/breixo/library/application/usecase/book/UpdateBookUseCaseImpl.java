@@ -12,7 +12,7 @@ import com.breixo.library.domain.port.output.book.BookUpdatePersistencePort;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 /** The Class Update Book Use Case Impl. */
@@ -31,9 +31,9 @@ public class UpdateBookUseCaseImpl implements UpdateBookUseCase {
     public Book execute(@Valid @NotNull final UpdateBookCommand updateBookCommand) {
 
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(updateBookCommand.id()).build();
-        final var bookExists = this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand).isPresent();
+        final var books = this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand);
 
-        if (BooleanUtils.isFalse(bookExists)) {
+        if (CollectionUtils.isEmpty(books)) {
             throw new BookException(
                     ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
                     ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR);

@@ -23,6 +23,7 @@ class FineCalculationServiceTest {
      */
     @Test
     void testExecute_whenReturnedOnTime_thenFineIsZero() {
+        
         // Given
         final var dueDate = LocalDate.now();
         final var returnDate = LocalDate.now();
@@ -39,6 +40,7 @@ class FineCalculationServiceTest {
      */
     @Test
     void testExecute_whenReturnedEarly_thenFineIsZero() {
+        
         // Given
         final var dueDate = LocalDate.now();
         final var returnDate = LocalDate.now().minusDays(3);

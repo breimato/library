@@ -1,6 +1,6 @@
 package com.breixo.library.application.usecase.loan;
 
-import java.util.Optional;
+import java.util.List;
 
 import com.breixo.library.domain.command.loan.UpdateLoanReturnCommand;
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
@@ -44,6 +44,7 @@ class UpdateLoanReturnUseCaseTest {
      */
     @Test
     void testExecute_whenLoanNotFound_thenThrowLoanException() {
+        
         // Given
         final var updateLoanReturnCommand = Instancio.create(UpdateLoanReturnCommand.class);
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
@@ -51,7 +52,7 @@ class UpdateLoanReturnUseCaseTest {
                 .build();
 
         // When
-        when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(Optional.empty());
+        when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(List.of());
         final var loanException = assertThrows(LoanException.class,
                 () -> this.updateLoanReturnUseCase.execute(updateLoanReturnCommand));
 
@@ -66,6 +67,7 @@ class UpdateLoanReturnUseCaseTest {
      */
     @Test
     void testExecute_whenLoanExists_thenUpdateAndReturnLoan() {
+        
         // Given
         final var updateLoanReturnCommand = Instancio.create(UpdateLoanReturnCommand.class);
         final var loanOne = Instancio.create(Loan.class);
@@ -75,8 +77,7 @@ class UpdateLoanReturnUseCaseTest {
                 .build();
 
         // When
-        when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand))
-                .thenReturn(Optional.of(loanOne));
+        when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(List.of(loanOne));
         when(this.loanUpdatePersistencePort.execute(updateLoanReturnCommand)).thenReturn(loanTwo);
         final var loan = this.updateLoanReturnUseCase.execute(updateLoanReturnCommand);
 

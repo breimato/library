@@ -25,6 +25,7 @@ class PatchLoanReturnRequestMapperTest {
      */
     @Test
     void testToUpdateLoanReturnCommand_whenRequestIsValid_thenReturnMappedCommand() {
+        
         // Given
         final var id = Instancio.create(Integer.class);
         final var patchLoanReturnV1Request = Instancio.create(PatchLoanReturnV1Request.class);
@@ -52,6 +53,7 @@ class PatchLoanReturnRequestMapperTest {
      */
     @Test
     void testToUpdateLoanReturnCommand_whenIdIsNull_thenReturnCommandWithNullId() {
+        
         // Given
         final var patchLoanReturnV1Request = Instancio.create(PatchLoanReturnV1Request.class);
 
@@ -69,6 +71,7 @@ class PatchLoanReturnRequestMapperTest {
      */
     @Test
     void testToUpdateLoanReturnCommand_whenRequestIsNull_thenReturnCommandWithOnlyId() {
+        
         // Given
         final var id = Instancio.create(Integer.class);
 

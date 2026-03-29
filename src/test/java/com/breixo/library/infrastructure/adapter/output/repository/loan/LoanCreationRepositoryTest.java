@@ -75,6 +75,7 @@ class LoanCreationRepositoryTest {
      */
     @Test
     void testExecute_whenInsertThrowsException_thenThrowLoanException() {
+        
         // Given
         final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
         final var loanEntity = Instancio.create(LoanEntity.class);

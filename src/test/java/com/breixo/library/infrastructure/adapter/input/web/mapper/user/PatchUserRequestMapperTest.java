@@ -33,6 +33,7 @@ class PatchUserRequestMapperTest {
      */
     @Test
     void testToUpdateUserCommand_whenRequestIsValid_thenReturnMappedCommand() {
+        
         // Given
         final var id = Instancio.create(Integer.class);
         final var patchUserV1RequestDto = Instancio.create(PatchUserV1Request.class);
@@ -64,6 +65,7 @@ class PatchUserRequestMapperTest {
      */
     @Test
     void testToUpdateUserCommand_whenIdIsNull_thenReturnCommandWithNullId() {
+        
         // Given
         final var patchUserV1RequestDto = Instancio.create(PatchUserV1Request.class);
         final var userStatus = Instancio.create(UserStatus.class);
@@ -85,6 +87,7 @@ class PatchUserRequestMapperTest {
      */
     @Test
     void testToUpdateUserCommand_whenRequestIsNull_thenReturnCommandWithOnlyId() {
+        
         // Given
         final var id = Instancio.create(Integer.class);
 

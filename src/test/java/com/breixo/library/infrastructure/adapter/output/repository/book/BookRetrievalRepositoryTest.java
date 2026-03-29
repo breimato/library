@@ -1,7 +1,6 @@
 package com.breixo.library.infrastructure.adapter.output.repository.book;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
@@ -39,48 +38,11 @@ class BookRetrievalRepositoryTest {
     BookEntityMapper bookEntityMapper;
 
     /**
-     * Test find when book found then return book.
+     * Test find when criteria provided then return matching books.
      */
     @Test
-    void testFind_whenBookFound_thenReturnBook() {
-        // Given
-        final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
-        final var bookEntity = Instancio.create(BookEntity.class);
-        final var book = Instancio.create(Book.class);
-
-        // When
-        when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of(bookEntity));
-        when(this.bookEntityMapper.toBook(bookEntity)).thenReturn(book);
-        final var result = this.bookRetrievalRepository.find(bookSearchCriteriaCommand);
-
-        // Then
-        verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
-        verify(this.bookEntityMapper, times(1)).toBook(bookEntity);
-        assertEquals(Optional.of(book), result);
-    }
-
-    /**
-     * Test find when book not found then return empty optional.
-     */
-    @Test
-    void testFind_whenBookNotFound_thenReturnEmptyOptional() {
-        // Given
-        final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
-
-        // When
-        when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of());
-        final var result = this.bookRetrievalRepository.find(bookSearchCriteriaCommand);
-
-        // Then
-        verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
-        assertTrue(result.isEmpty());
-    }
-
-    /**
-     * Test find all when criteria provided then return matching books.
-     */
-    @Test
-    void testFindAll_whenCriteriaProvided_thenReturnMatchingBooks() {
+    void testFind_whenCriteriaProvided_thenReturnMatchingBooks() {
+        
         // Given
         final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
         final var bookEntities = Instancio.createList(BookEntity.class);
@@ -89,7 +51,7 @@ class BookRetrievalRepositoryTest {
         // When
         when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(bookEntities);
         when(this.bookEntityMapper.toBookList(bookEntities)).thenReturn(books);
-        final var result = this.bookRetrievalRepository.findAll(bookSearchCriteriaCommand);
+        final var result = this.bookRetrievalRepository.find(bookSearchCriteriaCommand);
 
         // Then
         verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
@@ -98,10 +60,11 @@ class BookRetrievalRepositoryTest {
     }
 
     /**
-     * Test find all when no books match criteria then return empty list.
+     * Test find when no books match criteria then return empty list.
      */
     @Test
-    void testFindAll_whenNoBooksMatchCriteria_thenReturnEmptyList() {
+    void testFind_whenNoBooksMatchCriteria_thenReturnEmptyList() {
+        
         // Given
         final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
         final var books = List.<Book>of();
@@ -109,7 +72,7 @@ class BookRetrievalRepositoryTest {
         // When
         when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of());
         when(this.bookEntityMapper.toBookList(List.of())).thenReturn(books);
-        final var result = this.bookRetrievalRepository.findAll(bookSearchCriteriaCommand);
+        final var result = this.bookRetrievalRepository.find(bookSearchCriteriaCommand);
 
         // Then
         verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);

@@ -43,6 +43,7 @@ class FineRetrievalRepositoryTest {
      */
     @Test
     void testFind_whenFineFound_thenReturnFine() {
+        
         // Given
         final var fineSearchCriteriaCommand = Instancio.create(FineSearchCriteriaCommand.class);
         final var fineEntity = Instancio.create(FineEntity.class);
@@ -64,6 +65,7 @@ class FineRetrievalRepositoryTest {
      */
     @Test
     void testFind_whenFineNotFound_thenReturnEmptyOptional() {
+        
         // Given
         final var fineSearchCriteriaCommand = Instancio.create(FineSearchCriteriaCommand.class);
 

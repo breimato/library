@@ -47,6 +47,7 @@ class BookUpdateRepositoryTest {
      */
     @Test
     void testExecute_whenBookExists_thenReturnUpdatedBook() {
+        
         // Given
         final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
         final var bookEntity = Instancio.create(BookEntity.class);
@@ -70,6 +71,7 @@ class BookUpdateRepositoryTest {
      */
     @Test
     void testExecute_whenUpdateThrowsException_thenThrowBookException() {
+        
         // Given
         final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
 

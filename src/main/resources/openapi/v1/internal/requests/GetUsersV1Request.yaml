@@ -1,0 +1,17 @@
+description: "Get Users V1 Request"
+type: object
+properties:
+  id:
+    type: integer
+    format: int32
+    description: "Filter by identifier"
+  name:
+    type: string
+    description: "Filter by name"
+  email:
+    type: string
+    description: "Filter by email"
+  status:
+    type: integer
+    format: int32
+    description: "Filter by status"

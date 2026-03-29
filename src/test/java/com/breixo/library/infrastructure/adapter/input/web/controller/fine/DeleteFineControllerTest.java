@@ -46,6 +46,7 @@ class DeleteFineControllerTest {
      */
     @Test
     void testDeleteFineV1_whenFineExists_thenReturnNoContent() throws Exception {
+        
         // Given
         final var id = Instancio.create(Integer.class);
 

@@ -12,7 +12,7 @@ import com.breixo.library.domain.port.output.user.UserUpdatePersistencePort;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 /** The Class Update User Use Case Impl. */
@@ -31,9 +31,9 @@ public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
     public User execute(@Valid @NotNull final UpdateUserCommand updateUserCommand) {
 
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(updateUserCommand.id()).build();
-        final var userExists = this.userRetrievalPersistencePort.find(userSearchCriteriaCommand).isPresent();
+        final var users = this.userRetrievalPersistencePort.find(userSearchCriteriaCommand);
 
-        if (BooleanUtils.isFalse(userExists)) {
+        if (CollectionUtils.isEmpty(users)) {
             throw new UserException(
                     ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
                     ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR);

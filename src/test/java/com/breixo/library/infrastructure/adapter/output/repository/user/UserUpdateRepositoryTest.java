@@ -47,6 +47,7 @@ class UserUpdateRepositoryTest {
      */
     @Test
     void testExecute_whenUserExists_thenReturnUpdatedUser() {
+        
         // Given
         final var updateUserCommand = Instancio.create(UpdateUserCommand.class);
         final var userEntity = Instancio.create(UserEntity.class);
@@ -72,6 +73,7 @@ class UserUpdateRepositoryTest {
      */
     @Test
     void testExecute_whenUpdateThrowsException_thenThrowUserException() {
+        
         // Given
         final var updateUserCommand = Instancio.create(UpdateUserCommand.class);
         final var userEntity = Instancio.create(UserEntity.class);

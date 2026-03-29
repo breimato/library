@@ -34,6 +34,7 @@ class BookResponseMapperTest {
      */
     @Test
     void testToBookV1Response_whenBookIsValid_thenReturnMappedResponse() {
+        
         // Given
         final var book = Instancio.create(Book.class);
         final var bookV1Dto = Instancio.create(BookV1Dto.class);

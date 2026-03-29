@@ -1,7 +1,6 @@
 package com.breixo.library.infrastructure.adapter.output.repository.loan;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
 import com.breixo.library.domain.model.loan.Loan;
@@ -39,50 +38,11 @@ class LoanRetrievalRepositoryTest {
     LoanEntityMapper loanEntityMapper;
 
     /**
-     * Test find when loan found then return loan.
+     * Test find when loans exist then return loans.
      */
     @Test
-    void testFind_whenLoanFound_thenReturnLoan() {
-        // Given
-        final var loanSearchCriteriaCommand = Instancio.create(LoanSearchCriteriaCommand.class);
-        final var loanEntity = Instancio.create(LoanEntity.class);
-        final var loan = Instancio.create(Loan.class);
-
-        // When
-        when(this.loanMyBatisMapper.find(loanSearchCriteriaCommand)).thenReturn(List.of(loanEntity));
-        when(this.loanEntityMapper.toLoan(loanEntity)).thenReturn(loan);
-
-        final var result = this.loanRetrievalRepository.find(loanSearchCriteriaCommand);
-
-        // Then
-        verify(this.loanMyBatisMapper, times(1)).find(loanSearchCriteriaCommand);
-        verify(this.loanEntityMapper, times(1)).toLoan(loanEntity);
-
-        assertEquals(Optional.of(loan), result);
-    }
-
-    /**
-     * Test find when loan not found then return empty optional.
-     */
-    @Test
-    void testFind_whenLoanNotFound_thenReturnEmptyOptional() {
-        // Given
-        final var loanSearchCriteriaCommand = Instancio.create(LoanSearchCriteriaCommand.class);
-
-        // When
-        when(this.loanMyBatisMapper.find(loanSearchCriteriaCommand)).thenReturn(List.of());
-        final var result = this.loanRetrievalRepository.find(loanSearchCriteriaCommand);
-
-        // Then
-        verify(this.loanMyBatisMapper, times(1)).find(loanSearchCriteriaCommand);
-        assertTrue(result.isEmpty());
-    }
-
-    /**
-     * Test find all when loans exist then return loans.
-     */
-    @Test
-    void testFindAll_whenLoansExist_thenReturnLoans() {
+    void testFind_whenLoansExist_thenReturnLoans() {
+        
         // Given
         final var loanSearchCriteriaCommand = Instancio.create(LoanSearchCriteriaCommand.class);
         final var loanEntities = Instancio.createList(LoanEntity.class);
@@ -91,11 +51,32 @@ class LoanRetrievalRepositoryTest {
         // When
         when(this.loanMyBatisMapper.find(loanSearchCriteriaCommand)).thenReturn(loanEntities);
         when(this.loanEntityMapper.toLoanList(loanEntities)).thenReturn(loans);
-        final var result = this.loanRetrievalRepository.findAll(loanSearchCriteriaCommand);
+        final var result = this.loanRetrievalRepository.find(loanSearchCriteriaCommand);
 
         // Then
         verify(this.loanMyBatisMapper, times(1)).find(loanSearchCriteriaCommand);
         verify(this.loanEntityMapper, times(1)).toLoanList(loanEntities);
         assertEquals(loans, result);
+    }
+
+    /**
+     * Test find when no loans match criteria then return empty list.
+     */
+    @Test
+    void testFind_whenNoLoansMatchCriteria_thenReturnEmptyList() {
+        
+        // Given
+        final var loanSearchCriteriaCommand = Instancio.create(LoanSearchCriteriaCommand.class);
+        final var loans = List.<Loan>of();
+
+        // When
+        when(this.loanMyBatisMapper.find(loanSearchCriteriaCommand)).thenReturn(List.of());
+        when(this.loanEntityMapper.toLoanList(List.of())).thenReturn(loans);
+        final var result = this.loanRetrievalRepository.find(loanSearchCriteriaCommand);
+
+        // Then
+        verify(this.loanMyBatisMapper, times(1)).find(loanSearchCriteriaCommand);
+        verify(this.loanEntityMapper, times(1)).toLoanList(List.of());
+        assertTrue(result.isEmpty());
     }
 }

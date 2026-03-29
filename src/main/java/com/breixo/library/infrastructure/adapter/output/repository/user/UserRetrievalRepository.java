@@ -1,7 +1,6 @@
 package com.breixo.library.infrastructure.adapter.output.repository.user;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
 import com.breixo.library.domain.model.user.User;
@@ -27,22 +26,7 @@ public class UserRetrievalRepository implements UserRetrievalPersistencePort {
 
     /** {@inheritDoc} */
     @Override
-    public Optional<User> find(@Valid @NotNull final UserSearchCriteriaCommand userSearchCriteriaCommand) {
-
-        final var userEntities = this.userMyBatisMapper.find(userSearchCriteriaCommand);
-
-        if (userEntities.isEmpty()) {
-            return Optional.empty();
-        }
-
-        final var user = this.userEntityMapper.toUser(userEntities.getFirst());
-
-        return Optional.of(user);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public List<User> findAll(@Valid @NotNull final UserSearchCriteriaCommand userSearchCriteriaCommand) {
+    public List<User> find(@Valid @NotNull final UserSearchCriteriaCommand userSearchCriteriaCommand) {
 
         final var userEntities = this.userMyBatisMapper.find(userSearchCriteriaCommand);
 

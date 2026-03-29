@@ -4,31 +4,12 @@ get:
   operationId: "GetBooksV1"
   tags:
     - get-books-v1
-  parameters:
-    - name: isbn
-      in: query
-      required: false
-      schema:
-        type: string
-      description: "Filter by ISBN"
-    - name: title
-      in: query
-      required: false
-      schema:
-        type: string
-      description: "Filter by title (partial match)"
-    - name: author
-      in: query
-      required: false
-      schema:
-        type: string
-      description: "Filter by author (partial match)"
-    - name: genre
-      in: query
-      required: false
-      schema:
-        type: string
-      description: "Filter by genre (partial match)"
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/GetBooksV1Request.yaml'
   responses:
     '200':
       description: "200 OK"

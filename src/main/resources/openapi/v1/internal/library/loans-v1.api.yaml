@@ -4,25 +4,12 @@ get:
   operationId: "GetLoansV1"
   tags:
     - get-loans-v1
-  parameters:
-    - name: userId
-      in: query
-      required: false
-      schema:
-        type: integer
-        format: int32
-    - name: bookId
-      in: query
-      required: false
-      schema:
-        type: integer
-        format: int32
-    - name: status
-      in: query
-      required: false
-      schema:
-        type: integer
-        format: int32
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/GetLoansV1Request.yaml'
   responses:
     '200':
       description: "200 OK"

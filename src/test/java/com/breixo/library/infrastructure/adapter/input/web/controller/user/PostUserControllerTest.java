@@ -67,6 +67,7 @@ class PostUserControllerTest {
      */
     @Test
     void testPostUserV1_whenRequestIsValid_thenReturnCreatedResponse() throws Exception {
+        
         // Given
         final var postUserV1RequestDto = Instancio.create(PostUserV1RequestDto.class);
         final var createUserCommand = Instancio.create(CreateUserCommand.class);

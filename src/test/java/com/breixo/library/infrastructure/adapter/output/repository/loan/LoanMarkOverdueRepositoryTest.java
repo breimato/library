@@ -31,6 +31,7 @@ class LoanMarkOverdueRepositoryTest {
      */
     @Test
     void testMarkOverdue_whenLoansAreOverdue_thenReturnUpdatedCount() {
+        
         // Given
         final var expectedCount = Instancio.create(Integer.class);
 
@@ -48,6 +49,7 @@ class LoanMarkOverdueRepositoryTest {
      */
     @Test
     void testMarkOverdue_whenNoLoansAreOverdue_thenReturnZero() {
+        
         // Given
         final var expectedCount = 0;
 

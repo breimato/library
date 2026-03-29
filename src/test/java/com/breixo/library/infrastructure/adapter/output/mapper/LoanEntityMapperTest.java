@@ -38,6 +38,7 @@ class LoanEntityMapperTest {
      */
     @Test
     void testToLoan_whenLoanEntityIsValid_thenReturnMappedLoan() {
+        
         // Given
         final var loanEntity = Instancio.create(LoanEntity.class);
         final var loanStatus = Instancio.create(LoanStatus.class);
@@ -71,6 +72,7 @@ class LoanEntityMapperTest {
      */
     @Test
     void testToLoanEntity_whenCreateLoanCommandIsValid_thenReturnMappedLoanEntity() {
+        
         // Given
         final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
 
@@ -98,6 +100,7 @@ class LoanEntityMapperTest {
      */
     @Test
     void testToLoanList_whenLoanEntitiesAreValid_thenReturnMappedLoanList() {
+        
         // Given
         final var loanEntity = Instancio.create(LoanEntity.class);
         final var loanEntities = List.of(loanEntity);

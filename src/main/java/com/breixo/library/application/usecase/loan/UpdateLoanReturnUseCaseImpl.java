@@ -12,7 +12,7 @@ import com.breixo.library.domain.port.output.loan.LoanUpdatePersistencePort;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 /** The Class Update Loan Return Use Case Impl. */
@@ -31,10 +31,9 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
     public Loan execute(@Valid @NotNull final UpdateLoanReturnCommand updateLoanReturnCommand) {
 
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder().id(updateLoanReturnCommand.id()).build();
+        final var loans = this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand);
 
-        final var loanExists = this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand).isPresent();
-
-        if (BooleanUtils.isFalse(loanExists)) {
+        if (CollectionUtils.isEmpty(loans)) {
             throw new LoanException(
                     ExceptionMessageConstants.LOAN_NOT_FOUND_CODE_ERROR,
                     ExceptionMessageConstants.LOAN_NOT_FOUND_MESSAGE_ERROR);

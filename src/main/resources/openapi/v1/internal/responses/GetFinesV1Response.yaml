@@ -1,0 +1,7 @@
+description: "Get Fines V1 Response"
+type: object
+properties:
+  fines:
+    type: array
+    items:
+      $ref: '../components/FineV1.yaml'

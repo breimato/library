@@ -64,6 +64,7 @@ class GetFineIdControllerTest {
      */
     @Test
     void testGetFineIdV1_whenFineExists_thenReturnOkResponse() throws Exception {
+        
         // Given
         final var id = Instancio.create(Integer.class);
         final var fine = Instancio.create(Fine.class);
@@ -88,6 +89,7 @@ class GetFineIdControllerTest {
      */
     @Test
     void testGetFineIdV1_whenFineNotFound_thenThrowFineException() {
+        
         // Given
         final var id = Instancio.create(Integer.class);
         final var fineSearchCriteriaCommand = FineSearchCriteriaCommand.builder().id(id).build();
@@ -99,7 +101,7 @@ class GetFineIdControllerTest {
 
         // Then
         verify(this.fineRetrievalPersistencePort, times(1)).find(fineSearchCriteriaCommand);
-        verifyNoInteractions(this.fineResponseMapper);
+        verify(this.fineResponseMapper, times(0)).toFineV1Response(null);
         assertEquals(ExceptionMessageConstants.FINE_NOT_FOUND_CODE_ERROR, fineException.getCode());
         assertEquals(ExceptionMessageConstants.FINE_NOT_FOUND_MESSAGE_ERROR, fineException.getMessage());
     }

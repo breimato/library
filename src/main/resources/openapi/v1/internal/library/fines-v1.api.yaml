@@ -1,0 +1,25 @@
+get:
+  summary: "Get Fines V1"
+  description: "Get all fines, optionally filtered by search criteria"
+  operationId: "GetFinesV1"
+  tags:
+    - get-fines-v1
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/GetFinesV1Request.yaml'
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/GetFinesV1Response.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

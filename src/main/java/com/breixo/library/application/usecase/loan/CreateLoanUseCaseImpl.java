@@ -20,6 +20,7 @@ import com.breixo.library.domain.service.LoanPolicyValidationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 /** The Class Create Loan Use Case Impl. */
@@ -53,7 +54,7 @@ public class CreateLoanUseCaseImpl implements CreateLoanUseCase {
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
                 .userId(user.id())
                 .build();
-        final var loanList = this.loanRetrievalPersistencePort.findAll(loanSearchCriteriaCommand);
+        final var loanList = this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand);
 
         this.loanPolicyValidationService.checkCanBorrow(user, book, loanList);
 
@@ -70,11 +71,15 @@ public class CreateLoanUseCaseImpl implements CreateLoanUseCase {
     private User validateUser(final Integer userId) {
 
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(userId).build();
+        final var users = this.userRetrievalPersistencePort.find(userSearchCriteriaCommand);
 
-        return this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)
-                .orElseThrow(() -> new UserException(
-                        ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
-                        ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR));
+        if (CollectionUtils.isEmpty(users)) {
+            throw new UserException(
+                    ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
+                    ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR);
+        }
+
+        return users.getFirst();
     }
 
 
@@ -89,10 +94,14 @@ public class CreateLoanUseCaseImpl implements CreateLoanUseCase {
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder()
                 .id(bookId)
                 .build();
+        final var books = this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand);
 
-        return this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)
-                .orElseThrow(() -> new BookException(
-                        ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
-                        ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR));
+        if (CollectionUtils.isEmpty(books)) {
+            throw new BookException(
+                    ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
+                    ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR);
+        }
+
+        return books.getFirst();
     }
 }

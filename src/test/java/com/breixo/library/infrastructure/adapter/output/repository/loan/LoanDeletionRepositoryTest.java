@@ -29,6 +29,7 @@ class LoanDeletionRepositoryTest {
      */
     @Test
     void testExecute_whenIdIsValid_thenDeleteLoan() {
+        
         // Given
         final var id = Instancio.create(Integer.class);
 

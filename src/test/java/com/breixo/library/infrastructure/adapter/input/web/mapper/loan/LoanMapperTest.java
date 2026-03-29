@@ -36,6 +36,7 @@ class LoanMapperTest {
      */
     @Test
     void testToLoanV1_whenLoanIsValid_thenReturnMappedDto() {
+        
         // Given
         final var loan = Instancio.create(Loan.class);
         final var statusId = Instancio.create(Integer.class);
@@ -69,6 +70,7 @@ class LoanMapperTest {
      */
     @Test
     void testToLoanV1List_whenLoansAreValid_thenReturnMappedDtoList() {
+        
         // Given
         final var loan = Instancio.create(Loan.class);
         final var loans = List.of(loan);

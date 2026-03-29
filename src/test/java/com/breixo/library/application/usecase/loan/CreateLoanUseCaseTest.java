@@ -1,7 +1,6 @@
 package com.breixo.library.application.usecase.loan;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.command.loan.CreateLoanCommand;
@@ -67,6 +66,7 @@ class CreateLoanUseCaseTest {
      */
     @Test
     void testExecute_whenUserNotFound_thenThrowUserException() {
+        
         // Given
         final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder()
@@ -77,7 +77,7 @@ class CreateLoanUseCaseTest {
                 .build();
 
         // When
-        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.empty());
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(List.of());
         final var userException = assertThrows(UserException.class,
                 () -> this.createLoanUseCase.execute(createLoanCommand));
 
@@ -92,6 +92,7 @@ class CreateLoanUseCaseTest {
      */
     @Test
     void testExecute_whenBookNotFound_thenThrowBookException() {
+        
         // Given
         final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
         final var user = Instancio.create(User.class);
@@ -106,15 +107,15 @@ class CreateLoanUseCaseTest {
                 .build();
 
         // When
-        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.of(user));
-        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(Optional.empty());
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(List.of(user));
+        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(List.of());
         final var bookException = assertThrows(BookException.class,
                 () -> this.createLoanUseCase.execute(createLoanCommand));
 
         // Then
         verify(this.userRetrievalPersistencePort, times(1)).find(userSearchCriteriaCommand);
         verify(this.bookRetrievalPersistencePort, times(1)).find(bookSearchCriteriaCommand);
-        verify(this.loanRetrievalPersistencePort, times(0)).findAll(loanSearchCriteriaCommand);
+        verify(this.loanRetrievalPersistencePort, times(0)).find(loanSearchCriteriaCommand);
         assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, bookException.getMessage());
     }
 
@@ -123,6 +124,7 @@ class CreateLoanUseCaseTest {
      */
     @Test
     void testExecute_whenPolicyRejected_thenThrowLoanException() {
+        
         // Given
         final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
         final var user = Instancio.create(User.class);
@@ -142,15 +144,15 @@ class CreateLoanUseCaseTest {
                 ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR);
 
         // When
-        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.of(user));
-        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(Optional.of(book));
-        when(this.loanRetrievalPersistencePort.findAll(loanSearchCriteriaCommand)).thenReturn(loanList);
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(List.of(user));
+        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(List.of(book));
+        when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(loanList);
         doThrow(loanException).when(this.loanPolicyValidationService).checkCanBorrow(user, book, loanList);
         final var thrownLoanException = assertThrows(LoanException.class,
                 () -> this.createLoanUseCase.execute(createLoanCommand));
 
         // Then
-        verify(this.loanRetrievalPersistencePort, times(1)).findAll(loanSearchCriteriaCommand);
+        verify(this.loanRetrievalPersistencePort, times(1)).find(loanSearchCriteriaCommand);
         verify(this.loanPolicyValidationService, times(1)).checkCanBorrow(user, book, loanList);
         verify(this.loanCreationPersistencePort, times(0)).execute(createLoanCommand);
         assertEquals(ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR, thrownLoanException.getMessage());
@@ -161,6 +163,7 @@ class CreateLoanUseCaseTest {
      */
     @Test
     void testExecute_whenAllConditionsMet_thenCreateAndReturnLoan() {
+        
         // Given
         final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
         final var user = Instancio.create(User.class);
@@ -178,14 +181,14 @@ class CreateLoanUseCaseTest {
                 .build();
 
         // When
-        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.of(user));
-        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(Optional.of(book));
-        when(this.loanRetrievalPersistencePort.findAll(loanSearchCriteriaCommand)).thenReturn(loanList);
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(List.of(user));
+        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(List.of(book));
+        when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(loanList);
         when(this.loanCreationPersistencePort.execute(createLoanCommand)).thenReturn(loan);
         final var result = this.createLoanUseCase.execute(createLoanCommand);
 
         // Then
-        verify(this.loanRetrievalPersistencePort, times(1)).findAll(loanSearchCriteriaCommand);
+        verify(this.loanRetrievalPersistencePort, times(1)).find(loanSearchCriteriaCommand);
         verify(this.loanPolicyValidationService, times(1)).checkCanBorrow(user, book, loanList);
         verify(this.loanCreationPersistencePort, times(1)).execute(createLoanCommand);
         assertEquals(loan, result);

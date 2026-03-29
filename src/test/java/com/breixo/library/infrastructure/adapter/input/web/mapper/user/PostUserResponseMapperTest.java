@@ -31,6 +31,7 @@ class PostUserResponseMapperTest {
      */
     @Test
     void testToPostUserV1Response_whenUserIsValid_thenReturnMappedResponse() {
+        
         // Given
         final var user = Instancio.create(User.class);
         final var userV1Dto = Instancio.create(UserV1Dto.class);

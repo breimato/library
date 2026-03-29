@@ -68,6 +68,7 @@ class PostLoanControllerTest {
      */
     @Test
     void testPostLoanV1_whenRequestIsValid_thenReturnCreatedResponse() throws Exception {
+
         // Given
         final var postLoanV1Request = Instancio.create(PostLoanV1Request.class);
         final var createLoanCommand = Instancio.create(CreateLoanCommand.class);

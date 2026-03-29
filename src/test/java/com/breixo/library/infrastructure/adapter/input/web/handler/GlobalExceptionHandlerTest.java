@@ -27,6 +27,7 @@ class GlobalExceptionHandlerTest {
      */
     @Test
     void testHandleLoanException_whenCodeIsPolicyCode_thenReturnBadRequest() {
+        
         // Given
         final var loanException = new LoanException(
                 ExceptionMessageConstants.USER_BLOCKED_CODE_ERROR,
@@ -48,6 +49,7 @@ class GlobalExceptionHandlerTest {
      */
     @Test
     void testHandleLoanException_whenCodeIsNotFoundCode_thenReturnNotFound() {
+        
         // Given
         final var loanException = new LoanException(
                 ExceptionMessageConstants.LOAN_NOT_FOUND_CODE_ERROR,
@@ -69,6 +71,7 @@ class GlobalExceptionHandlerTest {
      */
     @Test
     void testHandleIsbnException_whenCalled_thenReturnBadRequest() {
+        
         // Given
         final var isbnException = new IsbnException(
                 ExceptionMessageConstants.INVALID_ISBN_CODE_ERROR,
@@ -90,6 +93,7 @@ class GlobalExceptionHandlerTest {
      */
     @Test
     void testHandleException_whenCalled_thenReturnNotFound() {
+        
         // Given
         final var bookException = new BookException(
                 ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,

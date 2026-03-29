@@ -33,6 +33,7 @@ class BookMapperTest {
      */
     @Test
     void testToBookV1_whenBookIsValid_thenReturnMappedDto() {
+        
         // Given
         final var book = Instancio.create(Book.class);
 
@@ -64,6 +65,7 @@ class BookMapperTest {
      */
     @Test
     void testToBookV1List_whenBooksAreValid_thenReturnMappedDtoList() {
+        
         // Given
         final var book = Instancio.create(Book.class);
         final var books = List.of(book);

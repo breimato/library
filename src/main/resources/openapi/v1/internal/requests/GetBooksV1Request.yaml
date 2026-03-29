@@ -1,0 +1,19 @@
+description: "Get Books V1 Request"
+type: object
+properties:
+  id:
+    type: integer
+    format: int32
+    description: "Filter by identifier"
+  isbn:
+    type: string
+    description: "Filter by ISBN"
+  title:
+    type: string
+    description: "Filter by title"
+  author:
+    type: string
+    description: "Filter by author"
+  genre:
+    type: string
+    description: "Filter by genre"

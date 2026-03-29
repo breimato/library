@@ -47,6 +47,7 @@ class DeleteUserControllerTest {
      */
     @Test
     void testDeleteUserV1_whenCalled_thenReturnNoContentResponse() throws Exception {
+        
         // Given
         final var id = Instancio.create(Integer.class);
 

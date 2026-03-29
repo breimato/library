@@ -12,6 +12,7 @@ import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 /** The Class Create User Use Case Impl. */
@@ -30,10 +31,9 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
     public User execute(@Valid @NotNull final CreateUserCommand createUserCommand) {
 
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().email(createUserCommand.email()).build();
+        final var users = this.userRetrievalPersistencePort.find(userSearchCriteriaCommand);
 
-        final var emailAlreadyExists = this.userRetrievalPersistencePort.find(userSearchCriteriaCommand).isPresent();
-
-        if (emailAlreadyExists) {
+        if (CollectionUtils.isNotEmpty(users)) {
             throw new UserException(
                     ExceptionMessageConstants.USER_EMAIL_ALREADY_EXISTS_CODE_ERROR,
                     ExceptionMessageConstants.USER_EMAIL_ALREADY_EXISTS_MESSAGE_ERROR);

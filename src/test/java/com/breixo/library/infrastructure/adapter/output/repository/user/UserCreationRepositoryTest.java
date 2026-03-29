@@ -42,6 +42,7 @@ class UserCreationRepositoryTest {
      */
     @Test
     void testExecute_whenCommandIsValid_thenCreateAndReturnUser() {
+        
         // Given
         final var createUserCommand = Instancio.create(CreateUserCommand.class);
         final var userEntity = Instancio.create(UserEntity.class);

@@ -1,6 +1,6 @@
 package com.breixo.library.application.usecase.user;
 
-import java.util.Optional;
+import java.util.List;
 
 import com.breixo.library.domain.command.user.UpdateUserCommand;
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
@@ -42,6 +42,7 @@ class UpdateUserUseCaseTest {
      */
     @Test
     void testExecute_whenUserExists_thenUpdateAndReturnUser() {
+        
         // Given
         final var updateUserCommand = Instancio.create(UpdateUserCommand.class);
         final var existingUser = Instancio.create(User.class);
@@ -49,7 +50,7 @@ class UpdateUserUseCaseTest {
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(updateUserCommand.id()).build();
 
         // When
-        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.of(existingUser));
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(List.of(existingUser));
         when(this.userUpdatePersistencePort.execute(updateUserCommand)).thenReturn(updatedUser);
         final var result = this.updateUserUseCase.execute(updateUserCommand);
 
@@ -62,12 +63,13 @@ class UpdateUserUseCaseTest {
      */
     @Test
     void testExecute_whenUserNotFound_thenThrowUserException() {
+        
         // Given
         final var updateUserCommand = Instancio.create(UpdateUserCommand.class);
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(updateUserCommand.id()).build();
 
         // When
-        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.empty());
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(List.of());
         final var exception = assertThrows(UserException.class,
                 () -> this.updateUserUseCase.execute(updateUserCommand));
 

@@ -67,6 +67,7 @@ class PostBookControllerTest {
      */
     @Test
     void testPostBookV1_whenRequestIsValid_thenReturnCreatedResponse() throws Exception {
+        
         // Given
         final var postBookV1Request = Instancio.create(PostBookV1Request.class);
         final var createBookCommand = Instancio.create(CreateBookCommand.class);

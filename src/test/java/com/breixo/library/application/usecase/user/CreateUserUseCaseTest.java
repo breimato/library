@@ -1,6 +1,6 @@
 package com.breixo.library.application.usecase.user;
 
-import java.util.Optional;
+import java.util.List;
 
 import com.breixo.library.domain.command.user.CreateUserCommand;
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
@@ -42,13 +42,14 @@ class CreateUserUseCaseTest {
      */
     @Test
     void testExecute_whenEmailDoesNotExist_thenCreateAndReturnUser() {
+        
         // Given
         final var createUserCommand = Instancio.create(CreateUserCommand.class);
         final var user = Instancio.create(User.class);
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().email(createUserCommand.email()).build();
 
         // When
-        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.empty());
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(List.of());
         when(this.userCreationPersistencePort.execute(createUserCommand)).thenReturn(user);
         final var result = this.createUserUseCase.execute(createUserCommand);
 
@@ -61,13 +62,14 @@ class CreateUserUseCaseTest {
      */
     @Test
     void testExecute_whenEmailAlreadyExists_thenThrowUserException() {
+        
         // Given
         final var createUserCommand = Instancio.create(CreateUserCommand.class);
         final var user = Instancio.create(User.class);
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().email(createUserCommand.email()).build();
 
         // When
-        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(Optional.of(user));
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(List.of(user));
         final var exception = assertThrows(UserException.class,
                 () -> this.createUserUseCase.execute(createUserCommand));
 

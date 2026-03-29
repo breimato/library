@@ -29,6 +29,7 @@ class BookDeletionRepositoryTest {
      */
     @Test
     void testExecute_whenCalled_thenDeleteBook() {
+        
         // Given
         final var id = Instancio.create(Integer.class);
 

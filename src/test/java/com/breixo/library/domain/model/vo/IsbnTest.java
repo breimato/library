@@ -107,6 +107,7 @@ class IsbnTest {
      */
     @Test
     void testToString_whenIsbnIsValid_thenReturnValue() {
+        
         // Given
         final var isbn = new Isbn(VALID_ISBN);
 

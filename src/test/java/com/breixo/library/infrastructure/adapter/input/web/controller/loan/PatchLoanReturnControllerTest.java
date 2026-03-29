@@ -68,6 +68,7 @@ class PatchLoanReturnControllerTest {
      */
     @Test
     void testPatchLoanReturnV1_whenLoanExists_thenReturnOkResponse() throws Exception {
+        
         // Given
         final var id = Instancio.create(Integer.class);
         final var patchLoanReturnV1Request = Instancio.create(PatchLoanReturnV1Request.class);

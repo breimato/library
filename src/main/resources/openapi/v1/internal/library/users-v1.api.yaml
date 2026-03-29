@@ -4,22 +4,12 @@ get:
   operationId: "GetUsersV1"
   tags:
     - get-users-v1
-  parameters:
-    - name: name
-      in: query
-      required: false
-      schema:
-        type: string
-    - name: email
-      in: query
-      required: false
-      schema:
-        type: string
-    - name: status
-      in: query
-      required: false
-      schema:
-        type: integer
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/GetUsersV1Request.yaml'
   responses:
     '200':
       description: "200 OK"

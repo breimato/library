@@ -24,6 +24,7 @@ class PatchBookRequestMapperTest {
      */
     @Test
     void testToUpdateBookCommand_whenRequestIsValid_thenReturnMappedCommand() {
+        
         // Given
         final var id = Instancio.create(Integer.class);
         final var patchBookV1Request = Instancio.create(PatchBookV1Request.class);
@@ -55,6 +56,7 @@ class PatchBookRequestMapperTest {
      */
     @Test
     void testToUpdateBookCommand_whenIdIsNull_thenReturnCommandWithNullId() {
+        
         // Given
         final var patchBookV1Request = Instancio.create(PatchBookV1Request.class);
 
@@ -76,6 +78,7 @@ class PatchBookRequestMapperTest {
      */
     @Test
     void testToUpdateBookCommand_whenRequestIsNull_thenReturnCommandWithOnlyId() {
+        
         // Given
         final var id = Instancio.create(Integer.class);
 
