@@ -42,9 +42,9 @@ public class UserRetrievalRepository implements UserRetrievalPersistencePort {
 
     /** {@inheritDoc} */
     @Override
-    public List<User> findAll() {
+    public List<User> findAll(@Valid @NotNull final UserSearchCriteriaCommand userSearchCriteriaCommand) {
 
-        final var userEntities = this.userMyBatisMapper.findAll();
+        final var userEntities = this.userMyBatisMapper.find(userSearchCriteriaCommand);
 
         return this.userEntityMapper.toUserList(userEntities);
     }

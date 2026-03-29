@@ -1,5 +1,6 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.user;
 
+import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.dto.UserV1Dto;
@@ -52,16 +53,17 @@ class GetUsersControllerTest {
     }
 
     /**
-     * Test get users v 1 when users exist then return ok response.
+     * Test get users v 1 when no criteria then return all users.
      */
     @Test
-    void testGetUsersV1_whenUsersExist_thenReturnOkResponse() throws Exception {
+    void testGetUsersV1_whenNoCriteria_thenReturnAllUsers() throws Exception {
         // Given
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().build();
         final var users = Instancio.createList(User.class);
         final var userV1DtoList = Instancio.createList(UserV1Dto.class);
 
         // When
-        when(this.userRetrievalPersistencePort.findAll()).thenReturn(users);
+        when(this.userRetrievalPersistencePort.findAll(userSearchCriteriaCommand)).thenReturn(users);
         when(this.userMapper.toUserV1List(users)).thenReturn(userV1DtoList);
 
         this.mockMvc.perform(get(URL).accept(MediaType.APPLICATION_JSON))
@@ -69,7 +71,32 @@ class GetUsersControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Then
-        verify(this.userRetrievalPersistencePort, times(1)).findAll();
+        verify(this.userRetrievalPersistencePort, times(1)).findAll(userSearchCriteriaCommand);
+        verify(this.userMapper, times(1)).toUserV1List(users);
+    }
+
+    /**
+     * Test get users v 1 when criteria provided then return filtered users.
+     */
+    @Test
+    void testGetUsersV1_whenCriteriaProvided_thenReturnFilteredUsers() throws Exception {
+        // Given
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder()
+                .name("John")
+                .build();
+        final var users = Instancio.createList(User.class);
+        final var userV1DtoList = Instancio.createList(UserV1Dto.class);
+
+        // When
+        when(this.userRetrievalPersistencePort.findAll(userSearchCriteriaCommand)).thenReturn(users);
+        when(this.userMapper.toUserV1List(users)).thenReturn(userV1DtoList);
+
+        this.mockMvc.perform(get(URL).param("name", "John").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        // Then
+        verify(this.userRetrievalPersistencePort, times(1)).findAll(userSearchCriteriaCommand);
         verify(this.userMapper, times(1)).toUserV1List(users);
     }
 }

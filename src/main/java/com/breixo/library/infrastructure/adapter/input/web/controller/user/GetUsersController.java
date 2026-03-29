@@ -1,5 +1,6 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.user;
 
+import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.api.GetUsersV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetUsersV1ResponseDto;
@@ -22,9 +23,12 @@ public class GetUsersController implements GetUsersV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<GetUsersV1ResponseDto> getUsersV1() {
+    public ResponseEntity<GetUsersV1ResponseDto> getUsersV1(final String name, final String email, final Integer status) {
 
-        final var users = this.userRetrievalPersistencePort.findAll();
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder()
+                .name(name).email(email).statusId(status).build();
+
+        final var users = this.userRetrievalPersistencePort.findAll(userSearchCriteriaCommand);
 
         final var userV1DtoList = this.userMapper.toUserV1List(users);
 

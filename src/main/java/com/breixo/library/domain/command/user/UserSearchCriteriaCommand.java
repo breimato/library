@@ -15,6 +15,12 @@ public class UserSearchCriteriaCommand {
     /** The id. */
     private final Integer id;
 
+    /** The name. */
+    private final String name;
+
     /** The email. */
     private final String email;
+
+    /** The status id. */
+    private final Integer statusId;
 }
