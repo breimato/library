@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DeleteFineController implements DeleteFineV1Api {
 
-    /** The fine deletion persistence port. */
+    /** The Fine Deletion Persistence Port. */
     private final FineDeletionPersistencePort fineDeletionPersistencePort;
 
     /** {@inheritDoc} */

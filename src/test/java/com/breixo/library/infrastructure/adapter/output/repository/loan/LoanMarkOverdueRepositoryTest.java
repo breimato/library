@@ -18,11 +18,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class LoanMarkOverdueRepositoryTest {
 
-    /** The loan mark overdue repository. */
+    /** The Loan Mark Overdue Repository. */
     @InjectMocks
     LoanMarkOverdueRepository loanMarkOverdueRepository;
 
-    /** The loan my batis mapper. */
+    /** The Loan My Batis Mapper. */
     @Mock
     LoanMyBatisMapper loanMyBatisMapper;
 

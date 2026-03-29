@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OverdueLoanScheduler {
 
-    /** The loan mark overdue persistence port. */
+    /** The Loan Mark Overdue Persistence Port. */
     private final LoanMarkOverduePersistencePort loanMarkOverduePersistencePort;
 
     /**

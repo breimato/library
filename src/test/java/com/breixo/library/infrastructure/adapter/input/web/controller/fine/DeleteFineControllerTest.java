@@ -24,14 +24,14 @@ class DeleteFineControllerTest {
     /** The Constant URL. */
     static final String URL = "/v1/library/fines/{id}";
 
-    /** The mock mvc. */
+    /** The Mock Mvc. */
     MockMvc mockMvc;
 
-    /** The delete fine controller. */
+    /** The Delete Fine Controller. */
     @InjectMocks
     DeleteFineController deleteFineController;
 
-    /** The fine deletion persistence port. */
+    /** The Fine Deletion Persistence Port. */
     @Mock
     FineDeletionPersistencePort fineDeletionPersistencePort;
 

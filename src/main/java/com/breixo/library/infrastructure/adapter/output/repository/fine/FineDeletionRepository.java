@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FineDeletionRepository implements FineDeletionPersistencePort {
 
-    /** The fine my batis mapper. */
+    /** The Fine My Batis Mapper. */
     private final FineMyBatisMapper fineMyBatisMapper;
 
     /** {@inheritDoc} */

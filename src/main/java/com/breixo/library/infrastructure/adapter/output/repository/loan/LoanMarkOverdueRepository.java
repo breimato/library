@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LoanMarkOverdueRepository implements LoanMarkOverduePersistencePort {
 
-    /** The loan my batis mapper. */
+    /** The Loan My Batis Mapper. */
     private final LoanMyBatisMapper loanMyBatisMapper;
 
     /** {@inheritDoc} */
