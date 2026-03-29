@@ -14,11 +14,11 @@ import static org.mockito.Mockito.verify;
 
 /** The Class Loan Deletion Persistence Repository Test. */
 @ExtendWith(MockitoExtension.class)
-class LoanDeletionPersistenceRepositoryTest {
+class LoanDeletionRepositoryTest {
 
     /** The loan deletion persistence repository. */
     @InjectMocks
-    LoanDeletionPersistenceRepository loanDeletionPersistenceRepository;
+    LoanDeletionRepository loanDeletionRepository;
 
     /** The loan my batis mapper. */
     @Mock
@@ -33,7 +33,7 @@ class LoanDeletionPersistenceRepositoryTest {
         final var id = Instancio.create(Integer.class);
 
         // When
-        this.loanDeletionPersistenceRepository.execute(id);
+        this.loanDeletionRepository.execute(id);
 
         // Then
         verify(this.loanMyBatisMapper, times(1)).delete(id);

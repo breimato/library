@@ -27,11 +27,11 @@ import static org.mockito.Mockito.when;
 
 /** The Class Loan Creation Persistence Repository Test. */
 @ExtendWith(MockitoExtension.class)
-class LoanCreationPersistenceRepositoryTest {
+class LoanCreationRepositoryTest {
 
     /** The loan creation persistence repository. */
     @InjectMocks
-    LoanCreationPersistenceRepository loanCreationPersistenceRepository;
+    LoanCreationRepository loanCreationRepository;
 
     /** The loan my batis mapper. */
     @Mock
@@ -59,7 +59,7 @@ class LoanCreationPersistenceRepositoryTest {
         when(this.loanMyBatisMapper.find(loanSearchCriteriaCommand)).thenReturn(List.of(createdLoanEntity));
         when(this.loanEntityMapper.toLoan(createdLoanEntity)).thenReturn(loan);
 
-        final var result = this.loanCreationPersistenceRepository.execute(createLoanCommand);
+        final var result = this.loanCreationRepository.execute(createLoanCommand);
 
         // Then
         verify(this.loanEntityMapper, times(1)).toLoanEntity(createLoanCommand);
@@ -83,7 +83,7 @@ class LoanCreationPersistenceRepositoryTest {
         when(this.loanEntityMapper.toLoanEntity(createLoanCommand)).thenReturn(loanEntity);
         doThrow(new RuntimeException()).when(this.loanMyBatisMapper).insert(loanEntity);
         final var loanException = assertThrows(LoanException.class,
-                () -> this.loanCreationPersistenceRepository.execute(createLoanCommand));
+                () -> this.loanCreationRepository.execute(createLoanCommand));
 
         // Then
         verify(this.loanEntityMapper, times(1)).toLoanEntity(createLoanCommand);

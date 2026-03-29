@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 /** The Class User Update Persistence Repository. */
 @Component
 @RequiredArgsConstructor
-public class UserUpdatePersistenceRepository implements UserUpdatePersistencePort {
+public class UserUpdateRepository implements UserUpdatePersistencePort {
 
     /** The user my batis mapper. */
     private final UserMyBatisMapper userMyBatisMapper;

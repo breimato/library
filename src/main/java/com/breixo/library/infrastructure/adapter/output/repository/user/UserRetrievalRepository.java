@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 /** The Class User Retrieval Persistence Repository. */
 @Component
 @RequiredArgsConstructor
-public class UserRetrievalPersistenceRepository implements UserRetrievalPersistencePort {
+public class UserRetrievalRepository implements UserRetrievalPersistencePort {
 
     /** The user my batis mapper. */
     private final UserMyBatisMapper userMyBatisMapper;

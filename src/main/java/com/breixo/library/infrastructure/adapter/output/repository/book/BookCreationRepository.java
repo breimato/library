@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 /** The Class Book Creation Persistence Repository. */
 @Component
 @RequiredArgsConstructor
-public class BookCreationPersistenceRepository implements BookCreationPersistencePort {
+public class BookCreationRepository implements BookCreationPersistencePort {
 
     /** The book my batis mapper. */
     private final BookMyBatisMapper bookMyBatisMapper;

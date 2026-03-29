@@ -24,11 +24,11 @@ import static org.mockito.Mockito.when;
 
 /** The Class Loan Retrieval Persistence Repository Test. */
 @ExtendWith(MockitoExtension.class)
-class LoanRetrievalPersistenceRepositoryTest {
+class LoanRetrievalRepositoryTest {
 
     /** The loan retrieval persistence repository. */
     @InjectMocks
-    LoanRetrievalPersistenceRepository loanRetrievalPersistenceRepository;
+    LoanRetrievalRepository loanRetrievalRepository;
 
     /** The loan my batis mapper. */
     @Mock
@@ -52,7 +52,7 @@ class LoanRetrievalPersistenceRepositoryTest {
         when(this.loanMyBatisMapper.find(loanSearchCriteriaCommand)).thenReturn(List.of(loanEntity));
         when(this.loanEntityMapper.toLoan(loanEntity)).thenReturn(loan);
 
-        final var result = this.loanRetrievalPersistenceRepository.find(loanSearchCriteriaCommand);
+        final var result = this.loanRetrievalRepository.find(loanSearchCriteriaCommand);
 
         // Then
         verify(this.loanMyBatisMapper, times(1)).find(loanSearchCriteriaCommand);
@@ -71,7 +71,7 @@ class LoanRetrievalPersistenceRepositoryTest {
 
         // When
         when(this.loanMyBatisMapper.find(loanSearchCriteriaCommand)).thenReturn(List.of());
-        final var result = this.loanRetrievalPersistenceRepository.find(loanSearchCriteriaCommand);
+        final var result = this.loanRetrievalRepository.find(loanSearchCriteriaCommand);
 
         // Then
         verify(this.loanMyBatisMapper, times(1)).find(loanSearchCriteriaCommand);
@@ -91,7 +91,7 @@ class LoanRetrievalPersistenceRepositoryTest {
         // When
         when(this.loanMyBatisMapper.find(loanSearchCriteriaCommand)).thenReturn(loanEntities);
         when(this.loanEntityMapper.toLoanList(loanEntities)).thenReturn(loans);
-        final var result = this.loanRetrievalPersistenceRepository.findAll(loanSearchCriteriaCommand);
+        final var result = this.loanRetrievalRepository.findAll(loanSearchCriteriaCommand);
 
         // Then
         verify(this.loanMyBatisMapper, times(1)).find(loanSearchCriteriaCommand);

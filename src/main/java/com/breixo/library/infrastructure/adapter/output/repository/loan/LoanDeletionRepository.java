@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 /** The Class Loan Deletion Persistence Repository. */
 @Component
 @RequiredArgsConstructor
-public class LoanDeletionPersistenceRepository implements LoanDeletionPersistencePort {
+public class LoanDeletionRepository implements LoanDeletionPersistencePort {
 
     /** The loan my batis mapper. */
     private final LoanMyBatisMapper loanMyBatisMapper;

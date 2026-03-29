@@ -18,7 +18,7 @@ class UserDeletionRepositoryTest {
 
     /** The user deletion persistence repository. */
     @InjectMocks
-    UserDeletionPersistenceRepository userDeletionPersistenceRepository;
+    UserDeletionRepository userDeletionRepository;
 
     /** The user my batis mapper. */
     @Mock
@@ -33,7 +33,7 @@ class UserDeletionRepositoryTest {
         final var id = Instancio.create(Integer.class);
 
         // When
-        this.userDeletionPersistenceRepository.execute(id);
+        this.userDeletionRepository.execute(id);
 
         // Then
         verify(this.userMyBatisMapper, times(1)).delete(id);

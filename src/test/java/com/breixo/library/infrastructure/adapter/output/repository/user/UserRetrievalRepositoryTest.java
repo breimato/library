@@ -28,7 +28,7 @@ class UserRetrievalRepositoryTest {
 
     /** The user retrieval persistence repository. */
     @InjectMocks
-    UserRetrievalPersistenceRepository userRetrievalPersistenceRepository;
+    UserRetrievalRepository userRetrievalRepository;
 
     /** The user my batis mapper. */
     @Mock
@@ -51,7 +51,7 @@ class UserRetrievalRepositoryTest {
         // When
         when(this.userMyBatisMapper.find(userSearchCriteriaCommand)).thenReturn(List.of(userEntity));
         when(this.userEntityMapper.toUser(userEntity)).thenReturn(user);
-        final var result = this.userRetrievalPersistenceRepository.find(userSearchCriteriaCommand);
+        final var result = this.userRetrievalRepository.find(userSearchCriteriaCommand);
 
         // Then
         verify(this.userMyBatisMapper, times(1)).find(userSearchCriteriaCommand);
@@ -69,7 +69,7 @@ class UserRetrievalRepositoryTest {
 
         // When
         when(this.userMyBatisMapper.find(userSearchCriteriaCommand)).thenReturn(List.of());
-        final var result = this.userRetrievalPersistenceRepository.find(userSearchCriteriaCommand);
+        final var result = this.userRetrievalRepository.find(userSearchCriteriaCommand);
 
         // Then
         verify(this.userMyBatisMapper, times(1)).find(userSearchCriteriaCommand);
@@ -88,7 +88,7 @@ class UserRetrievalRepositoryTest {
         // When
         when(this.userMyBatisMapper.findAll()).thenReturn(userEntities);
         when(this.userEntityMapper.toUserList(userEntities)).thenReturn(users);
-        final var result = this.userRetrievalPersistenceRepository.findAll();
+        final var result = this.userRetrievalRepository.findAll();
 
         // Then
         verify(this.userMyBatisMapper, times(1)).findAll();
@@ -107,7 +107,7 @@ class UserRetrievalRepositoryTest {
         // When
         when(this.userMyBatisMapper.findAll()).thenReturn(List.of());
         when(this.userEntityMapper.toUserList(List.of())).thenReturn(users);
-        final var result = this.userRetrievalPersistenceRepository.findAll();
+        final var result = this.userRetrievalRepository.findAll();
 
         // Then
         verify(this.userMyBatisMapper, times(1)).findAll();

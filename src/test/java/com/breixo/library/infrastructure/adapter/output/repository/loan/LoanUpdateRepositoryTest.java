@@ -27,11 +27,11 @@ import static org.mockito.Mockito.when;
 
 /** The Class Loan Update Persistence Repository Test. */
 @ExtendWith(MockitoExtension.class)
-class LoanUpdatePersistenceRepositoryTest {
+class LoanUpdateRepositoryTest {
 
     /** The loan update persistence repository. */
     @InjectMocks
-    LoanUpdatePersistenceRepository loanUpdatePersistenceRepository;
+    LoanUpdateRepository loanUpdateRepository;
 
     /** The loan my batis mapper. */
     @Mock
@@ -57,7 +57,7 @@ class LoanUpdatePersistenceRepositoryTest {
         when(this.loanMyBatisMapper.find(loanSearchCriteriaCommand)).thenReturn(List.of(loanEntity));
         when(this.loanEntityMapper.toLoan(loanEntity)).thenReturn(loan);
 
-        final var result = this.loanUpdatePersistenceRepository.execute(updateLoanReturnCommand);
+        final var result = this.loanUpdateRepository.execute(updateLoanReturnCommand);
 
         // Then
         verify(this.loanMyBatisMapper, times(1)).update(updateLoanReturnCommand);
@@ -80,7 +80,7 @@ class LoanUpdatePersistenceRepositoryTest {
         doThrow(new RuntimeException()).when(this.loanMyBatisMapper).update(updateLoanReturnCommand);
 
         final var loanException = assertThrows(LoanException.class,
-                () -> this.loanUpdatePersistenceRepository.execute(updateLoanReturnCommand));
+                () -> this.loanUpdateRepository.execute(updateLoanReturnCommand));
 
         // Then
         verify(this.loanMyBatisMapper, times(1)).update(updateLoanReturnCommand);

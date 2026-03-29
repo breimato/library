@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 /** The Class Loan Retrieval Persistence Repository. */
 @Component
 @RequiredArgsConstructor
-public class LoanRetrievalPersistenceRepository implements LoanRetrievalPersistencePort {
+public class LoanRetrievalRepository implements LoanRetrievalPersistencePort {
 
     /** The loan my batis mapper. */
     private final LoanMyBatisMapper loanMyBatisMapper;

@@ -32,7 +32,7 @@ class UserUpdateRepositoryTest {
 
     /** The user update persistence repository. */
     @InjectMocks
-    UserUpdatePersistenceRepository userUpdatePersistenceRepository;
+    UserUpdateRepository userUpdateRepository;
 
     /** The user my batis mapper. */
     @Mock
@@ -58,7 +58,7 @@ class UserUpdateRepositoryTest {
         when(this.userEntityMapper.toUserEntity(updateUserCommand)).thenReturn(userEntity);
         when(this.userMyBatisMapper.find(userSearchCriteriaCommand)).thenReturn(List.of(updatedUserEntity));
         when(this.userEntityMapper.toUser(updatedUserEntity)).thenReturn(user);
-        final var result = this.userUpdatePersistenceRepository.execute(updateUserCommand);
+        final var result = this.userUpdateRepository.execute(updateUserCommand);
 
         // Then
         verify(this.userMyBatisMapper, times(1)).update(userEntity);
@@ -80,7 +80,7 @@ class UserUpdateRepositoryTest {
         when(this.userEntityMapper.toUserEntity(updateUserCommand)).thenReturn(userEntity);
         doThrow(new RuntimeException()).when(this.userMyBatisMapper).update(userEntity);
         final var userException = assertThrows(UserException.class,
-                () -> this.userUpdatePersistenceRepository.execute(updateUserCommand));
+                () -> this.userUpdateRepository.execute(updateUserCommand));
 
         // Then
         verify(this.userEntityMapper, times(1)).toUserEntity(updateUserCommand);

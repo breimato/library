@@ -32,7 +32,7 @@ class BookUpdateRepositoryTest {
 
     /** The book update persistence repository. */
     @InjectMocks
-    BookUpdatePersistenceRepository bookUpdatePersistenceRepository;
+    BookUpdateRepository bookUpdateRepository;
 
     /** The book my batis mapper. */
     @Mock
@@ -56,7 +56,7 @@ class BookUpdateRepositoryTest {
         // When
         when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of(bookEntity));
         when(this.bookEntityMapper.toBook(bookEntity)).thenReturn(book);
-        final var result = this.bookUpdatePersistenceRepository.execute(updateBookCommand);
+        final var result = this.bookUpdateRepository.execute(updateBookCommand);
 
         // Then
         verify(this.bookMyBatisMapper, times(1)).update(updateBookCommand);
@@ -76,7 +76,7 @@ class BookUpdateRepositoryTest {
         // When
         doThrow(new RuntimeException()).when(this.bookMyBatisMapper).update(updateBookCommand);
         final var bookException = assertThrows(BookException.class,
-                () -> this.bookUpdatePersistenceRepository.execute(updateBookCommand));
+                () -> this.bookUpdateRepository.execute(updateBookCommand));
 
         // Then
         verify(this.bookMyBatisMapper, times(1)).update(updateBookCommand);

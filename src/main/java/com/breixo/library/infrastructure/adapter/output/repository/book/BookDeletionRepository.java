@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 /** The Class Book Deletion Persistence Repository. */
 @Component
 @RequiredArgsConstructor
-public class BookDeletionPersistenceRepository implements BookDeletionPersistencePort {
+public class BookDeletionRepository implements BookDeletionPersistencePort {
 
     /** The book my batis mapper. */
     private final BookMyBatisMapper bookMyBatisMapper;

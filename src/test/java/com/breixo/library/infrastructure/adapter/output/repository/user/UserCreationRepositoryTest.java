@@ -27,7 +27,7 @@ class UserCreationRepositoryTest {
 
     /** The user creation persistence repository. */
     @InjectMocks
-    UserCreationPersistenceRepository userCreationPersistenceRepository;
+    UserCreationRepository userCreationRepository;
 
     /** The user my batis mapper. */
     @Mock
@@ -53,7 +53,7 @@ class UserCreationRepositoryTest {
         when(this.userEntityMapper.toUserEntity(createUserCommand)).thenReturn(userEntity);
         when(this.userMyBatisMapper.find(userSearchCriteriaCommand)).thenReturn(List.of(createdUserEntity));
         when(this.userEntityMapper.toUser(createdUserEntity)).thenReturn(user);
-        final var result = this.userCreationPersistenceRepository.execute(createUserCommand);
+        final var result = this.userCreationRepository.execute(createUserCommand);
 
         // Then
         verify(this.userEntityMapper, times(1)).toUserEntity(createUserCommand);
