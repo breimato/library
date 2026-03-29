@@ -1,0 +1,5 @@
+description: "Fine V1 Response"
+type: object
+properties:
+  fine:
+    $ref: '../components/FineV1.yaml'

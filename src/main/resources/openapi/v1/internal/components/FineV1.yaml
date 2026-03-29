@@ -1,0 +1,23 @@
+description: "Fine V1"
+type: object
+properties:
+  id:
+    type: integer
+    format: int32
+    description: "Fine identifier"
+  loanId:
+    type: integer
+    format: int32
+    description: "Loan identifier"
+  amountEuros:
+    type: number
+    format: double
+    description: "Fine amount in euros"
+  status:
+    type: integer
+    format: int32
+    description: "Fine status"
+  paidAt:
+    type: string
+    format: date-time
+    description: "Payment date"

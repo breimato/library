@@ -111,4 +111,10 @@ public class ExceptionMessageConstants {
 
     /** The Constant USER_ALREADY_HAS_BOOK_ON_LOAN_MESSAGE_ERROR. */
     public static final String USER_ALREADY_HAS_BOOK_ON_LOAN_MESSAGE_ERROR = "Error: User already has this book on loan";
+
+    /** The Constant FINE_NOT_FOUND_CODE_ERROR. */
+    public static final String FINE_NOT_FOUND_CODE_ERROR = "LIB-FINE-001";
+
+    /** The Constant FINE_NOT_FOUND_MESSAGE_ERROR. */
+    public static final String FINE_NOT_FOUND_MESSAGE_ERROR = "Error: Fine not found";
 }

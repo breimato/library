@@ -46,6 +46,8 @@ components:
       $ref: './requests/PostLoanV1Request.yaml'
     PatchLoanReturnV1Request:
       $ref: './requests/PatchLoanReturnV1Request.yaml'
+    FineV1:
+      $ref: './components/FineV1.yaml'
     
   responses:
     BadRequest:
