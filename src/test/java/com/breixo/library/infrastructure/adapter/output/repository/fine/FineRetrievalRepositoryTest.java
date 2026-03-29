@@ -1,0 +1,78 @@
+package com.breixo.library.infrastructure.adapter.output.repository.fine;
+
+import java.util.List;
+import java.util.Optional;
+
+import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
+import com.breixo.library.domain.model.fine.Fine;
+import com.breixo.library.infrastructure.adapter.output.entities.FineEntity;
+import com.breixo.library.infrastructure.adapter.output.mapper.FineEntityMapper;
+import com.breixo.library.infrastructure.adapter.output.mybatis.FineMyBatisMapper;
+
+import org.instancio.Instancio;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+/** The Class Fine Retrieval Repository Test. */
+@ExtendWith(MockitoExtension.class)
+class FineRetrievalRepositoryTest {
+
+    /** The Fine Retrieval Repository. */
+    @InjectMocks
+    FineRetrievalRepository fineRetrievalRepository;
+
+    /** The Fine My Batis Mapper. */
+    @Mock
+    FineMyBatisMapper fineMyBatisMapper;
+
+    /** The Fine Entity Mapper. */
+    @Mock
+    FineEntityMapper fineEntityMapper;
+
+    /**
+     * Test find when fine found then return fine.
+     */
+    @Test
+    void testFind_whenFineFound_thenReturnFine() {
+        // Given
+        final var fineSearchCriteriaCommand = Instancio.create(FineSearchCriteriaCommand.class);
+        final var fineEntity = Instancio.create(FineEntity.class);
+        final var fine = Instancio.create(Fine.class);
+
+        // When
+        when(this.fineMyBatisMapper.find(fineSearchCriteriaCommand)).thenReturn(List.of(fineEntity));
+        when(this.fineEntityMapper.toFine(fineEntity)).thenReturn(fine);
+        final var result = this.fineRetrievalRepository.find(fineSearchCriteriaCommand);
+
+        // Then
+        verify(this.fineMyBatisMapper, times(1)).find(fineSearchCriteriaCommand);
+        verify(this.fineEntityMapper, times(1)).toFine(fineEntity);
+        assertEquals(Optional.of(fine), result);
+    }
+
+    /**
+     * Test find when fine not found then return empty optional.
+     */
+    @Test
+    void testFind_whenFineNotFound_thenReturnEmptyOptional() {
+        // Given
+        final var fineSearchCriteriaCommand = Instancio.create(FineSearchCriteriaCommand.class);
+
+        // When
+        when(this.fineMyBatisMapper.find(fineSearchCriteriaCommand)).thenReturn(List.of());
+        final var result = this.fineRetrievalRepository.find(fineSearchCriteriaCommand);
+
+        // Then
+        verify(this.fineMyBatisMapper, times(1)).find(fineSearchCriteriaCommand);
+        assertTrue(result.isEmpty());
+    }
+}
