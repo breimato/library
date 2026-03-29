@@ -2,6 +2,7 @@ package com.breixo.library.application.usecase.loan;
 
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.command.loan.CreateLoanCommand;
+import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
 import com.breixo.library.domain.exception.BookException;
 import com.breixo.library.domain.exception.UserException;
@@ -12,6 +13,7 @@ import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.port.input.loan.CreateLoanUseCase;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanCreationPersistencePort;
+import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 import com.breixo.library.domain.service.LoanPolicyValidationService;
 
@@ -31,6 +33,9 @@ public class CreateLoanUseCaseImpl implements CreateLoanUseCase {
     /** The book retrieval persistence port. */
     private final BookRetrievalPersistencePort bookRetrievalPersistencePort;
 
+    /** The loan retrieval persistence port. */
+    private final LoanRetrievalPersistencePort loanRetrievalPersistencePort;
+
     /** The loan policy validation service. */
     private final LoanPolicyValidationService loanPolicyValidationService;
 
@@ -45,7 +50,12 @@ public class CreateLoanUseCaseImpl implements CreateLoanUseCase {
 
         final var book = this.validateBook(createLoanCommand.bookId());
 
-        this.loanPolicyValidationService.checkCanBorrow(user, book);
+        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
+                .userId(user.id())
+                .build();
+        final var loanList = this.loanRetrievalPersistencePort.findAll(loanSearchCriteriaCommand);
+
+        this.loanPolicyValidationService.checkCanBorrow(user, book, loanList);
 
         return this.loanCreationPersistencePort.execute(createLoanCommand);
     }

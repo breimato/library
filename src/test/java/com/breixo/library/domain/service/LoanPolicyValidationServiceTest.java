@@ -1,12 +1,17 @@
 package com.breixo.library.domain.service;
 
+import java.util.List;
+
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
+import com.breixo.library.domain.model.loan.Loan;
+import com.breixo.library.domain.model.loan.enums.LoanStatus;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.model.user.enums.UserStatus;
 
 import org.instancio.Instancio;
+import static org.instancio.Select.field;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -44,10 +49,139 @@ class LoanPolicyValidationServiceTest {
 
         // When
         final var loanException = assertThrows(LoanException.class,
-                () -> this.loanPolicyValidationService.checkCanBorrow(blockedUser, book));
+                () -> this.loanPolicyValidationService.checkCanBorrow(blockedUser, book, List.of()));
 
         // Then
         assertEquals(ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR, loanException.getMessage());
+    }
+
+    /**
+     * Test check can borrow when user is suspended then throw loan exception.
+     */
+    @Test
+    void testCheckCanBorrow_whenUserIsSuspended_thenThrowLoanException() {
+
+        // Given
+        final var user = Instancio.create(User.class);
+        final var suspendedUser = User.builder()
+                .id(user.id())
+                .name(user.name())
+                .email(user.email())
+                .phone(user.phone())
+                .status(UserStatus.SUSPENDED)
+                .build();
+
+        final var book = Instancio.create(Book.class);
+
+        // When
+        final var loanException = assertThrows(LoanException.class,
+                () -> this.loanPolicyValidationService.checkCanBorrow(suspendedUser, book, List.of()));
+
+        // Then
+        assertEquals(ExceptionMessageConstants.USER_SUSPENDED_MESSAGE_ERROR, loanException.getMessage());
+    }
+
+    /**
+     * Test check can borrow when user has overdue loans then throw loan exception.
+     */
+    @Test
+    void testCheckCanBorrow_whenUserHasOverdueLoans_thenThrowLoanException() {
+
+        // Given
+        final var user = Instancio.create(User.class);
+        final var activeUser = User.builder()
+                .id(user.id())
+                .name(user.name())
+                .email(user.email())
+                .phone(user.phone())
+                .status(UserStatus.ACTIVE)
+                .build();
+
+        final var book = Instancio.create(Book.class);
+
+        final var loan = Instancio.create(Loan.class);
+        final var overdueLoan = Loan.builder()
+                .id(loan.id())
+                .userId(loan.userId())
+                .bookId(loan.bookId())
+                .dueDate(loan.dueDate())
+                .returnDate(loan.returnDate())
+                .status(LoanStatus.OVERDUE)
+                .build();
+
+        // When
+        final var loanException = assertThrows(LoanException.class,
+                () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, book, List.of(overdueLoan)));
+
+        // Then
+        assertEquals(ExceptionMessageConstants.USER_HAS_OVERDUE_LOANS_MESSAGE_ERROR, loanException.getMessage());
+    }
+
+    /**
+     * Test check can borrow when user has reached loan limit then throw loan exception.
+     */
+    @Test
+    void testCheckCanBorrow_whenUserHasReachedLoanLimit_thenThrowLoanException() {
+
+        // Given
+        final var user = Instancio.create(User.class);
+        final var activeUser = User.builder()
+                .id(user.id())
+                .name(user.name())
+                .email(user.email())
+                .phone(user.phone())
+                .status(UserStatus.ACTIVE)
+                .build();
+
+        final var book = Instancio.create(Book.class);
+
+        final var loanList = Instancio.ofList(Loan.class)
+                .size(3)
+                .set(field(Loan.class, "status"), LoanStatus.ACTIVE)
+                .create();
+
+        // When
+        final var loanException = assertThrows(LoanException.class,
+                () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, book, loanList));
+
+        // Then
+        assertEquals(ExceptionMessageConstants.USER_ACTIVE_LOANS_LIMIT_REACHED_MESSAGE_ERROR, loanException.getMessage());
+    }
+
+    /**
+     * Test check can borrow when user already has book on loan then throw loan exception.
+     */
+    @Test
+    void testCheckCanBorrow_whenUserAlreadyHasBookOnLoan_thenThrowLoanException() {
+
+        // Given
+        final var user = Instancio.create(User.class);
+        final var activeUser = User.builder()
+                .id(user.id())
+                .name(user.name())
+                .email(user.email())
+                .phone(user.phone())
+                .status(UserStatus.ACTIVE)
+                .build();
+
+        final var book = Instancio.create(Book.class);
+
+        final var loan = Instancio.create(Loan.class);
+        final var activeLoanForSameBook = Loan.builder()
+                .id(loan.id())
+                .userId(loan.userId())
+                .bookId(book.id())
+                .dueDate(loan.dueDate())
+                .returnDate(loan.returnDate())
+                .status(LoanStatus.ACTIVE)
+                .build();
+
+        // When
+        final var loanException = assertThrows(LoanException.class,
+                () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, book, List.of(activeLoanForSameBook)));
+
+        // Then
+        assertEquals(ExceptionMessageConstants.USER_ALREADY_HAS_BOOK_ON_LOAN_MESSAGE_ERROR, loanException.getMessage());
     }
 
     /**
@@ -79,7 +213,7 @@ class LoanPolicyValidationServiceTest {
 
         // When
         final var loanException = assertThrows(LoanException.class,
-                () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, retiredBook));
+                () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, retiredBook, List.of()));
 
         // Then
         assertEquals(ExceptionMessageConstants.BOOK_RETIRED_MESSAGE_ERROR, loanException.getMessage());
@@ -114,7 +248,7 @@ class LoanPolicyValidationServiceTest {
 
         // When
         final var loanException = assertThrows(LoanException.class,
-                () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, unavailableBook));
+                () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, unavailableBook, List.of()));
 
         // Then
         assertEquals(ExceptionMessageConstants.BOOK_COPIES_NOT_AVAILABLE_MESSAGE_ERROR, loanException.getMessage());
@@ -148,6 +282,6 @@ class LoanPolicyValidationServiceTest {
                 .build();
 
         // When / Then
-        assertDoesNotThrow(() -> this.loanPolicyValidationService.checkCanBorrow(activeUser, availableBook));
+        assertDoesNotThrow(() -> this.loanPolicyValidationService.checkCanBorrow(activeUser, availableBook, List.of()));
     }
 }
