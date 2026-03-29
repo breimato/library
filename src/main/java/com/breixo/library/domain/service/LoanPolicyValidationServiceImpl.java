@@ -59,12 +59,18 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
      */
     private void validateUserLoans(final List<Loan> loanList) {
 
-        if (loanList.stream().anyMatch(loan -> LoanStatus.OVERDUE.getId().equals(loan.status().getId()))) {
+        final var hasOverdueLoans = loanList.stream()
+                .anyMatch(loan -> LoanStatus.OVERDUE.getId().equals(loan.status().getId()));
+        if (hasOverdueLoans) {
             throw new LoanException(
                     ExceptionMessageConstants.USER_HAS_OVERDUE_LOANS_CODE_ERROR,
                     ExceptionMessageConstants.USER_HAS_OVERDUE_LOANS_MESSAGE_ERROR);
         }
-        if (loanList.stream().filter(loan -> LoanStatus.ACTIVE.getId().equals(loan.status().getId())).count() >= MAX_ACTIVE_LOANS) {
+
+        final var hasReachedLoanLimit = loanList.stream()
+                .filter(loan -> LoanStatus.ACTIVE.getId().equals(loan.status().getId()))
+                .count() >= MAX_ACTIVE_LOANS;
+        if (hasReachedLoanLimit) {
             throw new LoanException(
                     ExceptionMessageConstants.USER_ACTIVE_LOANS_LIMIT_REACHED_CODE_ERROR,
                     ExceptionMessageConstants.USER_ACTIVE_LOANS_LIMIT_REACHED_MESSAGE_ERROR);
