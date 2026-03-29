@@ -46,17 +46,6 @@ public interface LoanMyBatisMapper {
     List<LoanEntity> find(LoanSearchCriteriaCommand loanSearchCriteriaCommand);
 
     /**
-     * Find all.
-     *
-     * @return the list of loan entities
-     */
-    @Select("""
-            select id, user_id, book_id, due_date, return_date, status_id, created_at, updated_at
-            from loans
-            """)
-    List<LoanEntity> findAll();
-
-    /**
      * Insert.
      *
      * @param loanEntity the loan entity

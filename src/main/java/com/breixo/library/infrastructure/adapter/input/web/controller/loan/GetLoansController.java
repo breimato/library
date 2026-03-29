@@ -23,9 +23,10 @@ public class GetLoansController implements GetLoansV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<GetLoansV1ResponseDto> getLoansV1(final Integer userId) {
+    public ResponseEntity<GetLoansV1ResponseDto> getLoansV1(final Integer userId, final Integer bookId, final Integer status) {
 
-        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder().userId(userId).build();
+        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
+                .userId(userId).bookId(bookId).statusId(status).build();
 
         final var loans = this.loanRetrievalPersistencePort.findAll(loanSearchCriteriaCommand);
 
