@@ -2,6 +2,7 @@ package com.breixo.library.infrastructure.adapter.output.repository.loan;
 
 import com.breixo.library.infrastructure.adapter.output.mybatis.LoanMyBatisMapper;
 
+import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,7 +32,7 @@ class LoanMarkOverdueRepositoryTest {
     @Test
     void testMarkOverdue_whenLoansAreOverdue_thenReturnUpdatedCount() {
         // Given
-        final var expectedCount = 3;
+        final var expectedCount = Instancio.create(Integer.class);
 
         // When
         when(this.loanMyBatisMapper.markOverdue()).thenReturn(expectedCount);
