@@ -2,6 +2,7 @@ package com.breixo.library.infrastructure.adapter.input.scheduler;
 
 import com.breixo.library.domain.port.output.loan.LoanMarkOverduePersistencePort;
 
+import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,7 +31,7 @@ class OverdueLoanSchedulerTest {
     @Test
     void testMarkOverdueLoans_whenCalled_thenDelegatesToPort() {
         // Given
-        final var updatedCount = 2;
+        final var updatedCount = Instancio.create(Integer.class);
 
         // When
         when(this.loanMarkOverduePersistencePort.markOverdue()).thenReturn(updatedCount);
