@@ -86,8 +86,10 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
      */
     private void validateBookAvailability(final Book book, final List<Loan> loanList) {
 
-        if (loanList.stream().anyMatch(loan -> loan.bookId().equals(book.id())
-                && LoanStatus.ACTIVE.getId().equals(loan.status().getId()))) {
+        final var hasActiveLoanForThisBook = loanList.stream()
+                .anyMatch(loan -> loan.bookId().equals(book.id())
+                        && LoanStatus.ACTIVE.getId().equals(loan.status().getId()));
+        if (hasActiveLoanForThisBook) {
             throw new LoanException(
                     ExceptionMessageConstants.USER_ALREADY_HAS_BOOK_ON_LOAN_CODE_ERROR,
                     ExceptionMessageConstants.USER_ALREADY_HAS_BOOK_ON_LOAN_MESSAGE_ERROR);
