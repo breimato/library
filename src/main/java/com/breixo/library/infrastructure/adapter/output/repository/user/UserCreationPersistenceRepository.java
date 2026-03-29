@@ -31,10 +31,9 @@ public class UserCreationPersistenceRepository implements UserCreationPersistenc
 
         this.userMyBatisMapper.insert(userEntity);
 
-        final var saved = this.userMyBatisMapper
-                .find(UserSearchCriteriaCommand.builder().id(userEntity.getId()).build())
-                .getFirst();
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(userEntity.getId()).build();
+        final var createdUserEntity = this.userMyBatisMapper.find(userSearchCriteriaCommand).getFirst();
 
-        return this.userEntityMapper.toUser(saved);
+        return this.userEntityMapper.toUser(createdUserEntity);
     }
 }

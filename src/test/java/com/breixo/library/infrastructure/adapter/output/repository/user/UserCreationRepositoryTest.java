@@ -1,6 +1,9 @@
 package com.breixo.library.infrastructure.adapter.output.repository.user;
 
+import java.util.List;
+
 import com.breixo.library.domain.command.user.CreateUserCommand;
+import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.infrastructure.adapter.output.entities.UserEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.UserEntityMapper;
@@ -14,6 +17,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /** The Class User Creation Repository Test. */
@@ -40,14 +45,21 @@ class UserCreationRepositoryTest {
         // Given
         final var createUserCommand = Instancio.create(CreateUserCommand.class);
         final var userEntity = Instancio.create(UserEntity.class);
+        final var createdUserEntity = Instancio.create(UserEntity.class);
         final var user = Instancio.create(User.class);
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(userEntity.getId()).build();
 
         // When
         when(this.userEntityMapper.toUserEntity(createUserCommand)).thenReturn(userEntity);
-        when(this.userEntityMapper.toUser(userEntity)).thenReturn(user);
+        when(this.userMyBatisMapper.find(userSearchCriteriaCommand)).thenReturn(List.of(createdUserEntity));
+        when(this.userEntityMapper.toUser(createdUserEntity)).thenReturn(user);
         final var result = this.userCreationPersistenceRepository.execute(createUserCommand);
 
         // Then
+        verify(this.userEntityMapper, times(1)).toUserEntity(createUserCommand);
+        verify(this.userMyBatisMapper, times(1)).insert(userEntity);
+        verify(this.userMyBatisMapper, times(1)).find(userSearchCriteriaCommand);
+        verify(this.userEntityMapper, times(1)).toUser(createdUserEntity);
         assertEquals(user, result);
     }
 }
