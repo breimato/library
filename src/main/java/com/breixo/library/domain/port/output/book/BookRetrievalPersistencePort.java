@@ -24,7 +24,7 @@ public interface BookRetrievalPersistencePort {
      * Find all.
      *
      * @param bookSearchCriteriaCommand the book search criteria command.
-     * @return the list of books matching the criteria, or all books if no criteria provided.
+     * @return the list of books.
      */
     List<Book> findAll(@Valid @NotNull BookSearchCriteriaCommand bookSearchCriteriaCommand);
 }
