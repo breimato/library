@@ -1,6 +1,7 @@
 package com.breixo.library.domain.model.fine;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 import com.breixo.library.domain.model.fine.enums.FineStatus;
@@ -18,5 +19,5 @@ import lombok.Builder;
  */
 @Builder
 public record Fine(@NotNull Integer id, @NotNull Integer loanId, @NotNull BigDecimal amountEuros,
-                   @NotNull FineStatus status, OffsetDateTime paidAt) {
+                   @NotNull FineStatus status, LocalDateTime paidAt) {
 }

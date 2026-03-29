@@ -3,11 +3,13 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper.fine;
 import com.breixo.library.domain.model.fine.Fine;
 import com.breixo.library.infrastructure.adapter.input.web.dto.FineV1Response;
 
+import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
+import com.breixo.library.infrastructure.mapper.FineStatusMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /** The Interface Fine Response Mapper. */
-@Mapper(componentModel = "spring", uses = FineMapper.class)
+@Mapper(componentModel = "spring", uses = {FineStatusMapper.class, DateMapper.class})
 public interface FineResponseMapper {
 
     /**

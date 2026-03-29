@@ -1,6 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.mapper;
 
 import com.breixo.library.domain.model.fine.Fine;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
 import com.breixo.library.infrastructure.adapter.output.entities.FineEntity;
 import com.breixo.library.infrastructure.mapper.FineStatusMapper;
 
