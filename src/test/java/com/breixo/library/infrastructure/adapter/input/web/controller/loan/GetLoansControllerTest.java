@@ -53,15 +53,38 @@ class GetLoansControllerTest {
     }
 
     /**
-     * Test get loans v 1 when loans exist then return ok response.
+     * Test get loans v 1 when no criteria then return all loans.
      */
     @Test
-    void testGetLoansV1_whenLoansExist_thenReturnOkResponse() throws Exception {
+    void testGetLoansV1_whenNoCriteria_thenReturnAllLoans() throws Exception {
         // Given
-        final var userId = Instancio.create(Integer.class);
+        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder().build();
         final var loans = Instancio.createList(Loan.class);
         final var loanV1DtoList = Instancio.createList(LoanV1Dto.class);
+
+        // When
+        when(this.loanRetrievalPersistencePort.findAll(loanSearchCriteriaCommand)).thenReturn(loans);
+        when(this.loanMapper.toLoanV1List(loans)).thenReturn(loanV1DtoList);
+
+        this.mockMvc.perform(get(URL).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        // Then
+        verify(this.loanRetrievalPersistencePort, times(1)).findAll(loanSearchCriteriaCommand);
+        verify(this.loanMapper, times(1)).toLoanV1List(loans);
+    }
+
+    /**
+     * Test get loans v 1 when criteria provided then return filtered loans.
+     */
+    @Test
+    void testGetLoansV1_whenCriteriaProvided_thenReturnFilteredLoans() throws Exception {
+        // Given
+        final var userId = Instancio.create(Integer.class);
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder().userId(userId).build();
+        final var loans = Instancio.createList(Loan.class);
+        final var loanV1DtoList = Instancio.createList(LoanV1Dto.class);
 
         // When
         when(this.loanRetrievalPersistencePort.findAll(loanSearchCriteriaCommand)).thenReturn(loans);

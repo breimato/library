@@ -11,7 +11,18 @@ get:
       schema:
         type: integer
         format: int32
-      description: "Filter by user identifier"
+    - name: bookId
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+    - name: status
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
   responses:
     '200':
       description: "200 OK"
