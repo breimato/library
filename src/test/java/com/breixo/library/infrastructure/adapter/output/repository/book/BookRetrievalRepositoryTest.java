@@ -77,40 +77,42 @@ class BookRetrievalRepositoryTest {
     }
 
     /**
-     * Test find all when books exist then return books.
+     * Test find all when criteria provided then return matching books.
      */
     @Test
-    void testFindAll_whenBooksExist_thenReturnBooks() {
+    void testFindAll_whenCriteriaProvided_thenReturnMatchingBooks() {
         // Given
+        final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
         final var bookEntities = Instancio.createList(BookEntity.class);
         final var books = Instancio.createList(Book.class);
 
         // When
-        when(this.bookMyBatisMapper.findAll()).thenReturn(bookEntities);
+        when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(bookEntities);
         when(this.bookEntityMapper.toBookList(bookEntities)).thenReturn(books);
-        final var result = this.bookRetrievalRepository.findAll();
+        final var result = this.bookRetrievalRepository.findAll(bookSearchCriteriaCommand);
 
         // Then
-        verify(this.bookMyBatisMapper, times(1)).findAll();
+        verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
         verify(this.bookEntityMapper, times(1)).toBookList(bookEntities);
         assertEquals(books, result);
     }
 
     /**
-     * Test find all when no books exist then return empty list.
+     * Test find all when no books match criteria then return empty list.
      */
     @Test
-    void testFindAll_whenNoBooksExist_thenReturnEmptyList() {
+    void testFindAll_whenNoBooksMatchCriteria_thenReturnEmptyList() {
         // Given
+        final var bookSearchCriteriaCommand = Instancio.create(BookSearchCriteriaCommand.class);
         final var books = List.<Book>of();
 
         // When
-        when(this.bookMyBatisMapper.findAll()).thenReturn(List.of());
+        when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of());
         when(this.bookEntityMapper.toBookList(List.of())).thenReturn(books);
-        final var result = this.bookRetrievalRepository.findAll();
+        final var result = this.bookRetrievalRepository.findAll(bookSearchCriteriaCommand);
 
         // Then
-        verify(this.bookMyBatisMapper, times(1)).findAll();
+        verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
         verify(this.bookEntityMapper, times(1)).toBookList(List.of());
         assertTrue(result.isEmpty());
     }
