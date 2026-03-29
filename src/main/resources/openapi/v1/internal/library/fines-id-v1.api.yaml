@@ -1,0 +1,29 @@
+delete:
+  summary: "Delete Fine V1"
+  description: "Delete a fine"
+  operationId: "DeleteFineV1"
+  tags:
+    - delete-fine-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Fine identifier"
+  responses:
+    '204':
+      description: "204 No Content"
+    '404':
+      description: "Not Found - Fine not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

@@ -17,11 +17,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class OverdueLoanSchedulerTest {
 
-    /** The overdue loan scheduler. */
+    /** The Overdue Loan Scheduler. */
     @InjectMocks
     OverdueLoanScheduler overdueLoanScheduler;
 
-    /** The loan mark overdue persistence port. */
+    /** The Loan Mark Overdue Persistence Port. */
     @Mock
     LoanMarkOverduePersistencePort loanMarkOverduePersistencePort;
 
