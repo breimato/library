@@ -87,4 +87,28 @@ public class ExceptionMessageConstants {
 
     /** The Constant LOAN_UPDATE_ERROR_MESSAGE_ERROR. */
     public static final String LOAN_UPDATE_ERROR_MESSAGE_ERROR = "Error: Loan update failed";
+
+    /** The Constant USER_SUSPENDED_CODE_ERROR. */
+    public static final String USER_SUSPENDED_CODE_ERROR = "LIB-LOAN-007";
+
+    /** The Constant USER_SUSPENDED_MESSAGE_ERROR. */
+    public static final String USER_SUSPENDED_MESSAGE_ERROR = "Error: User is suspended and cannot borrow books";
+
+    /** The Constant USER_HAS_OVERDUE_LOANS_CODE_ERROR. */
+    public static final String USER_HAS_OVERDUE_LOANS_CODE_ERROR = "LIB-LOAN-008";
+
+    /** The Constant USER_HAS_OVERDUE_LOANS_MESSAGE_ERROR. */
+    public static final String USER_HAS_OVERDUE_LOANS_MESSAGE_ERROR = "Error: User has overdue loans and cannot borrow books";
+
+    /** The Constant USER_ACTIVE_LOANS_LIMIT_REACHED_CODE_ERROR. */
+    public static final String USER_ACTIVE_LOANS_LIMIT_REACHED_CODE_ERROR = "LIB-LOAN-009";
+
+    /** The Constant USER_ACTIVE_LOANS_LIMIT_REACHED_MESSAGE_ERROR. */
+    public static final String USER_ACTIVE_LOANS_LIMIT_REACHED_MESSAGE_ERROR = "Error: User has reached the maximum number of active loans";
+
+    /** The Constant USER_ALREADY_HAS_BOOK_ON_LOAN_CODE_ERROR. */
+    public static final String USER_ALREADY_HAS_BOOK_ON_LOAN_CODE_ERROR = "LIB-LOAN-010";
+
+    /** The Constant USER_ALREADY_HAS_BOOK_ON_LOAN_MESSAGE_ERROR. */
+    public static final String USER_ALREADY_HAS_BOOK_ON_LOAN_MESSAGE_ERROR = "Error: User already has this book on loan";
 }
