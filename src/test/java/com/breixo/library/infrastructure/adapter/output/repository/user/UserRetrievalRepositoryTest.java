@@ -77,21 +77,45 @@ class UserRetrievalRepositoryTest {
     }
 
     /**
-     * Test find all when users exist then return users.
+     * Test find all when no criteria then return all users.
      */
     @Test
-    void testFindAll_whenUsersExist_thenReturnUsers() {
+    void testFindAll_whenNoCriteria_thenReturnAllUsers() {
         // Given
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().build();
         final var userEntities = Instancio.createList(UserEntity.class);
         final var users = Instancio.createList(User.class);
 
         // When
-        when(this.userMyBatisMapper.findAll()).thenReturn(userEntities);
+        when(this.userMyBatisMapper.find(userSearchCriteriaCommand)).thenReturn(userEntities);
         when(this.userEntityMapper.toUserList(userEntities)).thenReturn(users);
-        final var result = this.userRetrievalRepository.findAll();
+        final var result = this.userRetrievalRepository.findAll(userSearchCriteriaCommand);
 
         // Then
-        verify(this.userMyBatisMapper, times(1)).findAll();
+        verify(this.userMyBatisMapper, times(1)).find(userSearchCriteriaCommand);
+        verify(this.userEntityMapper, times(1)).toUserList(userEntities);
+        assertEquals(users, result);
+    }
+
+    /**
+     * Test find all when criteria provided then return filtered users.
+     */
+    @Test
+    void testFindAll_whenCriteriaProvided_thenReturnFilteredUsers() {
+        // Given
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder()
+                .name("John")
+                .build();
+        final var userEntities = Instancio.createList(UserEntity.class);
+        final var users = Instancio.createList(User.class);
+
+        // When
+        when(this.userMyBatisMapper.find(userSearchCriteriaCommand)).thenReturn(userEntities);
+        when(this.userEntityMapper.toUserList(userEntities)).thenReturn(users);
+        final var result = this.userRetrievalRepository.findAll(userSearchCriteriaCommand);
+
+        // Then
+        verify(this.userMyBatisMapper, times(1)).find(userSearchCriteriaCommand);
         verify(this.userEntityMapper, times(1)).toUserList(userEntities);
         assertEquals(users, result);
     }
@@ -102,15 +126,16 @@ class UserRetrievalRepositoryTest {
     @Test
     void testFindAll_whenNoUsersExist_thenReturnEmptyList() {
         // Given
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().build();
         final var users = List.<User>of();
 
         // When
-        when(this.userMyBatisMapper.findAll()).thenReturn(List.of());
+        when(this.userMyBatisMapper.find(userSearchCriteriaCommand)).thenReturn(List.of());
         when(this.userEntityMapper.toUserList(List.of())).thenReturn(users);
-        final var result = this.userRetrievalRepository.findAll();
+        final var result = this.userRetrievalRepository.findAll(userSearchCriteriaCommand);
 
         // Then
-        verify(this.userMyBatisMapper, times(1)).findAll();
+        verify(this.userMyBatisMapper, times(1)).find(userSearchCriteriaCommand);
         verify(this.userEntityMapper, times(1)).toUserList(List.of());
         assertTrue(result.isEmpty());
     }

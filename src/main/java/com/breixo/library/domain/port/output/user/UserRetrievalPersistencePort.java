@@ -23,7 +23,8 @@ public interface UserRetrievalPersistencePort {
     /**
      * Find all.
      *
+     * @param userSearchCriteriaCommand the user search criteria command.
      * @return the list of users.
      */
-    List<User> findAll();
+    List<User> findAll(@Valid @NotNull UserSearchCriteriaCommand userSearchCriteriaCommand);
 }

@@ -33,19 +33,13 @@ public interface UserMyBatisMapper {
             from users
             <where>
                 <if test="id != null">and id = #{id}</if>
+                <if test="name != null">and name ilike '%' || #{name} || '%'</if>
                 <if test="email != null">and email = #{email}</if>
+                <if test="statusId != null">and status_id = #{statusId}</if>
             </where>
             </script>
             """)
     List<UserEntity> find(UserSearchCriteriaCommand userSearchCriteriaCommand);
-
-    /**
-     * Find all.
-     *
-     * @return the list of user entities.
-     */
-    @Select("select id, name, email, phone, status_id from users")
-    List<UserEntity> findAll();
 
     /**
      * Insert.
