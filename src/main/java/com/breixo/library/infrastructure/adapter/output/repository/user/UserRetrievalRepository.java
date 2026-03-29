@@ -14,10 +14,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** The Class User Retrieval Persistence Repository. */
+/** The Class User Retrieval repository. */
 @Component
 @RequiredArgsConstructor
-public class UserRetrievalPersistenceRepository implements UserRetrievalPersistencePort {
+public class UserRetrievalRepository implements UserRetrievalPersistencePort {
 
     /** The user my batis mapper. */
     private final UserMyBatisMapper userMyBatisMapper;

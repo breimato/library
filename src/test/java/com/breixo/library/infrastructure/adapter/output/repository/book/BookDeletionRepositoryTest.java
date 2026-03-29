@@ -16,9 +16,9 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class BookDeletionRepositoryTest {
 
-    /** The book deletion persistence repository. */
+    /** The book deletion repository. */
     @InjectMocks
-    BookDeletionPersistenceRepository bookDeletionPersistenceRepository;
+    BookDeletionRepository bookDeletionRepository;
 
     /** The book my batis mapper. */
     @Mock
@@ -33,7 +33,7 @@ class BookDeletionRepositoryTest {
         final var id = Instancio.create(Integer.class);
 
         // When
-        this.bookDeletionPersistenceRepository.execute(id);
+        this.bookDeletionRepository.execute(id);
 
         // Then
         verify(this.bookMyBatisMapper, times(1)).delete(id);

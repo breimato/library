@@ -1,6 +1,6 @@
 package com.breixo.library.infrastructure.mapper;
 
-import com.breixo.library.domain.model.user.UserStatus;
+import com.breixo.library.domain.model.user.enums.UserStatus;
 
 import org.mapstruct.Mapper;
 

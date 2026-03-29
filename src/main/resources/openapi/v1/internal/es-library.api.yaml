@@ -15,6 +15,13 @@ paths:
     $ref: './library/users-v1.api.yaml'
   /v1/library/users/{id}:
     $ref: './library/users-id-v1.api.yaml'
+  # Loans
+  /v1/library/loans:
+    $ref: './library/loans-v1.api.yaml'
+  /v1/library/loans/{id}:
+    $ref: './library/loans-id-v1.api.yaml'
+  /v1/library/loans/{id}/return:
+    $ref: './library/loans-id-return-v1.api.yaml'
 
 components:
   schemas:
@@ -30,6 +37,12 @@ components:
       $ref: './components/UserV1.yaml'
     PostUserV1Request:
       $ref: './requests/PostUserV1Request.yaml'
+    LoanV1:
+      $ref: './components/LoanV1.yaml'
+    PostLoanV1Request:
+      $ref: './requests/PostLoanV1Request.yaml'
+    PatchLoanReturnV1Request:
+      $ref: './requests/PatchLoanReturnV1Request.yaml'
     
   responses:
     BadRequest:

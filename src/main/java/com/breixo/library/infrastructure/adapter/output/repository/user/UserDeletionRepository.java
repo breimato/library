@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** The Class User Deletion Persistence Repository. */
+/** The Class User Deletion repository. */
 @Component
 @RequiredArgsConstructor
-public class UserDeletionPersistenceRepository implements UserDeletionPersistencePort {
+public class UserDeletionRepository implements UserDeletionPersistencePort {
 
     /** The user my batis mapper. */
     private final UserMyBatisMapper userMyBatisMapper;

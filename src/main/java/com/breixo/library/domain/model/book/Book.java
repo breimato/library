@@ -1,7 +1,5 @@
 package com.breixo.library.domain.model.book;
 
-import java.time.LocalDateTime;
-
 import com.breixo.library.domain.vo.Isbn;
 
 import jakarta.validation.constraints.NotBlank;
@@ -18,12 +16,9 @@ import lombok.Builder;
  * @param genre           The genre.
  * @param totalCopies     The total copies.
  * @param availableCopies The available copies.
- * @param createdAt       The created at.
- * @param updatedAt       The updated at.
  */
 @Builder
 public record Book(@NotNull Integer id, @NotNull Isbn isbn, @NotBlank String title, @NotBlank String author,
-                   @NotBlank String genre, @NotNull Integer totalCopies, @NotNull Integer availableCopies,
-                   @NotNull LocalDateTime createdAt, @NotNull LocalDateTime updatedAt) {
+                   @NotBlank String genre, @NotNull Integer totalCopies, @NotNull Integer availableCopies) {
 
 }

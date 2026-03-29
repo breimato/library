@@ -26,9 +26,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class BookRetrievalRepositoryTest {
 
-    /** The book retrieval persistence repository. */
+    /** The book retrieval repository. */
     @InjectMocks
-    BookRetrievalPersistenceRepository bookRetrievalPersistenceRepository;
+    BookRetrievalRepository bookRetrievalRepository;
 
     /** The book my batis mapper. */
     @Mock
@@ -51,7 +51,7 @@ class BookRetrievalRepositoryTest {
         // When
         when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of(bookEntity));
         when(this.bookEntityMapper.toBook(bookEntity)).thenReturn(book);
-        final var result = this.bookRetrievalPersistenceRepository.find(bookSearchCriteriaCommand);
+        final var result = this.bookRetrievalRepository.find(bookSearchCriteriaCommand);
 
         // Then
         verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
@@ -69,7 +69,7 @@ class BookRetrievalRepositoryTest {
 
         // When
         when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of());
-        final var result = this.bookRetrievalPersistenceRepository.find(bookSearchCriteriaCommand);
+        final var result = this.bookRetrievalRepository.find(bookSearchCriteriaCommand);
 
         // Then
         verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
@@ -88,7 +88,7 @@ class BookRetrievalRepositoryTest {
         // When
         when(this.bookMyBatisMapper.findAll()).thenReturn(bookEntities);
         when(this.bookEntityMapper.toBookList(bookEntities)).thenReturn(books);
-        final var result = this.bookRetrievalPersistenceRepository.findAll();
+        final var result = this.bookRetrievalRepository.findAll();
 
         // Then
         verify(this.bookMyBatisMapper, times(1)).findAll();
@@ -107,7 +107,7 @@ class BookRetrievalRepositoryTest {
         // When
         when(this.bookMyBatisMapper.findAll()).thenReturn(List.of());
         when(this.bookEntityMapper.toBookList(List.of())).thenReturn(books);
-        final var result = this.bookRetrievalPersistenceRepository.findAll();
+        final var result = this.bookRetrievalRepository.findAll();
 
         // Then
         verify(this.bookMyBatisMapper, times(1)).findAll();

@@ -1,0 +1,62 @@
+get:
+  summary: "Get Loan By Id V1"
+  description: "Get loan by id"
+  operationId: "GetLoanIdV1"
+  tags:
+    - get-loan-id-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Loan identifier"
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/LoanV1Response.yaml'
+    '404':
+      description: "Not Found - Loan not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+delete:
+  summary: "Delete Loan V1"
+  description: "Delete a loan"
+  operationId: "DeleteLoanV1"
+  tags:
+    - delete-loan-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Loan identifier"
+  responses:
+    '204':
+      description: "204 No Content"
+    '404':
+      description: "Not Found - Loan not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

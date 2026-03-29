@@ -53,7 +53,7 @@ public interface UserMyBatisMapper {
      * @param userEntity the user entity.
      */
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    @Insert("insert into users (name, email, phone, status_id) values (#{name}, #{email}, #{phone}, 1)")
+    @Insert("insert into users (name, email, phone, status_id) values (#{name}, #{email}, #{phone}, 0)")
     void insert(UserEntity userEntity);
 
     /**

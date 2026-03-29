@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.breixo.library.domain.command.user.CreateUserCommand;
 import com.breixo.library.domain.command.user.UpdateUserCommand;
-import com.breixo.library.domain.model.user.UserStatus;
+import com.breixo.library.domain.model.user.enums.UserStatus;
 import com.breixo.library.infrastructure.adapter.output.entities.UserEntity;
 import com.breixo.library.infrastructure.mapper.UserStatusMapper;
 

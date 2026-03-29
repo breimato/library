@@ -30,9 +30,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class BookCreationRepositoryTest {
 
-    /** The book creation persistence repository. */
+    /** The book creation repository. */
     @InjectMocks
-    BookCreationPersistenceRepository bookCreationPersistenceRepository;
+    BookCreationRepository bookCreationRepository;
 
     /** The book my batis mapper. */
     @Mock
@@ -58,7 +58,7 @@ class BookCreationRepositoryTest {
         when(this.bookEntityMapper.toBookEntity(createBookCommand)).thenReturn(bookEntity);
         when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of(createdBookEntity));
         when(this.bookEntityMapper.toBook(createdBookEntity)).thenReturn(book);
-        final var result = this.bookCreationPersistenceRepository.execute(createBookCommand);
+        final var result = this.bookCreationRepository.execute(createBookCommand);
 
         // Then
         verify(this.bookEntityMapper, times(1)).toBookEntity(createBookCommand);
@@ -81,7 +81,7 @@ class BookCreationRepositoryTest {
         when(this.bookEntityMapper.toBookEntity(createBookCommand)).thenReturn(bookEntity);
         doThrow(new RuntimeException()).when(this.bookMyBatisMapper).insert(bookEntity);
         final var bookException = assertThrows(BookException.class,
-                () -> this.bookCreationPersistenceRepository.execute(createBookCommand));
+                () -> this.bookCreationRepository.execute(createBookCommand));
 
         // Then
         verify(this.bookEntityMapper, times(1)).toBookEntity(createBookCommand);

@@ -4,9 +4,8 @@ import com.breixo.library.domain.exception.BookException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
-import com.breixo.library.domain.command.book.CreateBookCommand;
-import com.breixo.library.domain.port.output.book.BookCreationPersistencePort;
-import com.breixo.library.infrastructure.adapter.output.entities.BookEntity;
+import com.breixo.library.domain.command.book.UpdateBookCommand;
+import com.breixo.library.domain.port.output.book.BookUpdatePersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
 
@@ -15,10 +14,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** The Class Book Creation Persistence Repository. */
+/** The Class Book Update repository. */
 @Component
 @RequiredArgsConstructor
-public class BookCreationPersistenceRepository implements BookCreationPersistencePort {
+public class BookUpdateRepository implements BookUpdatePersistencePort {
 
     /** The book my batis mapper. */
     private final BookMyBatisMapper bookMyBatisMapper;
@@ -28,30 +27,26 @@ public class BookCreationPersistenceRepository implements BookCreationPersistenc
 
     /** {@inheritDoc} */
     @Override
-    public Book execute(@Valid @NotNull final CreateBookCommand createBookCommand) {
-        final var bookEntity = this.insert(createBookCommand);
-        return this.find(bookEntity.getId());
+    public Book execute(@Valid @NotNull final UpdateBookCommand updateBookCommand) {
+        this.update(updateBookCommand);
+        return this.find(updateBookCommand.id());
     }
 
     /**
-     * Insert.
+     * Update.
      *
-     * @param createBookCommand the create book command.
-     * @return the book entity.
+     * @param updateBookCommand the update book command.
      */
-    private BookEntity insert(final CreateBookCommand createBookCommand) {
-
-        final var bookEntity = this.bookEntityMapper.toBookEntity(createBookCommand);
+    private void update(final UpdateBookCommand updateBookCommand) {
 
         try {
-            this.bookMyBatisMapper.insert(bookEntity);
+            this.bookMyBatisMapper.update(updateBookCommand);
 
         } catch (final Exception exception) {
             throw new BookException(
-                    ExceptionMessageConstants.BOOK_CREATION_ERROR_CODE_ERROR,
-                    ExceptionMessageConstants.BOOK_CREATION_ERROR_MESSAGE_ERROR);
+                    ExceptionMessageConstants.BOOK_UPDATE_ERROR_CODE_ERROR,
+                    ExceptionMessageConstants.BOOK_UPDATE_ERROR_MESSAGE_ERROR);
         }
-        return bookEntity;
     }
 
     /**

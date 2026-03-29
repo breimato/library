@@ -14,10 +14,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** The Class User Update Persistence Repository. */
+/** The Class User Update repository. */
 @Component
 @RequiredArgsConstructor
-public class UserUpdatePersistenceRepository implements UserUpdatePersistencePort {
+public class UserUpdateRepository implements UserUpdatePersistencePort {
 
     /** The user my batis mapper. */
     private final UserMyBatisMapper userMyBatisMapper;

@@ -1,5 +1,6 @@
 package com.breixo.library.domain.model.user;
 
+import com.breixo.library.domain.model.user.enums.UserStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

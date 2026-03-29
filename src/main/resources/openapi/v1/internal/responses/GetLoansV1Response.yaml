@@ -1,0 +1,7 @@
+description: "Get Loans V1 Response"
+type: object
+properties:
+  loans:
+    type: array
+    items:
+      $ref: '../components/LoanV1.yaml'

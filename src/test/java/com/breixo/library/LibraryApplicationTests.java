@@ -2,6 +2,7 @@ package com.breixo.library;
 
 import org.junit.jupiter.api.Test;
 import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
+import com.breixo.library.infrastructure.adapter.output.mybatis.LoanMyBatisMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.UserMyBatisMapper;
 import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -20,6 +21,9 @@ class LibraryApplicationTests {
 
     @MockBean
     BookMyBatisMapper bookMyBatisMapper;
+
+    @MockBean
+    LoanMyBatisMapper loanMyBatisMapper;
 
     @MockBean
     UserMyBatisMapper userMyBatisMapper;
