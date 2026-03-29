@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** The Class Book Creation Persistence Repository. */
+/** The Class Book Creation repository. */
 @Component
 @RequiredArgsConstructor
 public class BookCreationRepository implements BookCreationPersistencePort {

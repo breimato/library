@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** The Class Loan Deletion Persistence Repository. */
+/** The Class Loan Deletion repository. */
 @Component
 @RequiredArgsConstructor
 public class LoanDeletionRepository implements LoanDeletionPersistencePort {

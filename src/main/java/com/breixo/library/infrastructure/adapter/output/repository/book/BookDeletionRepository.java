@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** The Class Book Deletion Persistence Repository. */
+/** The Class Book Deletion repository. */
 @Component
 @RequiredArgsConstructor
 public class BookDeletionRepository implements BookDeletionPersistencePort {

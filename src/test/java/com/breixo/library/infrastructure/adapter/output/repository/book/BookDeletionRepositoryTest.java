@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class BookDeletionRepositoryTest {
 
-    /** The book deletion persistence repository. */
+    /** The book deletion repository. */
     @InjectMocks
     BookDeletionRepository bookDeletionRepository;
 

@@ -22,11 +22,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/** The Class Loan Retrieval Persistence Repository Test. */
+/** The Class Loan Retrieval repository Test. */
 @ExtendWith(MockitoExtension.class)
 class LoanRetrievalRepositoryTest {
 
-    /** The loan retrieval persistence repository. */
+    /** The loan retrieval repository. */
     @InjectMocks
     LoanRetrievalRepository loanRetrievalRepository;
 

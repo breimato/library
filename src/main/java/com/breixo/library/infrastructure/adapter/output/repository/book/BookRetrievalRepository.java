@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** The Class Book Retrieval Persistence Repository. */
+/** The Class Book Retrieval repository. */
 @Component
 @RequiredArgsConstructor
 public class BookRetrievalRepository implements BookRetrievalPersistencePort {

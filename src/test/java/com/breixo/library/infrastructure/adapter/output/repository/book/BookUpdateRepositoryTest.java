@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class BookUpdateRepositoryTest {
 
-    /** The book update persistence repository. */
+    /** The book update repository. */
     @InjectMocks
     BookUpdateRepository bookUpdateRepository;
 

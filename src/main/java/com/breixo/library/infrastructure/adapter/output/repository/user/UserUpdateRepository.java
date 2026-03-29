@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** The Class User Update Persistence Repository. */
+/** The Class User Update repository. */
 @Component
 @RequiredArgsConstructor
 public class UserUpdateRepository implements UserUpdatePersistencePort {

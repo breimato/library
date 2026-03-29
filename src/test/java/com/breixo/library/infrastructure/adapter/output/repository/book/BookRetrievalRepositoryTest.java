@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class BookRetrievalRepositoryTest {
 
-    /** The book retrieval persistence repository. */
+    /** The book retrieval repository. */
     @InjectMocks
     BookRetrievalRepository bookRetrievalRepository;
 

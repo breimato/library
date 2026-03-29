@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** The Class User Creation Persistence Repository. */
+/** The Class User Creation repository. */
 @Component
 @RequiredArgsConstructor
 public class UserCreationRepository implements UserCreationPersistencePort {

@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
-/** The Class Loan Retrieval Persistence Repository. */
+/** The Class Loan Retrieval repository. */
 @Component
 @RequiredArgsConstructor
 public class LoanRetrievalRepository implements LoanRetrievalPersistencePort {

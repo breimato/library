@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserCreationRepositoryTest {
 
-    /** The user creation persistence repository. */
+    /** The user creation repository. */
     @InjectMocks
     UserCreationRepository userCreationRepository;
 

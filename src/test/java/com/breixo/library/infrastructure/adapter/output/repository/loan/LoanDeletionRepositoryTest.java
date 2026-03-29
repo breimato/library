@@ -12,11 +12,11 @@ import com.breixo.library.infrastructure.adapter.output.mybatis.LoanMyBatisMappe
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-/** The Class Loan Deletion Persistence Repository Test. */
+/** The Class Loan Deletion repository Test. */
 @ExtendWith(MockitoExtension.class)
 class LoanDeletionRepositoryTest {
 
-    /** The loan deletion persistence repository. */
+    /** The loan deletion repository. */
     @InjectMocks
     LoanDeletionRepository loanDeletionRepository;
 

@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** The Class Loan Update Persistence Repository. */
+/** The Class Loan Update repository. */
 @Component
 @RequiredArgsConstructor
 public class LoanUpdateRepository implements LoanUpdatePersistencePort {

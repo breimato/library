@@ -25,11 +25,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/** The Class Loan Creation Persistence Repository Test. */
+/** The Class Loan Creation repository Test. */
 @ExtendWith(MockitoExtension.class)
 class LoanCreationRepositoryTest {
 
-    /** The loan creation persistence repository. */
+    /** The loan creation repository. */
     @InjectMocks
     LoanCreationRepository loanCreationRepository;
 

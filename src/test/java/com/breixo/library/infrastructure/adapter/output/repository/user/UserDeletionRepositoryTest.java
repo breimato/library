@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class UserDeletionRepositoryTest {
 
-    /** The user deletion persistence repository. */
+    /** The user deletion repository. */
     @InjectMocks
     UserDeletionRepository userDeletionRepository;
 
