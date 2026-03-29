@@ -44,6 +44,7 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
                     ExceptionMessageConstants.USER_BLOCKED_CODE_ERROR,
                     ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR);
         }
+
         if (UserStatus.SUSPENDED.getId().equals(user.status().getId())) {
             throw new LoanException(
                     ExceptionMessageConstants.USER_SUSPENDED_CODE_ERROR,
@@ -61,6 +62,7 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
 
         final var hasOverdueLoans = loanList.stream()
                 .anyMatch(loan -> LoanStatus.OVERDUE.getId().equals(loan.status().getId()));
+
         if (hasOverdueLoans) {
             throw new LoanException(
                     ExceptionMessageConstants.USER_HAS_OVERDUE_LOANS_CODE_ERROR,
@@ -70,6 +72,7 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
         final var hasReachedLoanLimit = loanList.stream()
                 .filter(loan -> LoanStatus.ACTIVE.getId().equals(loan.status().getId()))
                 .count() >= MAX_ACTIVE_LOANS;
+
         if (hasReachedLoanLimit) {
             throw new LoanException(
                     ExceptionMessageConstants.USER_ACTIVE_LOANS_LIMIT_REACHED_CODE_ERROR,
@@ -89,16 +92,19 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
         final var hasActiveLoanForThisBook = loanList.stream()
                 .anyMatch(loan -> loan.bookId().equals(book.id())
                         && LoanStatus.ACTIVE.getId().equals(loan.status().getId()));
+
         if (hasActiveLoanForThisBook) {
             throw new LoanException(
                     ExceptionMessageConstants.USER_ALREADY_HAS_BOOK_ON_LOAN_CODE_ERROR,
                     ExceptionMessageConstants.USER_ALREADY_HAS_BOOK_ON_LOAN_MESSAGE_ERROR);
         }
+
         if (book.totalCopies().equals(0)) {
             throw new LoanException(
                     ExceptionMessageConstants.BOOK_RETIRED_CODE_ERROR,
                     ExceptionMessageConstants.BOOK_RETIRED_MESSAGE_ERROR);
         }
+
         if (book.availableCopies().equals(0)) {
             throw new LoanException(
                     ExceptionMessageConstants.BOOK_COPIES_NOT_AVAILABLE_CODE_ERROR,
