@@ -42,9 +42,9 @@ public class BookRetrievalRepository implements BookRetrievalPersistencePort {
 
     /** {@inheritDoc} */
     @Override
-    public List<Book> findAll() {
+    public List<Book> findAll(@Valid @NotNull final BookSearchCriteriaCommand bookSearchCriteriaCommand) {
 
-        final var bookEntities = this.bookMyBatisMapper.findAll();
+        final var bookEntities = this.bookMyBatisMapper.find(bookSearchCriteriaCommand);
 
         return this.bookEntityMapper.toBookList(bookEntities);
     }

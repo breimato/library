@@ -37,21 +37,13 @@ public interface BookMyBatisMapper {
             <where>
                 <if test="id != null">and id = #{id}</if>
                 <if test="isbn != null">and isbn = #{isbn}</if>
-                <if test="title != null">and title ilike #{title}</if>
-                <if test="author != null">and author ilike #{author}</if>
-                <if test="genre != null">and genre ilike #{genre}</if>
+                <if test="title != null">and title ilike '%' || #{title} || '%'</if>
+                <if test="author != null">and author ilike '%' || #{author} || '%'</if>
+                <if test="genre != null">and genre ilike '%' || #{genre} || '%'</if>
             </where>
             </script>
             """)
     List<BookEntity> find(BookSearchCriteriaCommand bookSearchCriteriaCommand);
-
-    /**
-     * Find all.
-     *
-     * @return the list of all book entities.
-     */
-    @Select("select id, isbn, title, author, genre, total_copies, available_copies from books")
-    List<BookEntity> findAll();
 
     /**
      * Insert.

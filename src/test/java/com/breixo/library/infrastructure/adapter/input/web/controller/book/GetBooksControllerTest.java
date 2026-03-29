@@ -1,5 +1,6 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
+import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.dto.BookV1Dto;
@@ -52,16 +53,17 @@ class GetBooksControllerTest {
     }
 
     /**
-     * Test get books v 1 when books exist then return ok response.
+     * Test get books v 1 when no criteria then return all books.
      */
     @Test
-    void testGetBooksV1_whenBooksExist_thenReturnOkResponse() throws Exception {
+    void testGetBooksV1_whenNoCriteria_thenReturnAllBooks() throws Exception {
         // Given
+        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().build();
         final var books = Instancio.createList(Book.class);
         final var bookV1DtoList = Instancio.createList(BookV1Dto.class);
 
         // When
-        when(this.bookRetrievalPersistencePort.findAll()).thenReturn(books);
+        when(this.bookRetrievalPersistencePort.findAll(bookSearchCriteriaCommand)).thenReturn(books);
         when(this.bookMapper.toBookV1List(books)).thenReturn(bookV1DtoList);
 
         this.mockMvc.perform(get(URL).accept(MediaType.APPLICATION_JSON))
@@ -69,7 +71,32 @@ class GetBooksControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Then
-        verify(this.bookRetrievalPersistencePort, times(1)).findAll();
+        verify(this.bookRetrievalPersistencePort, times(1)).findAll(bookSearchCriteriaCommand);
+        verify(this.bookMapper, times(1)).toBookV1List(books);
+    }
+
+    /**
+     * Test get books v 1 when criteria provided then return filtered books.
+     */
+    @Test
+    void testGetBooksV1_whenCriteriaProvided_thenReturnFilteredBooks() throws Exception {
+        // Given
+        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder()
+                .author("Martin")
+                .build();
+        final var books = Instancio.createList(Book.class);
+        final var bookV1DtoList = Instancio.createList(BookV1Dto.class);
+
+        // When
+        when(this.bookRetrievalPersistencePort.findAll(bookSearchCriteriaCommand)).thenReturn(books);
+        when(this.bookMapper.toBookV1List(books)).thenReturn(bookV1DtoList);
+
+        this.mockMvc.perform(get(URL).param("author", "Martin").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        // Then
+        verify(this.bookRetrievalPersistencePort, times(1)).findAll(bookSearchCriteriaCommand);
         verify(this.bookMapper, times(1)).toBookV1List(books);
     }
 }
