@@ -71,6 +71,14 @@ public interface LoanMyBatisMapper {
     void update(UpdateLoanReturnCommand loanReturnCommand);
 
     /**
+     * Mark overdue.
+     *
+     * @return the number of loans marked as overdue.
+     */
+    @Update("update loans set status_id = 2 where status_id = 0 and due_date < current_date")
+    int markOverdue();
+
+    /**
      * Delete.
      *
      * @param id the id
