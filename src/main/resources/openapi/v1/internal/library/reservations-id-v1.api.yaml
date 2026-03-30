@@ -1,0 +1,29 @@
+delete:
+  summary: "Delete Reservation V1"
+  description: "Delete a reservation"
+  operationId: "DeleteReservationV1"
+  tags:
+    - delete-reservation-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Reservation identifier"
+  responses:
+    '204':
+      description: "204 No Content"
+    '404':
+      description: "Not Found - Reservation not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

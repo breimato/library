@@ -27,6 +27,9 @@ paths:
     $ref: './library/fines-v1.api.yaml'
   /v1/library/fines/{id}:
     $ref: './library/fines-id-v1.api.yaml'
+  # Reservations
+  /v1/library/reservations/{id}:
+    $ref: './library/reservations-id-v1.api.yaml'
 
 components:
   schemas:
