@@ -1,0 +1,15 @@
+description: "Patch Reservation V1 Request"
+type: object
+properties:
+  loanId:
+    type: integer
+    format: int32
+    description: "Loan identifier"
+  expiresAt:
+    type: string
+    format: date-time
+    description: "Reservation expiration date"
+  status:
+    type: integer
+    format: int32
+    description: "Reservation status identifier"

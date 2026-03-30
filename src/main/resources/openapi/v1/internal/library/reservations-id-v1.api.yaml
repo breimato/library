@@ -1,3 +1,42 @@
+patch:
+  summary: "Patch Reservation V1"
+  description: "Partially update a reservation"
+  operationId: "PatchReservationV1"
+  tags:
+    - patch-reservation-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Reservation identifier"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/PatchReservationV1Request.yaml'
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/ReservationV1Response.yaml'
+    '404':
+      description: "Not Found - Reservation not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
 delete:
   summary: "Delete Reservation V1"
   description: "Delete a reservation"

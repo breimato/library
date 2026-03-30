@@ -129,4 +129,16 @@ public class ExceptionMessageConstants {
 
     /** The Constant FINE_UPDATE_ERROR_MESSAGE_ERROR. */
     public static final String FINE_UPDATE_ERROR_MESSAGE_ERROR = "Error: Fine update failed";
+
+    /** The Constant RESERVATION_NOT_FOUND_CODE_ERROR. */
+    public static final String RESERVATION_NOT_FOUND_CODE_ERROR = "LIB-RESERVATION-001";
+
+    /** The Constant RESERVATION_NOT_FOUND_MESSAGE_ERROR. */
+    public static final String RESERVATION_NOT_FOUND_MESSAGE_ERROR = "Error: Reservation not found";
+
+    /** The Constant RESERVATION_UPDATE_ERROR_CODE_ERROR. */
+    public static final String RESERVATION_UPDATE_ERROR_CODE_ERROR = "LIB-RESERVATION-002";
+
+    /** The Constant RESERVATION_UPDATE_ERROR_MESSAGE_ERROR. */
+    public static final String RESERVATION_UPDATE_ERROR_MESSAGE_ERROR = "Error: Reservation update failed";
 }

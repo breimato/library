@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 /** The Interface Reservation My Batis Mapper. */
 @Mapper
@@ -53,6 +54,24 @@ public interface ReservationMyBatisMapper {
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(ReservationEntity reservationEntity);
+
+    /**
+     * Update.
+     *
+     * @param reservationEntity the reservation entity.
+     */
+    @Update("""
+            <script>
+            update reservations
+            <set>
+                <if test="loanId != null">loan_id = #{loanId},</if>
+                <if test="expiresAt != null">expires_at = #{expiresAt},</if>
+                <if test="statusId != null">status_id = #{statusId},</if>
+            </set>
+            where id = #{id}
+            </script>
+            """)
+    void update(ReservationEntity reservationEntity);
 
     /**
      * Delete.
