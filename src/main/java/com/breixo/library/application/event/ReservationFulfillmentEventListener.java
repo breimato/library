@@ -1,5 +1,6 @@
 package com.breixo.library.application.event;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +33,21 @@ public class ReservationFulfillmentEventListener {
     @EventListener
     public void handleLoanCreatedEvent(final LoanCreatedDomainEvent loanCreatedDomainEvent) {
 
+        final boolean isPendingCompleted = this.completePendingReservationIfExists(loanCreatedDomainEvent);
+
+        if (BooleanUtils.isFalse(isPendingCompleted)) {
+            this.completeNotifiedReservationIfExists(loanCreatedDomainEvent);
+        }
+    }
+
+    /**
+     * Complete pending reservation if exists.
+     *
+     * @param loanCreatedDomainEvent the loan created domain event
+     * @return true, if pending reservation was completed
+     */
+    private boolean completePendingReservationIfExists(final LoanCreatedDomainEvent loanCreatedDomainEvent) {
+
         final var pendingList = this.reservationRetrievalPersistencePort.getPendingByBookId(loanCreatedDomainEvent.bookId());
 
         final var userPendingReservation = pendingList.stream()
@@ -40,8 +56,18 @@ public class ReservationFulfillmentEventListener {
 
         if (userPendingReservation.isPresent()) {
             this.completeReservation(userPendingReservation.get().id(), loanCreatedDomainEvent.loanId());
-            return;
+            return true;
         }
+        
+        return false;
+    }
+
+    /**
+     * Complete notified reservation if exists.
+     *
+     * @param loanCreatedDomainEvent the loan created domain event
+     */
+    private void completeNotifiedReservationIfExists(final LoanCreatedDomainEvent loanCreatedDomainEvent) {
 
         final var notifiedList = this.reservationRetrievalPersistencePort.getNotifiedByBookId(loanCreatedDomainEvent.bookId());
 
