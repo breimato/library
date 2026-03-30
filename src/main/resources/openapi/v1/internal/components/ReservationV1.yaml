@@ -1,0 +1,27 @@
+description: "Reservation V1"
+type: object
+properties:
+  id:
+    type: integer
+    format: int32
+    description: "Reservation identifier"
+  userId:
+    type: integer
+    format: int32
+    description: "User identifier"
+  bookId:
+    type: integer
+    format: int32
+    description: "Book identifier"
+  loanId:
+    type: integer
+    format: int32
+    description: "Loan identifier"
+  expiresAt:
+    type: string
+    format: date-time
+    description: "Reservation expiration date"
+  status:
+    type: integer
+    format: int32
+    description: "Reservation status"

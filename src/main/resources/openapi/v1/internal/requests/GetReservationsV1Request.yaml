@@ -1,0 +1,23 @@
+description: "Get Reservations V1 Request"
+type: object
+properties:
+  id:
+    type: integer
+    format: int32
+    description: "Filter by identifier"
+  userId:
+    type: integer
+    format: int32
+    description: "Filter by user identifier"
+  bookId:
+    type: integer
+    format: int32
+    description: "Filter by book identifier"
+  loanId:
+    type: integer
+    format: int32
+    description: "Filter by loan identifier"
+  status:
+    type: integer
+    format: int32
+    description: "Filter by status"

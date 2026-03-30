@@ -1,0 +1,25 @@
+get:
+  summary: "Get Reservations V1"
+  description: "Get all reservations"
+  operationId: "GetReservationsV1"
+  tags:
+    - get-reservations-v1
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/GetReservationsV1Request.yaml'
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/GetReservationsV1Response.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
