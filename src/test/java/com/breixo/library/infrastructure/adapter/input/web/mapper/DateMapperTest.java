@@ -1,6 +1,7 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 import org.instancio.Instancio;
@@ -30,5 +31,18 @@ class DateMapperTest {
 
         // When / Then
         assertEquals(localDateTime.atOffset(ZoneOffset.UTC), this.dateMapper.toOffsetDateTime(localDateTime));
+    }
+
+    /**
+     * Test to local date time when offset date time is valid then return local date time.
+     */
+    @Test
+    void testToLocalDateTime_whenOffsetDateTimeIsValid_thenReturnLocalDateTime() {
+
+        // Given
+        final var offsetDateTime = Instancio.create(OffsetDateTime.class);
+
+        // When / Then
+        assertEquals(offsetDateTime.toLocalDateTime(), this.dateMapper.toLocalDateTime(offsetDateTime));
     }
 }
