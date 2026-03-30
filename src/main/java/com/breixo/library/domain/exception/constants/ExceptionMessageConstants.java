@@ -117,4 +117,10 @@ public class ExceptionMessageConstants {
 
     /** The Constant FINE_NOT_FOUND_MESSAGE_ERROR. */
     public static final String FINE_NOT_FOUND_MESSAGE_ERROR = "Error: Fine not found";
+
+    /** The Constant FINE_CREATION_ERROR_CODE_ERROR. */
+    public static final String FINE_CREATION_ERROR_CODE_ERROR = "LIB-FINE-002";
+
+    /** The Constant FINE_CREATION_ERROR_MESSAGE_ERROR. */
+    public static final String FINE_CREATION_ERROR_MESSAGE_ERROR = "Error: Fine creation failed";
 }

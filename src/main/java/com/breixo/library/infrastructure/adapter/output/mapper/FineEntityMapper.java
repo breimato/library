@@ -2,8 +2,8 @@ package com.breixo.library.infrastructure.adapter.output.mapper;
 
 import java.util.List;
 
+import com.breixo.library.domain.command.fine.CreateFineCommand;
 import com.breixo.library.domain.model.fine.Fine;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
 import com.breixo.library.infrastructure.adapter.output.entities.FineEntity;
 import com.breixo.library.infrastructure.mapper.FineStatusMapper;
 
@@ -30,4 +30,12 @@ public interface FineEntityMapper {
      * @return the fine list.
      */
     List<Fine> toFineList(List<FineEntity> fineEntities);
+
+    /**
+     * To fine entity.
+     *
+     * @param createFineCommand the create fine command.
+     * @return the fine entity.
+     */
+    FineEntity toFineEntity(CreateFineCommand createFineCommand);
 }

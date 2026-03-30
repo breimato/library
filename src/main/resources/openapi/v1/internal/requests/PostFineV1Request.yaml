@@ -1,0 +1,19 @@
+description: "Post Fine V1 Request"
+type: object
+required:
+  - loanId
+  - amountEuros
+  - status
+properties:
+  loanId:
+    type: integer
+    format: int32
+    description: "Loan identifier"
+  amountEuros:
+    type: number
+    format: double
+    description: "Fine amount in euros"
+  status:
+    type: integer
+    format: int32
+    description: "Fine status identifier"

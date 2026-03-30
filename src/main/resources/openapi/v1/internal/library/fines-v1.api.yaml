@@ -23,3 +23,28 @@ get:
         application/json:
           schema:
             $ref: '../components/ApiErrorV1.yaml'
+post:
+  summary: "Post Fine V1"
+  description: "Create a new fine"
+  operationId: "PostFineV1"
+  tags:
+    - post-fine-v1
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/PostFineV1Request.yaml'
+  responses:
+    '201':
+      description: "201 Created"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/FineV1Response.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

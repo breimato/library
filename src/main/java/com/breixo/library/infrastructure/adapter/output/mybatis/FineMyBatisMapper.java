@@ -6,7 +6,9 @@ import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.FineEntity;
 
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
 /** The Interface Fine My Batis Mapper. */
@@ -36,6 +38,15 @@ public interface FineMyBatisMapper {
             </script>
             """)
     List<FineEntity> find(FineSearchCriteriaCommand fineSearchCriteriaCommand);
+
+    /**
+     * Insert.
+     *
+     * @param fineEntity the fine entity.
+     */
+    @Insert("insert into fines (loan_id, amount_euros, status_id) values (#{loanId}, #{amountEuros}, #{statusId})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void insert(FineEntity fineEntity);
 
     /**
      * Delete.
