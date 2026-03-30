@@ -15,7 +15,14 @@ public interface LoanPolicyValidationService {
      *
      * @param user  the user
      * @param book  the book
-     * @param loans the user's existing loans
+     * @param loanList the loan list
      */
     void checkCanBorrow(@NotNull User user, @NotNull Book book, @NotNull List<Loan> loanList);
+
+    /**
+     * Check user has no pending fines.
+     *
+     * @param loanList the loan list
+     */
+    void checkUserHasNoPendingFines(@NotNull List<Loan> loanList);
 }

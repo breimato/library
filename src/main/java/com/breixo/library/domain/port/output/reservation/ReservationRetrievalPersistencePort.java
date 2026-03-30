@@ -12,6 +12,22 @@ import jakarta.validation.constraints.NotNull;
 public interface ReservationRetrievalPersistencePort {
 
     /**
+     * Gets pending by book id.
+     *
+     * @param bookId the book id.
+     * @return the list of reservations.
+     */
+    List<Reservation> getPendingByBookId(@NotNull Integer bookId);
+
+    /**
+     * Gets notified by book id.
+     *
+     * @param bookId the book id.
+     * @return the list of reservations.
+     */
+    List<Reservation> getNotifiedByBookId(@NotNull Integer bookId);
+
+    /**
      * Find.
      *
      * @param reservationSearchCriteriaCommand the reservation search criteria command.

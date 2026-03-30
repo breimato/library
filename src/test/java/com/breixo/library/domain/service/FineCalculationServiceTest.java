@@ -32,7 +32,7 @@ class FineCalculationServiceTest {
         final var fine = this.fineCalculationService.execute(dueDate, returnDate);
 
         // Then
-        assertEquals(BigDecimal.ZERO, fine);
+        assertEquals(0, BigDecimal.ZERO.compareTo(fine));
     }
 
     /**
@@ -49,7 +49,7 @@ class FineCalculationServiceTest {
         final var fine = this.fineCalculationService.execute(dueDate, returnDate);
 
         // Then
-        assertEquals(BigDecimal.ZERO, fine);
+        assertEquals(0, BigDecimal.ZERO.compareTo(fine));
     }
 
     /**

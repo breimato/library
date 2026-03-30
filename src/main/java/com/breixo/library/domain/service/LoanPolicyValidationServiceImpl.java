@@ -10,13 +10,23 @@ import com.breixo.library.domain.model.loan.enums.LoanStatus;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.model.user.enums.UserStatus;
 
+import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
+import com.breixo.library.domain.model.fine.enums.FineStatus;
+import com.breixo.library.domain.port.output.fine.FineRetrievalPersistencePort;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 /** The Class Loan Policy Validation Service Impl. */
 @Component
+@RequiredArgsConstructor
 public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationService {
+
+    /** The fine retrieval persistence port. */
+    private final FineRetrievalPersistencePort fineRetrievalPersistencePort;
 
     /** The Constant MAX_ACTIVE_LOANS. */
     private static final int MAX_ACTIVE_LOANS = 3;
@@ -29,6 +39,30 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
         this.validateUserStatus(user);
         this.validateUserLoans(loanList);
         this.validateBookAvailability(book, loanList);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void checkUserHasNoPendingFines(@NotNull final List<Loan> loanList) {
+
+        final var hasPendingFines = loanList.stream()
+                .anyMatch(loan -> {
+
+                    final var fineSearchCriteriaCommand = FineSearchCriteriaCommand.builder()
+                            .loanId(loan.id())
+                            .statusId(FineStatus.PENDING.getId())
+                            .build();
+
+                    final var fineList = this.fineRetrievalPersistencePort.find(fineSearchCriteriaCommand);
+
+                    return CollectionUtils.isNotEmpty(fineList);
+                });
+
+        if (hasPendingFines) {
+            throw new LoanException(
+                    ExceptionMessageConstants.USER_HAS_PENDING_FINES_CODE_ERROR,
+                    ExceptionMessageConstants.USER_HAS_PENDING_FINES_MESSAGE_ERROR);
+        }
     }
 
 

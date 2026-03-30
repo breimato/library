@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.breixo.library.domain.command.reservation.ReservationSearchCriteriaCommand;
 import com.breixo.library.domain.model.reservation.Reservation;
+import com.breixo.library.domain.model.reservation.enums.ReservationStatus;
 import com.breixo.library.domain.port.output.reservation.ReservationRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mapper.ReservationEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.ReservationMyBatisMapper;
@@ -23,6 +24,30 @@ public class ReservationRetrievalRepository implements ReservationRetrievalPersi
 
     /** The Reservation Entity Mapper. */
     private final ReservationEntityMapper reservationEntityMapper;
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Reservation> getPendingByBookId(@NotNull final Integer bookId) {
+
+        final var reservationSearchCriteriaCommand = ReservationSearchCriteriaCommand.builder()
+                .bookId(bookId)
+                .statusId(ReservationStatus.PENDING.getId())
+                .build();
+
+        return this.find(reservationSearchCriteriaCommand);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Reservation> getNotifiedByBookId(@NotNull final Integer bookId) {
+
+        final var reservationSearchCriteriaCommand = ReservationSearchCriteriaCommand.builder()
+                .bookId(bookId)
+                .statusId(ReservationStatus.NOTIFIED.getId())
+                .build();
+
+        return this.find(reservationSearchCriteriaCommand);
+    }
 
     /** {@inheritDoc} */
     @Override

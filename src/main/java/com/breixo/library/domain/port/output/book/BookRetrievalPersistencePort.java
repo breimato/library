@@ -12,6 +12,14 @@ import jakarta.validation.constraints.NotNull;
 public interface BookRetrievalPersistencePort {
 
     /**
+     * Find by id.
+     *
+     * @param id the id.
+     * @return the book.
+     */
+    Book findById(@NotNull Integer id);
+
+    /**
      * Find.
      *
      * @param bookSearchCriteriaCommand the book search criteria command.

@@ -27,7 +27,20 @@ public class LoanRetrievalRepository implements LoanRetrievalPersistencePort {
     /** {@inheritDoc} */
     @Override
     public List<Loan> find(@Valid @NotNull final LoanSearchCriteriaCommand loanSearchCriteriaCommand) {
+
         final var loanEntities = this.loanMyBatisMapper.find(loanSearchCriteriaCommand);
+
         return this.loanEntityMapper.toLoanList(loanEntities);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Loan> findByUserId(@NotNull final Integer userId) {
+
+        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
+                .userId(userId)
+                .build();
+
+        return this.find(loanSearchCriteriaCommand);
     }
 }

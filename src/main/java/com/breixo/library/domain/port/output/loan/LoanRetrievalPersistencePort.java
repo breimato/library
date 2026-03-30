@@ -18,4 +18,12 @@ public interface LoanRetrievalPersistencePort {
      * @return the list of loans
      */
     List<Loan> find(@Valid @NotNull LoanSearchCriteriaCommand loanSearchCriteriaCommand);
+
+    /**
+     * Find by user id.
+     *
+     * @param userId the user id
+     * @return the list of loans
+     */
+    List<Loan> findByUserId(@NotNull Integer userId);
 }

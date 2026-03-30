@@ -12,6 +12,14 @@ import jakarta.validation.constraints.NotNull;
 public interface UserRetrievalPersistencePort {
 
     /**
+     * Find by id.
+     *
+     * @param id the id.
+     * @return the user.
+     */
+    User findById(@NotNull Integer id);
+
+    /**
      * Find.
      *
      * @param userSearchCriteriaCommand the user search criteria command.

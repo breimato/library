@@ -124,6 +124,12 @@ public class ExceptionMessageConstants {
     /** The Constant LOAN_ALREADY_RETURNED_MESSAGE_ERROR. */
     public static final String LOAN_ALREADY_RETURNED_MESSAGE_ERROR = "Error: Loan has already been returned";
 
+    /** The Constant LOAN_BOOK_RESERVED_BY_ANOTHER_USER_CODE_ERROR. */
+    public static final String LOAN_BOOK_RESERVED_BY_ANOTHER_USER_CODE_ERROR = "LIB-LOAN-008";
+
+    /** The Constant LOAN_BOOK_RESERVED_BY_ANOTHER_USER_MESSAGE_ERROR. */
+    public static final String LOAN_BOOK_RESERVED_BY_ANOTHER_USER_MESSAGE_ERROR = "Error: Loan cannot be created because book is reserved by another user";
+
     /** The Constant FINE_NOT_FOUND_CODE_ERROR. */
     public static final String FINE_NOT_FOUND_CODE_ERROR = "LIB-FINE-001";
 
