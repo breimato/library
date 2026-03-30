@@ -1,8 +1,10 @@
 package com.breixo.library.infrastructure.adapter.output.mapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.breixo.library.domain.model.reservation.enums.ReservationStatus;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
 import com.breixo.library.infrastructure.adapter.output.entities.ReservationEntity;
 import com.breixo.library.infrastructure.mapper.ReservationStatusMapper;
 
@@ -32,6 +34,10 @@ class ReservationEntityMapperTest {
     @Mock
     ReservationStatusMapper reservationStatusMapper;
 
+    /** The date mapper. */
+    @Mock
+    DateMapper dateMapper;
+
     /**
      * Test to reservation when reservation entity is valid then return mapped reservation.
      */
@@ -41,19 +47,22 @@ class ReservationEntityMapperTest {
         // Given
         final var reservationEntity = Instancio.create(ReservationEntity.class);
         final var reservationStatus = Instancio.create(ReservationStatus.class);
+        final var expiresAt = Instancio.create(LocalDateTime.class);
 
         // When
         when(this.reservationStatusMapper.toReservationStatus(reservationEntity.getStatusId())).thenReturn(reservationStatus);
+        when(this.dateMapper.toLocalDateTime(reservationEntity.getExpiresAt())).thenReturn(expiresAt);
         final var reservation = this.reservationEntityMapper.toReservation(reservationEntity);
 
         // Then
         verify(this.reservationStatusMapper, times(1)).toReservationStatus(reservationEntity.getStatusId());
+        verify(this.dateMapper, times(1)).toLocalDateTime(reservationEntity.getExpiresAt());
         assertNotNull(reservation);
         assertEquals(reservationEntity.getId(), reservation.id());
         assertEquals(reservationEntity.getUserId(), reservation.userId());
         assertEquals(reservationEntity.getBookId(), reservation.bookId());
         assertEquals(reservationEntity.getLoanId(), reservation.loanId());
-        assertEquals(reservationEntity.getExpiresAt(), reservation.expiresAt());
+        assertEquals(expiresAt, reservation.expiresAt());
         assertEquals(reservationStatus, reservation.status());
     }
 
@@ -76,9 +85,11 @@ class ReservationEntityMapperTest {
         final var reservationEntity = Instancio.create(ReservationEntity.class);
         final var reservationEntities = List.of(reservationEntity);
         final var reservationStatus = Instancio.create(ReservationStatus.class);
+        final var expiresAt = Instancio.create(LocalDateTime.class);
 
         // When
         when(this.reservationStatusMapper.toReservationStatus(reservationEntity.getStatusId())).thenReturn(reservationStatus);
+        when(this.dateMapper.toLocalDateTime(reservationEntity.getExpiresAt())).thenReturn(expiresAt);
         final var reservations = this.reservationEntityMapper.toReservationList(reservationEntities);
 
         // Then

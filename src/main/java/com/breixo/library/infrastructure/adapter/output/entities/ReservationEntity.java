@@ -1,6 +1,6 @@
 package com.breixo.library.infrastructure.adapter.output.entities;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import lombok.Data;
 
@@ -21,7 +21,7 @@ public class ReservationEntity {
     private Integer loanId;
 
     /** The expires at. */
-    private LocalDateTime expiresAt;
+    private OffsetDateTime expiresAt;
 
     /** The status id. */
     private Integer statusId;

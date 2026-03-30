@@ -17,6 +17,9 @@ public interface DateMapper {
      * @return the offset date time.
      */
     default OffsetDateTime toOffsetDateTime(final LocalDateTime localDateTime) {
+        if (localDateTime == null) {
+            return null;
+        }
         return localDateTime.atOffset(ZoneOffset.UTC);
     }
 
@@ -27,6 +30,9 @@ public interface DateMapper {
      * @return the local date time.
      */
     default LocalDateTime toLocalDateTime(final OffsetDateTime offsetDateTime) {
+        if (offsetDateTime == null) {
+            return null;
+        }
         return offsetDateTime.toLocalDateTime();
     }
 }
