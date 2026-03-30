@@ -3,6 +3,7 @@ package com.breixo.library.application.usecase.loan;
 import java.util.List;
 
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
+import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
 import com.breixo.library.domain.command.loan.CreateLoanCommand;
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
@@ -11,9 +12,12 @@ import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.UserException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
+import com.breixo.library.domain.model.fine.Fine;
+import com.breixo.library.domain.model.fine.enums.FineStatus;
 import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
+import com.breixo.library.domain.port.output.fine.FineRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanCreationPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
@@ -60,6 +64,10 @@ class CreateLoanUseCaseTest {
     /** The loan creation persistence port. */
     @Mock
     LoanCreationPersistencePort loanCreationPersistencePort;
+
+    /** The fine retrieval persistence port. */
+    @Mock
+    FineRetrievalPersistencePort fineRetrievalPersistencePort;
 
     /**
      * Test execute when user not found then throw user exception.
@@ -159,6 +167,49 @@ class CreateLoanUseCaseTest {
     }
 
     /**
+     * Test execute when user has pending fines then throw loan exception.
+     */
+    @Test
+    void testExecute_whenUserHasPendingFines_thenThrowLoanException() {
+
+        // Given
+        final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
+        final var user = Instancio.create(User.class);
+        final var book = Instancio.create(Book.class);
+        final var loan = Instancio.create(Loan.class);
+        final var fine = Instancio.create(Fine.class);
+        final var loanList = List.of(loan);
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder()
+                .id(createLoanCommand.userId())
+                .build();
+        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder()
+                .id(createLoanCommand.bookId())
+                .build();
+        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
+                .userId(user.id())
+                .build();
+        final var fineSearchCriteriaCommand = FineSearchCriteriaCommand.builder()
+                .loanId(loan.id())
+                .statusId(FineStatus.PENDING.getId())
+                .build();
+
+        // When
+        when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(List.of(user));
+        when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(List.of(book));
+        when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(loanList);
+        when(this.fineRetrievalPersistencePort.find(fineSearchCriteriaCommand)).thenReturn(List.of(fine));
+        final var loanException = assertThrows(LoanException.class,
+                () -> this.createLoanUseCase.execute(createLoanCommand));
+
+        // Then
+        verify(this.loanPolicyValidationService, times(1)).checkCanBorrow(user, book, loanList);
+        verify(this.fineRetrievalPersistencePort, times(1)).find(fineSearchCriteriaCommand);
+        verify(this.loanCreationPersistencePort, times(0)).execute(createLoanCommand);
+        assertEquals(ExceptionMessageConstants.USER_HAS_PENDING_FINES_CODE_ERROR, loanException.getCode());
+        assertEquals(ExceptionMessageConstants.USER_HAS_PENDING_FINES_MESSAGE_ERROR, loanException.getMessage());
+    }
+
+    /**
      * Test execute when all conditions met then create and return loan.
      */
     @Test
@@ -179,17 +230,23 @@ class CreateLoanUseCaseTest {
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
                 .userId(user.id())
                 .build();
+        final var fineSearchCriteriaCommand = FineSearchCriteriaCommand.builder()
+                .loanId(loanList.getFirst().id())
+                .statusId(FineStatus.PENDING.getId())
+                .build();
 
         // When
         when(this.userRetrievalPersistencePort.find(userSearchCriteriaCommand)).thenReturn(List.of(user));
         when(this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand)).thenReturn(List.of(book));
         when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(loanList);
+        when(this.fineRetrievalPersistencePort.find(fineSearchCriteriaCommand)).thenReturn(List.of());
         when(this.loanCreationPersistencePort.execute(createLoanCommand)).thenReturn(loan);
         final var result = this.createLoanUseCase.execute(createLoanCommand);
 
         // Then
         verify(this.loanRetrievalPersistencePort, times(1)).find(loanSearchCriteriaCommand);
         verify(this.loanPolicyValidationService, times(1)).checkCanBorrow(user, book, loanList);
+        verify(this.fineRetrievalPersistencePort, times(1)).find(fineSearchCriteriaCommand);
         verify(this.loanCreationPersistencePort, times(1)).execute(createLoanCommand);
         assertEquals(loan, result);
     }

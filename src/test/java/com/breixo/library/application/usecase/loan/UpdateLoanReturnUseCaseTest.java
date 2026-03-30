@@ -7,6 +7,7 @@ import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.Loan;
+import com.breixo.library.domain.model.loan.enums.LoanStatus;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanUpdatePersistencePort;
 import com.breixo.library.domain.service.FineManagementService;
@@ -75,7 +76,15 @@ class UpdateLoanReturnUseCaseTest {
 
         // Given
         final var updateLoanReturnCommand = Instancio.create(UpdateLoanReturnCommand.class);
-        final var loanBeforeReturn = Instancio.create(Loan.class);
+        final var loan = Instancio.create(Loan.class);
+        final var loanBeforeReturn = Loan.builder()
+                .id(updateLoanReturnCommand.id())
+                .userId(loan.userId())
+                .bookId(loan.bookId())
+                .dueDate(loan.dueDate())
+                .returnDate(null)
+                .status(LoanStatus.ACTIVE)
+                .build();
         final var updatedLoan = Instancio.create(Loan.class);
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
                 .id(updateLoanReturnCommand.id())
@@ -84,12 +93,46 @@ class UpdateLoanReturnUseCaseTest {
         // When
         when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(List.of(loanBeforeReturn));
         when(this.loanUpdatePersistencePort.execute(updateLoanReturnCommand)).thenReturn(updatedLoan);
-        final var loan = this.updateLoanReturnUseCase.execute(updateLoanReturnCommand);
+        final var resultLoan = this.updateLoanReturnUseCase.execute(updateLoanReturnCommand);
 
         // Then
         verify(this.loanRetrievalPersistencePort, times(1)).find(loanSearchCriteriaCommand);
         verify(this.loanUpdatePersistencePort, times(1)).execute(updateLoanReturnCommand);
         verify(this.fineManagementService, times(1)).execute(loanBeforeReturn, updateLoanReturnCommand.returnDate());
-        assertEquals(updatedLoan, loan);
+        assertEquals(updatedLoan, resultLoan);
+    }
+
+    /**
+     * Test execute when loan already returned then throw loan exception.
+     */
+    @Test
+    void testExecute_whenLoanAlreadyReturned_thenThrowLoanException() {
+
+        // Given
+        final var updateLoanReturnCommand = Instancio.create(UpdateLoanReturnCommand.class);
+        final var loan = Instancio.create(Loan.class);
+        final var returnedLoan = Loan.builder()
+                .id(updateLoanReturnCommand.id())
+                .userId(loan.userId())
+                .bookId(loan.bookId())
+                .dueDate(loan.dueDate())
+                .returnDate(updateLoanReturnCommand.returnDate())
+                .status(LoanStatus.RETURNED)
+                .build();
+        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
+                .id(updateLoanReturnCommand.id())
+                .build();
+
+        // When
+        when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(List.of(returnedLoan));
+        final var loanException = assertThrows(LoanException.class,
+                () -> this.updateLoanReturnUseCase.execute(updateLoanReturnCommand));
+
+        // Then
+        verify(this.loanRetrievalPersistencePort, times(1)).find(loanSearchCriteriaCommand);
+        verify(this.loanUpdatePersistencePort, times(0)).execute(updateLoanReturnCommand);
+        verify(this.fineManagementService, times(0)).execute(returnedLoan, updateLoanReturnCommand.returnDate());
+        assertEquals(ExceptionMessageConstants.LOAN_ALREADY_RETURNED_CODE_ERROR, loanException.getCode());
+        assertEquals(ExceptionMessageConstants.LOAN_ALREADY_RETURNED_MESSAGE_ERROR, loanException.getMessage());
     }
 }

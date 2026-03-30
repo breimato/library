@@ -65,8 +65,8 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
 
         if (hasOverdueLoans) {
             throw new LoanException(
-                    ExceptionMessageConstants.USER_HAS_OVERDUE_LOANS_CODE_ERROR,
-                    ExceptionMessageConstants.USER_HAS_OVERDUE_LOANS_MESSAGE_ERROR);
+                    ExceptionMessageConstants.LOAN_USER_HAS_OVERDUE_LOANS_CODE_ERROR,
+                    ExceptionMessageConstants.LOAN_USER_HAS_OVERDUE_LOANS_MESSAGE_ERROR);
         }
 
         final var hasReachedLoanLimit = loanList.stream()
@@ -75,8 +75,8 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
 
         if (hasReachedLoanLimit) {
             throw new LoanException(
-                    ExceptionMessageConstants.USER_ACTIVE_LOANS_LIMIT_REACHED_CODE_ERROR,
-                    ExceptionMessageConstants.USER_ACTIVE_LOANS_LIMIT_REACHED_MESSAGE_ERROR);
+                    ExceptionMessageConstants.LOAN_USER_ACTIVE_LOANS_LIMIT_REACHED_CODE_ERROR,
+                    ExceptionMessageConstants.LOAN_USER_ACTIVE_LOANS_LIMIT_REACHED_MESSAGE_ERROR);
         }
     }
 
@@ -95,8 +95,8 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
 
         if (hasActiveLoanForThisBook) {
             throw new LoanException(
-                    ExceptionMessageConstants.USER_ALREADY_HAS_BOOK_ON_LOAN_CODE_ERROR,
-                    ExceptionMessageConstants.USER_ALREADY_HAS_BOOK_ON_LOAN_MESSAGE_ERROR);
+                    ExceptionMessageConstants.LOAN_USER_ALREADY_HAS_BOOK_ON_LOAN_CODE_ERROR,
+                    ExceptionMessageConstants.LOAN_USER_ALREADY_HAS_BOOK_ON_LOAN_MESSAGE_ERROR);
         }
 
         if (book.totalCopies().equals(0)) {

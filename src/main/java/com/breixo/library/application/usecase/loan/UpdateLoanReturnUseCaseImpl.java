@@ -5,6 +5,7 @@ import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.Loan;
+import com.breixo.library.domain.model.loan.enums.LoanStatus;
 import com.breixo.library.domain.port.input.loan.UpdateLoanReturnUseCase;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanUpdatePersistencePort;
@@ -15,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /** The Class Update Loan Return Use Case Impl. */
 @Component
@@ -32,6 +34,7 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
 
     /** {@inheritDoc} */
     @Override
+    @Transactional
     public Loan execute(@Valid @NotNull final UpdateLoanReturnCommand updateLoanReturnCommand) {
 
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder().id(updateLoanReturnCommand.id()).build();
@@ -43,10 +46,17 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
                     ExceptionMessageConstants.LOAN_NOT_FOUND_MESSAGE_ERROR);
         }
 
+        if (LoanStatus.RETURNED.equals(loans.getFirst().status())) {
+            throw new LoanException(
+                    ExceptionMessageConstants.LOAN_ALREADY_RETURNED_CODE_ERROR,
+                    ExceptionMessageConstants.LOAN_ALREADY_RETURNED_MESSAGE_ERROR);
+        }
+
         final var updatedLoan = this.loanUpdatePersistencePort.execute(updateLoanReturnCommand);
 
         this.fineManagementService.execute(loans.getFirst(), updateLoanReturnCommand.returnDate());
 
         return updatedLoan;
     }
+
 }

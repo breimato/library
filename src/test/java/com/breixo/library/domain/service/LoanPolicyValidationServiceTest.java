@@ -114,7 +114,7 @@ class LoanPolicyValidationServiceTest {
                 () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, book, List.of(overdueLoan)));
 
         // Then
-        assertEquals(ExceptionMessageConstants.USER_HAS_OVERDUE_LOANS_MESSAGE_ERROR, loanException.getMessage());
+        assertEquals(ExceptionMessageConstants.LOAN_USER_HAS_OVERDUE_LOANS_MESSAGE_ERROR, loanException.getMessage());
     }
 
     /**
@@ -145,7 +145,7 @@ class LoanPolicyValidationServiceTest {
                 () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, book, loanList));
 
         // Then
-        assertEquals(ExceptionMessageConstants.USER_ACTIVE_LOANS_LIMIT_REACHED_MESSAGE_ERROR, loanException.getMessage());
+        assertEquals(ExceptionMessageConstants.LOAN_USER_ACTIVE_LOANS_LIMIT_REACHED_MESSAGE_ERROR, loanException.getMessage());
     }
 
     /**
@@ -181,7 +181,7 @@ class LoanPolicyValidationServiceTest {
                 () -> this.loanPolicyValidationService.checkCanBorrow(activeUser, book, List.of(activeLoanForSameBook)));
 
         // Then
-        assertEquals(ExceptionMessageConstants.USER_ALREADY_HAS_BOOK_ON_LOAN_MESSAGE_ERROR, loanException.getMessage());
+        assertEquals(ExceptionMessageConstants.LOAN_USER_ALREADY_HAS_BOOK_ON_LOAN_MESSAGE_ERROR, loanException.getMessage());
     }
 
     /**
