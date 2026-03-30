@@ -1,6 +1,7 @@
 package com.breixo.library.application.usecase.loan;
 
 import com.breixo.library.domain.command.loan.CreateLoanCommand;
+import com.breixo.library.domain.event.LoanCreatedDomainEvent;
 import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.port.input.loan.CreateLoanUseCase;
 import com.breixo.library.domain.port.output.loan.LoanCreationPersistencePort;
@@ -12,6 +13,7 @@ import com.breixo.library.domain.service.ReservationPolicyValidationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 /** The Class Create Loan Use Case Impl. */
@@ -37,6 +39,9 @@ public class CreateLoanUseCaseImpl implements CreateLoanUseCase {
     /** The loan creation persistence port. */
     private final LoanCreationPersistencePort loanCreationPersistencePort;
 
+    /** The application event publisher. */
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     /** {@inheritDoc} */
     @Override
     public Loan execute(@Valid @NotNull final CreateLoanCommand createLoanCommand) {
@@ -53,8 +58,16 @@ public class CreateLoanUseCaseImpl implements CreateLoanUseCase {
 
         this.reservationPolicyValidationService.checkReservationPrecedence(user.id(), book.id());
 
-        return this.loanCreationPersistencePort.execute(createLoanCommand);
+        final var loan = this.loanCreationPersistencePort.execute(createLoanCommand);
+
+        final var loanCreatedDomainEvent = LoanCreatedDomainEvent.builder()
+                .userId(user.id())
+                .bookId(book.id())
+                .loanId(loan.id())
+                .build();
+
+        this.applicationEventPublisher.publishEvent(loanCreatedDomainEvent);
+
+        return loan;
     }
-
-
 }

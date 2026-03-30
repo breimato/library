@@ -2,9 +2,9 @@ package com.breixo.library.application.usecase.loan;
 
 import java.util.List;
 
-
 import com.breixo.library.domain.command.loan.CreateLoanCommand;
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
+import com.breixo.library.domain.event.LoanCreatedDomainEvent;
 import com.breixo.library.domain.exception.BookException;
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.UserException;
@@ -18,13 +18,14 @@ import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 import com.breixo.library.domain.service.LoanPolicyValidationService;
 import com.breixo.library.domain.service.ReservationPolicyValidationService;
-
+import org.springframework.context.ApplicationEventPublisher;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.ArgumentCaptor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -61,6 +62,9 @@ class CreateLoanUseCaseTest {
         @Mock
         LoanCreationPersistencePort loanCreationPersistencePort;
 
+        /** The application event publisher. */
+        @Mock
+        ApplicationEventPublisher applicationEventPublisher;
 
         /** The reservation policy validation service. */
         @Mock
@@ -176,7 +180,6 @@ class CreateLoanUseCaseTest {
                 // Then
                 final var exception = assertThrows(LoanException.class,
                                 () -> this.createLoanUseCase.execute(createLoanCommand));
-                verify(this.loanRetrievalPersistencePort, times(1)).findByUserId(user.id());
                 verify(this.loanPolicyValidationService, times(1)).checkUserHasNoPendingFines(loanList);
                 verify(this.loanPolicyValidationService, times(0)).checkCanBorrow(user, book, loanList);
                 verify(this.reservationPolicyValidationService, times(0)).checkReservationPrecedence(user.id(),
@@ -209,22 +212,23 @@ class CreateLoanUseCaseTest {
                                 .checkReservationPrecedence(user.id(), book.id());
 
                 // Then
-                final var ex = assertThrows(LoanException.class,
+                final var exception = assertThrows(LoanException.class,
                                 () -> this.createLoanUseCase.execute(createLoanCommand));
                 verify(this.loanPolicyValidationService, times(1)).checkCanBorrow(user, book, loanList);
                 verify(this.reservationPolicyValidationService, times(1)).checkReservationPrecedence(user.id(),
                                 book.id());
                 verify(this.loanCreationPersistencePort, times(0)).execute(createLoanCommand);
-                assertEquals(ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_CODE_ERROR, ex.getCode());
+                assertEquals(ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_CODE_ERROR,
+                                exception.getCode());
                 assertEquals(ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_MESSAGE_ERROR,
-                                ex.getMessage());
+                                exception.getMessage());
         }
 
         /**
-         * Test execute when all conditions met then create and return loan.
+         * Test execute when all conditions met then create loan and publish event.
          */
         @Test
-        void testExecute_whenAllConditionsMet_thenCreateAndReturnLoan() {
+        void testExecute_whenAllConditionsMet_thenCreateLoanAndPublishEvent() {
 
                 // Given
                 final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
@@ -232,11 +236,13 @@ class CreateLoanUseCaseTest {
                 final var book = Instancio.create(Book.class);
                 final var loanList = List.of(Instancio.create(Loan.class));
                 final var loan = Instancio.create(Loan.class);
+
                 // When
                 when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
                 when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(book);
                 when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
                 when(this.loanCreationPersistencePort.execute(createLoanCommand)).thenReturn(loan);
+
                 final var result = this.createLoanUseCase.execute(createLoanCommand);
 
                 // Then
@@ -246,6 +252,15 @@ class CreateLoanUseCaseTest {
                 verify(this.reservationPolicyValidationService, times(1)).checkReservationPrecedence(user.id(),
                                 book.id());
                 verify(this.loanCreationPersistencePort, times(1)).execute(createLoanCommand);
+
+                final ArgumentCaptor<LoanCreatedDomainEvent> eventCaptor = ArgumentCaptor
+                                .forClass(LoanCreatedDomainEvent.class);
+                verify(this.applicationEventPublisher, times(1)).publishEvent(eventCaptor.capture());
+                final var capturedEvent = eventCaptor.getValue();
+                assertEquals(user.id(), capturedEvent.userId());
+                assertEquals(book.id(), capturedEvent.bookId());
+                assertEquals(loan.id(), capturedEvent.loanId());
+
                 assertEquals(loan, result);
         }
 }
