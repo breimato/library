@@ -40,6 +40,26 @@ class PostFineRequestMapperTest {
     }
 
     /**
+     * Test to create fine command when amount euros is null then return command with null amount.
+     */
+    @Test
+    void testToCreateFineCommand_whenAmountEurosIsNull_thenReturnCommandWithNullAmount() {
+
+        // Given
+        final var postFineV1Request = Instancio.create(PostFineV1Request.class);
+        postFineV1Request.setAmountEuros(null);
+
+        // When
+        final var createFineCommand = this.postFineRequestMapper.toCreateFineCommand(postFineV1Request);
+
+        // Then
+        assertNotNull(createFineCommand);
+        assertEquals(postFineV1Request.getLoanId(), createFineCommand.loanId());
+        assertEquals(postFineV1Request.getStatus(), createFineCommand.statusId());
+        assertNull(createFineCommand.amountEuros());
+    }
+
+    /**
      * Test to create fine command when request is null then return null.
      */
     @Test

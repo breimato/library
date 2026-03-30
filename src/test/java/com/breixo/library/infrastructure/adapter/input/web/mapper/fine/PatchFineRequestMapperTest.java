@@ -1,5 +1,8 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.fine;
 
+import java.time.LocalDateTime;
+
+import com.breixo.library.domain.model.fine.enums.FineStatus;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchFineV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
 import com.breixo.library.infrastructure.mapper.FineStatusMapper;
@@ -43,8 +46,8 @@ class PatchFineRequestMapperTest {
         // Given
         final var id = Instancio.create(Integer.class);
         final var patchFineV1Request = Instancio.create(PatchFineV1Request.class);
-        final var fineStatus = Instancio.create(com.breixo.library.domain.model.fine.enums.FineStatus.class);
-        final var paidAt = Instancio.create(java.time.LocalDateTime.class);
+        final var fineStatus = Instancio.create(FineStatus.class);
+        final var paidAt = Instancio.create(LocalDateTime.class);
 
         // When
         when(this.fineStatusMapper.toFineStatus(patchFineV1Request.getStatus())).thenReturn(fineStatus);
@@ -72,6 +75,52 @@ class PatchFineRequestMapperTest {
 
         // When
         final var updateFineCommand = this.patchFineRequestMapper.toUpdateFineCommand(id, patchFineV1Request);
+
+        // Then
+        assertNotNull(updateFineCommand);
+        assertEquals(id, updateFineCommand.id());
+        assertNull(updateFineCommand.amountEuros());
+        assertNull(updateFineCommand.status());
+        assertNull(updateFineCommand.paidAt());
+    }
+
+    /**
+     * Test to update fine command when id and request are null then return null.
+     */
+    @Test
+    void testToUpdateFineCommand_whenIdAndRequestAreNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.patchFineRequestMapper.toUpdateFineCommand(null, null));
+    }
+
+    /**
+     * Test to update fine command when id is null and request exists then return command.
+     */
+    @Test
+    void testToUpdateFineCommand_whenIdIsNullAndRequestExists_thenReturnCommand() {
+
+        // Given
+        final var patchFineV1Request = new PatchFineV1Request();
+
+        // When
+        final var updateFineCommand = this.patchFineRequestMapper.toUpdateFineCommand(null, patchFineV1Request);
+
+        // Then
+        assertNotNull(updateFineCommand);
+        assertNull(updateFineCommand.id());
+    }
+
+    /**
+     * Test to update fine command when id exists and request is null then return command.
+     */
+    @Test
+    void testToUpdateFineCommand_whenIdExistsAndRequestIsNull_thenReturnCommand() {
+
+        // Given
+        final var id = Instancio.create(Integer.class);
+
+        // When
+        final var updateFineCommand = this.patchFineRequestMapper.toUpdateFineCommand(id, null);
 
         // Then
         assertNotNull(updateFineCommand);

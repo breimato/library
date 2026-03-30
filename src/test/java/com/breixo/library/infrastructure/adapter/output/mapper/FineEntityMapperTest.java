@@ -3,6 +3,7 @@ package com.breixo.library.infrastructure.adapter.output.mapper;
 import java.util.List;
 
 import com.breixo.library.domain.command.fine.CreateFineCommand;
+import com.breixo.library.domain.command.fine.UpdateFineCommand;
 import com.breixo.library.domain.model.fine.enums.FineStatus;
 import com.breixo.library.infrastructure.adapter.output.entities.FineEntity;
 import com.breixo.library.infrastructure.mapper.FineStatusMapper;
@@ -135,5 +136,37 @@ class FineEntityMapperTest {
     void testToFineEntity_whenCreateFineCommandIsNull_thenReturnNull() {
         // When / Then
         assertNull(this.fineEntityMapper.toFineEntity((CreateFineCommand) null));
+    }
+
+    /**
+     * Test to fine entity when update fine command is valid then return mapped fine entity.
+     */
+    @Test
+    void testToFineEntity_whenUpdateFineCommandIsValid_thenReturnMappedFineEntity() {
+
+        // Given
+        final var updateFineCommand = Instancio.create(UpdateFineCommand.class);
+        final var statusId = Instancio.create(Integer.class);
+
+        // When
+        when(this.fineStatusMapper.toStatusId(updateFineCommand.status())).thenReturn(statusId);
+        final var fineEntity = this.fineEntityMapper.toFineEntity(updateFineCommand);
+
+        // Then
+        verify(this.fineStatusMapper, times(1)).toStatusId(updateFineCommand.status());
+        assertNotNull(fineEntity);
+        assertEquals(updateFineCommand.id(), fineEntity.getId());
+        assertEquals(updateFineCommand.amountEuros(), fineEntity.getAmountEuros());
+        assertEquals(updateFineCommand.paidAt(), fineEntity.getPaidAt());
+        assertEquals(statusId, fineEntity.getStatusId());
+    }
+
+    /**
+     * Test to fine entity when update fine command is null then return null.
+     */
+    @Test
+    void testToFineEntity_whenUpdateFineCommandIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.fineEntityMapper.toFineEntity((UpdateFineCommand) null));
     }
 }
