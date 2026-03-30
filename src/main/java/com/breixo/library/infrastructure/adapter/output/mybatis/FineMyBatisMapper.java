@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 /** The Interface Fine My Batis Mapper. */
 @Mapper
@@ -47,6 +48,24 @@ public interface FineMyBatisMapper {
     @Insert("insert into fines (loan_id, amount_euros, status_id) values (#{loanId}, #{amountEuros}, #{statusId})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(FineEntity fineEntity);
+
+    /**
+     * Update.
+     *
+     * @param fineEntity the fine entity.
+     */
+    @Update("""
+            <script>
+            update fines
+            <set>
+                <if test="amountEuros != null">amount_euros = #{amountEuros},</if>
+                <if test="statusId != null">status_id = #{statusId},</if>
+                <if test="paidAt != null">paid_at = #{paidAt},</if>
+            </set>
+            where id = #{id}
+            </script>
+            """)
+    void update(FineEntity fineEntity);
 
     /**
      * Delete.

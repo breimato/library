@@ -1,0 +1,15 @@
+description: "Patch Fine V1 Request"
+type: object
+properties:
+  amountEuros:
+    type: number
+    format: double
+    description: "Fine amount in euros"
+  status:
+    type: integer
+    format: int32
+    description: "Fine status identifier"
+  paidAt:
+    type: string
+    format: date-time
+    description: "Payment date"

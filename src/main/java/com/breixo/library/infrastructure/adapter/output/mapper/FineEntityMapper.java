@@ -3,6 +3,7 @@ package com.breixo.library.infrastructure.adapter.output.mapper;
 import java.util.List;
 
 import com.breixo.library.domain.command.fine.CreateFineCommand;
+import com.breixo.library.domain.command.fine.UpdateFineCommand;
 import com.breixo.library.domain.model.fine.Fine;
 import com.breixo.library.infrastructure.adapter.output.entities.FineEntity;
 import com.breixo.library.infrastructure.mapper.FineStatusMapper;
@@ -38,4 +39,14 @@ public interface FineEntityMapper {
      * @return the fine entity.
      */
     FineEntity toFineEntity(CreateFineCommand createFineCommand);
+
+    /**
+     * To fine entity.
+     *
+     * @param updateFineCommand the update fine command.
+     * @return the fine entity.
+     */
+    @Mapping(source = "status", target = "statusId")
+    @Mapping(target = "loanId", ignore = true)
+    FineEntity toFineEntity(UpdateFineCommand updateFineCommand);
 }

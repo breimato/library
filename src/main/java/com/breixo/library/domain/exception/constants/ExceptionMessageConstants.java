@@ -123,4 +123,10 @@ public class ExceptionMessageConstants {
 
     /** The Constant FINE_CREATION_ERROR_MESSAGE_ERROR. */
     public static final String FINE_CREATION_ERROR_MESSAGE_ERROR = "Error: Fine creation failed";
+
+    /** The Constant FINE_UPDATE_ERROR_CODE_ERROR. */
+    public static final String FINE_UPDATE_ERROR_CODE_ERROR = "LIB-FINE-003";
+
+    /** The Constant FINE_UPDATE_ERROR_MESSAGE_ERROR. */
+    public static final String FINE_UPDATE_ERROR_MESSAGE_ERROR = "Error: Fine update failed";
 }

@@ -1,3 +1,42 @@
+patch:
+  summary: "Patch Fine V1"
+  description: "Partially update a fine"
+  operationId: "PatchFineV1"
+  tags:
+    - patch-fine-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Fine identifier"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/PatchFineV1Request.yaml'
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/FineV1Response.yaml'
+    '404':
+      description: "Not Found - Fine not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
 delete:
   summary: "Delete Fine V1"
   description: "Delete a fine"

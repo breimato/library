@@ -134,6 +134,6 @@ class FineEntityMapperTest {
     @Test
     void testToFineEntity_whenCreateFineCommandIsNull_thenReturnNull() {
         // When / Then
-        assertNull(this.fineEntityMapper.toFineEntity(null));
+        assertNull(this.fineEntityMapper.toFineEntity((CreateFineCommand) null));
     }
 }

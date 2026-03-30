@@ -19,4 +19,14 @@ public interface DateMapper {
     default OffsetDateTime toOffsetDateTime(final LocalDateTime localDateTime) {
         return localDateTime.atOffset(ZoneOffset.UTC);
     }
+
+    /**
+     * To local date time.
+     *
+     * @param offsetDateTime the offset date time.
+     * @return the local date time.
+     */
+    default LocalDateTime toLocalDateTime(final OffsetDateTime offsetDateTime) {
+        return offsetDateTime.toLocalDateTime();
+    }
 }
