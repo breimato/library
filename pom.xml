@@ -193,6 +193,13 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/breixo/library/LibraryApplication*</exclude>
+                        <exclude>com/breixo/library/infrastructure/adapter/input/web/api/**</exclude>
+                        <exclude>com/breixo/library/infrastructure/adapter/input/web/dto/**</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>jacoco-prepare-agent</id>

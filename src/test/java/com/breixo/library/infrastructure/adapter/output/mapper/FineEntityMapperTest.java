@@ -1,0 +1,65 @@
+package com.breixo.library.infrastructure.adapter.output.mapper;
+
+import com.breixo.library.domain.model.fine.enums.FineStatus;
+import com.breixo.library.infrastructure.adapter.output.entities.FineEntity;
+import com.breixo.library.infrastructure.mapper.FineStatusMapper;
+
+import org.instancio.Instancio;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+/** The Class Fine Entity Mapper Test. */
+@ExtendWith(MockitoExtension.class)
+class FineEntityMapperTest {
+
+    /** The fine entity mapper. */
+    @InjectMocks
+    FineEntityMapperImpl fineEntityMapper;
+
+    /** The fine status mapper. */
+    @Mock
+    FineStatusMapper fineStatusMapper;
+
+    /**
+     * Test to fine when fine entity is valid then return mapped fine.
+     */
+    @Test
+    void testToFine_whenFineEntityIsValid_thenReturnMappedFine() {
+
+        // Given
+        final var fineEntity = Instancio.create(FineEntity.class);
+        final var fineStatus = Instancio.create(FineStatus.class);
+
+        // When
+        when(this.fineStatusMapper.toFineStatus(fineEntity.getStatusId())).thenReturn(fineStatus);
+        final var fine = this.fineEntityMapper.toFine(fineEntity);
+
+        // Then
+        verify(this.fineStatusMapper, times(1)).toFineStatus(fineEntity.getStatusId());
+        assertNotNull(fine);
+        assertEquals(fineEntity.getId(), fine.id());
+        assertEquals(fineEntity.getLoanId(), fine.loanId());
+        assertEquals(fineEntity.getAmountEuros(), fine.amountEuros());
+        assertEquals(fineStatus, fine.status());
+        assertEquals(fineEntity.getPaidAt(), fine.paidAt());
+    }
+
+    /**
+     * Test to fine when fine entity is null then return null.
+     */
+    @Test
+    void testToFine_whenFineEntityIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.fineEntityMapper.toFine(null));
+    }
+}

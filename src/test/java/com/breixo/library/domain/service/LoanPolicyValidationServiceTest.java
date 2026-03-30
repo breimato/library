@@ -185,6 +185,90 @@ class LoanPolicyValidationServiceTest {
     }
 
     /**
+     * Test check can borrow when user had same book but loan is not active then no exception.
+     */
+    @Test
+    void testCheckCanBorrow_whenUserHadSameBookButLoanIsNotActive_thenNoException() {
+
+        // Given
+        final var user = Instancio.create(User.class);
+        final var activeUser = User.builder()
+                .id(user.id())
+                .name(user.name())
+                .email(user.email())
+                .phone(user.phone())
+                .status(UserStatus.ACTIVE)
+                .build();
+
+        final var book = Instancio.create(Book.class);
+        final var availableBook = Book.builder()
+                .id(book.id())
+                .isbn(book.isbn())
+                .title(book.title())
+                .author(book.author())
+                .genre(book.genre())
+                .totalCopies(book.totalCopies() > 0 ? book.totalCopies() : 1)
+                .availableCopies(book.availableCopies() > 0 ? book.availableCopies() : 1)
+                .build();
+
+        final var loan = Instancio.create(Loan.class);
+        final var returnedLoanForSameBook = Loan.builder()
+                .id(loan.id())
+                .userId(loan.userId())
+                .bookId(availableBook.id())
+                .dueDate(loan.dueDate())
+                .returnDate(loan.returnDate())
+                .status(LoanStatus.RETURNED)
+                .build();
+
+        // When / Then
+        assertDoesNotThrow(() -> this.loanPolicyValidationService
+                .checkCanBorrow(activeUser, availableBook, List.of(returnedLoanForSameBook)));
+    }
+
+    /**
+     * Test check can borrow when user has active loan for different book then no exception.
+     */
+    @Test
+    void testCheckCanBorrow_whenUserHasActiveLoanForDifferentBook_thenNoException() {
+
+        // Given
+        final var user = Instancio.create(User.class);
+        final var activeUser = User.builder()
+                .id(user.id())
+                .name(user.name())
+                .email(user.email())
+                .phone(user.phone())
+                .status(UserStatus.ACTIVE)
+                .build();
+
+        final var loan = Instancio.create(Loan.class);
+        final var activeLoanForDifferentBook = Loan.builder()
+                .id(loan.id())
+                .userId(loan.userId())
+                .bookId(loan.bookId())
+                .dueDate(loan.dueDate())
+                .returnDate(loan.returnDate())
+                .status(LoanStatus.ACTIVE)
+                .build();
+
+        final var book = Instancio.create(Book.class);
+        final var availableBook = Book.builder()
+                .id(book.id().equals(activeLoanForDifferentBook.bookId()) ? book.id() + 1 : book.id())
+                .isbn(book.isbn())
+                .title(book.title())
+                .author(book.author())
+                .genre(book.genre())
+                .totalCopies(book.totalCopies() > 0 ? book.totalCopies() : 1)
+                .availableCopies(book.availableCopies() > 0 ? book.availableCopies() : 1)
+                .build();
+
+        // When / Then
+        assertDoesNotThrow(() -> this.loanPolicyValidationService
+                .checkCanBorrow(activeUser, availableBook, List.of(activeLoanForDifferentBook)));
+    }
+
+    /**
      * Test check can borrow when book is retired then throw loan exception.
      */
     @Test
