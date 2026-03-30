@@ -8,6 +8,7 @@ import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.port.input.loan.UpdateLoanReturnUseCase;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanUpdatePersistencePort;
+import com.breixo.library.domain.service.FineManagementService;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +27,9 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
     /** The loan update persistence port. */
     private final LoanUpdatePersistencePort loanUpdatePersistencePort;
 
+    /** The fine management service. */
+    private final FineManagementService fineManagementService;
+
     /** {@inheritDoc} */
     @Override
     public Loan execute(@Valid @NotNull final UpdateLoanReturnCommand updateLoanReturnCommand) {
@@ -39,6 +43,10 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
                     ExceptionMessageConstants.LOAN_NOT_FOUND_MESSAGE_ERROR);
         }
 
-        return this.loanUpdatePersistencePort.execute(updateLoanReturnCommand);
+        final var updatedLoan = this.loanUpdatePersistencePort.execute(updateLoanReturnCommand);
+
+        this.fineManagementService.execute(loans.getFirst(), updateLoanReturnCommand.returnDate());
+
+        return updatedLoan;
     }
 }

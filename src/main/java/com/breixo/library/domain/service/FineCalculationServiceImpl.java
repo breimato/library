@@ -19,7 +19,7 @@ public class FineCalculationServiceImpl implements FineCalculationService {
     @Override
     public BigDecimal execute(@NotNull final LocalDate dueDate, @NotNull final LocalDate returnDate) {
 
-        if (BooleanUtils.isFalse(returnDate.isAfter(dueDate))) {
+        if (returnDate.isBefore(dueDate)) {
             return BigDecimal.ZERO;
         }
 

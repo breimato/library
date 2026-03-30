@@ -9,6 +9,7 @@ import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanUpdatePersistencePort;
+import com.breixo.library.domain.service.FineManagementService;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
@@ -39,12 +40,16 @@ class UpdateLoanReturnUseCaseTest {
     @Mock
     LoanUpdatePersistencePort loanUpdatePersistencePort;
 
+    /** The fine management service. */
+    @Mock
+    FineManagementService fineManagementService;
+
     /**
      * Test execute when loan not found then throw loan exception.
      */
     @Test
     void testExecute_whenLoanNotFound_thenThrowLoanException() {
-        
+
         // Given
         final var updateLoanReturnCommand = Instancio.create(UpdateLoanReturnCommand.class);
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
@@ -63,27 +68,28 @@ class UpdateLoanReturnUseCaseTest {
     }
 
     /**
-     * Test execute when loan exists then update and return loan.
+     * Test execute when loan exists then update and process fine.
      */
     @Test
-    void testExecute_whenLoanExists_thenUpdateAndReturnLoan() {
-        
+    void testExecute_whenLoanExists_thenUpdateAndProcessFine() {
+
         // Given
         final var updateLoanReturnCommand = Instancio.create(UpdateLoanReturnCommand.class);
-        final var loanOne = Instancio.create(Loan.class);
-        final var loanTwo = Instancio.create(Loan.class);
+        final var loanBeforeReturn = Instancio.create(Loan.class);
+        final var updatedLoan = Instancio.create(Loan.class);
         final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
                 .id(updateLoanReturnCommand.id())
                 .build();
 
         // When
-        when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(List.of(loanOne));
-        when(this.loanUpdatePersistencePort.execute(updateLoanReturnCommand)).thenReturn(loanTwo);
+        when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(List.of(loanBeforeReturn));
+        when(this.loanUpdatePersistencePort.execute(updateLoanReturnCommand)).thenReturn(updatedLoan);
         final var loan = this.updateLoanReturnUseCase.execute(updateLoanReturnCommand);
 
         // Then
         verify(this.loanRetrievalPersistencePort, times(1)).find(loanSearchCriteriaCommand);
         verify(this.loanUpdatePersistencePort, times(1)).execute(updateLoanReturnCommand);
-        assertEquals(loanTwo, loan);
+        verify(this.fineManagementService, times(1)).execute(loanBeforeReturn, updateLoanReturnCommand.returnDate());
+        assertEquals(updatedLoan, loan);
     }
 }
