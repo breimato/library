@@ -1,10 +1,7 @@
 package com.breixo.library;
 
+import com.breixo.library.infrastructure.adapter.output.mybatis.*;
 import org.junit.jupiter.api.Test;
-import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
-import com.breixo.library.infrastructure.adapter.output.mybatis.FineMyBatisMapper;
-import com.breixo.library.infrastructure.adapter.output.mybatis.LoanMyBatisMapper;
-import com.breixo.library.infrastructure.adapter.output.mybatis.UserMyBatisMapper;
 import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
@@ -31,6 +28,9 @@ class LibraryApplicationTests {
 
     @MockBean
     FineMyBatisMapper fineMyBatisMapper;
+
+    @MockBean
+    ReservationMyBatisMapper reservationMyBatisMapper;
 
     @Test
     void contextLoads() {
