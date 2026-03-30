@@ -2,6 +2,7 @@ package com.breixo.library.infrastructure.adapter.output.mapper;
 
 import java.util.List;
 
+import com.breixo.library.domain.command.reservation.CreateReservationCommand;
 import com.breixo.library.domain.model.reservation.Reservation;
 import com.breixo.library.infrastructure.adapter.output.entities.ReservationEntity;
 import com.breixo.library.infrastructure.mapper.ReservationStatusMapper;
@@ -21,6 +22,14 @@ public interface ReservationEntityMapper {
      */
     @Mapping(source = "statusId", target = "status")
     Reservation toReservation(ReservationEntity reservationEntity);
+
+    /**
+     * To reservation entity.
+     *
+     * @param createReservationCommand the create reservation command.
+     * @return the reservation entity.
+     */
+    ReservationEntity toReservationEntity(CreateReservationCommand createReservationCommand);
 
     /**
      * To reservation list.

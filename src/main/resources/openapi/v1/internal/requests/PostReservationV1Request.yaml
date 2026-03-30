@@ -1,0 +1,28 @@
+description: "Post Reservation V1 Request"
+type: object
+required:
+  - userId
+  - bookId
+  - expiresAt
+  - status
+properties:
+  userId:
+    type: integer
+    format: int32
+    description: "User identifier"
+  bookId:
+    type: integer
+    format: int32
+    description: "Book identifier"
+  loanId:
+    type: integer
+    format: int32
+    description: "Loan identifier"
+  expiresAt:
+    type: string
+    format: date-time
+    description: "Reservation expiration date"
+  status:
+    type: integer
+    format: int32
+    description: "Reservation status identifier"

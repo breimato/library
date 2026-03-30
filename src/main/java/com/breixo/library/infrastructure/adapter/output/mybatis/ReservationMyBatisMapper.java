@@ -6,7 +6,9 @@ import com.breixo.library.domain.command.reservation.ReservationSearchCriteriaCo
 import com.breixo.library.infrastructure.adapter.output.entities.ReservationEntity;
 
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
 /** The Interface Reservation My Batis Mapper. */
@@ -39,6 +41,18 @@ public interface ReservationMyBatisMapper {
             </script>
             """)
     List<ReservationEntity> find(ReservationSearchCriteriaCommand reservationSearchCriteriaCommand);
+
+    /**
+     * Insert.
+     *
+     * @param reservationEntity the reservation entity.
+     */
+    @Insert("""
+            insert into reservations (user_id, book_id, loan_id, expires_at, status_id)
+            values (#{userId}, #{bookId}, #{loanId}, #{expiresAt}, #{statusId})
+            """)
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void insert(ReservationEntity reservationEntity);
 
     /**
      * Delete.

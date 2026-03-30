@@ -23,3 +23,28 @@ get:
         application/json:
           schema:
             $ref: '../components/ApiErrorV1.yaml'
+post:
+  summary: "Post Reservation V1"
+  description: "Create a new reservation"
+  operationId: "PostReservationV1"
+  tags:
+    - post-reservation-v1
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/PostReservationV1Request.yaml'
+  responses:
+    '201':
+      description: "201 Created"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/ReservationV1Response.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

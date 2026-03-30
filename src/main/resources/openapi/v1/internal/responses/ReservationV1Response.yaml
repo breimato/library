@@ -1,0 +1,5 @@
+description: "Reservation V1 Response"
+type: object
+properties:
+  reservation:
+    $ref: '../components/ReservationV1.yaml'
