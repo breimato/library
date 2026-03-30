@@ -1,7 +1,6 @@
 package com.breixo.library.infrastructure.adapter.output.repository.fine;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
 import com.breixo.library.domain.model.fine.Fine;
@@ -39,11 +38,11 @@ class FineRetrievalRepositoryTest {
     FineEntityMapper fineEntityMapper;
 
     /**
-     * Test find when fine found then return fine.
+     * Test find when fine found then return fine list.
      */
     @Test
-    void testFind_whenFineFound_thenReturnFine() {
-        
+    void testFind_whenFineFound_thenReturnFineList() {
+
         // Given
         final var fineSearchCriteriaCommand = Instancio.create(FineSearchCriteriaCommand.class);
         final var fineEntity = Instancio.create(FineEntity.class);
@@ -51,30 +50,32 @@ class FineRetrievalRepositoryTest {
 
         // When
         when(this.fineMyBatisMapper.find(fineSearchCriteriaCommand)).thenReturn(List.of(fineEntity));
-        when(this.fineEntityMapper.toFine(fineEntity)).thenReturn(fine);
+        when(this.fineEntityMapper.toFineList(List.of(fineEntity))).thenReturn(List.of(fine));
         final var result = this.fineRetrievalRepository.find(fineSearchCriteriaCommand);
 
         // Then
         verify(this.fineMyBatisMapper, times(1)).find(fineSearchCriteriaCommand);
-        verify(this.fineEntityMapper, times(1)).toFine(fineEntity);
-        assertEquals(Optional.of(fine), result);
+        verify(this.fineEntityMapper, times(1)).toFineList(List.of(fineEntity));
+        assertEquals(List.of(fine), result);
     }
 
     /**
-     * Test find when fine not found then return empty optional.
+     * Test find when fine not found then return empty list.
      */
     @Test
-    void testFind_whenFineNotFound_thenReturnEmptyOptional() {
-        
+    void testFind_whenFineNotFound_thenReturnEmptyList() {
+
         // Given
         final var fineSearchCriteriaCommand = Instancio.create(FineSearchCriteriaCommand.class);
 
         // When
         when(this.fineMyBatisMapper.find(fineSearchCriteriaCommand)).thenReturn(List.of());
+        when(this.fineEntityMapper.toFineList(List.of())).thenReturn(List.of());
         final var result = this.fineRetrievalRepository.find(fineSearchCriteriaCommand);
 
         // Then
         verify(this.fineMyBatisMapper, times(1)).find(fineSearchCriteriaCommand);
+        verify(this.fineEntityMapper, times(1)).toFineList(List.of());
         assertTrue(result.isEmpty());
     }
 }

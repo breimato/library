@@ -23,6 +23,8 @@ paths:
   /v1/library/loans/{id}/return:
     $ref: './library/loans-id-return-v1.api.yaml'
   # Fines
+  /v1/library/fines:
+    $ref: './library/fines-v1.api.yaml'
   /v1/library/fines/{id}:
     $ref: './library/fines-id-v1.api.yaml'
 

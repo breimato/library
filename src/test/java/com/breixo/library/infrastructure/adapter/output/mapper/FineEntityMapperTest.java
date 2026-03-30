@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.mapper;
 
+import java.util.List;
+
 import com.breixo.library.domain.model.fine.enums.FineStatus;
 import com.breixo.library.infrastructure.adapter.output.entities.FineEntity;
 import com.breixo.library.infrastructure.mapper.FineStatusMapper;
@@ -61,5 +63,48 @@ class FineEntityMapperTest {
     void testToFine_whenFineEntityIsNull_thenReturnNull() {
         // When / Then
         assertNull(this.fineEntityMapper.toFine(null));
+    }
+
+    /**
+     * Test to fine list when fine entities are valid then return mapped fine list.
+     */
+    @Test
+    void testToFineList_whenFineEntitiesAreValid_thenReturnMappedFineList() {
+
+        // Given
+        final var fineEntity = Instancio.create(FineEntity.class);
+        final var fineEntities = List.of(fineEntity);
+        final var fineStatus = Instancio.create(FineStatus.class);
+
+        // When
+        when(this.fineStatusMapper.toFineStatus(fineEntity.getStatusId())).thenReturn(fineStatus);
+        final var fines = this.fineEntityMapper.toFineList(fineEntities);
+
+        // Then
+        assertNotNull(fines);
+        assertEquals(1, fines.size());
+        assertEquals(fineEntity.getId(), fines.getFirst().id());
+    }
+
+    /**
+     * Test to fine list when fine entities list is empty then return empty list.
+     */
+    @Test
+    void testToFineList_whenFineEntitiesListIsEmpty_thenReturnEmptyList() {
+        // When
+        final var fines = this.fineEntityMapper.toFineList(List.of());
+
+        // Then
+        assertNotNull(fines);
+        assertEquals(0, fines.size());
+    }
+
+    /**
+     * Test to fine list when fine entities list is null then return null.
+     */
+    @Test
+    void testToFineList_whenFineEntitiesListIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.fineEntityMapper.toFineList(null));
     }
 }

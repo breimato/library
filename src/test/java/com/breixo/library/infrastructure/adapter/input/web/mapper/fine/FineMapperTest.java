@@ -3,6 +3,7 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper.fine;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import com.breixo.library.domain.model.fine.Fine;
 import com.breixo.library.domain.model.fine.enums.FineStatus;
@@ -116,5 +117,60 @@ class FineMapperTest {
     void testToFineV1_whenFineIsNull_thenReturnNull() {
         // When / Then
         assertNull(this.fineMapper.toFineV1(null));
+    }
+
+    /**
+     * Test to fine V1 list when fines are valid then return mapped dto list.
+     */
+    @Test
+    void testToFineV1List_whenFinesAreValid_thenReturnMappedDtoList() {
+
+        // Given
+        final var id = Instancio.create(Integer.class);
+        final var loanId = Instancio.create(Integer.class);
+        final var amountEuros = Instancio.create(BigDecimal.class);
+        final var paidAt = Instancio.create(LocalDateTime.class);
+        final var statusId = Instancio.create(Integer.class);
+        final var offsetDateTime = Instancio.create(OffsetDateTime.class);
+        final var fine = Fine.builder()
+                .id(id)
+                .loanId(loanId)
+                .amountEuros(amountEuros)
+                .status(FineStatus.PENDING)
+                .paidAt(paidAt)
+                .build();
+        final var fines = List.of(fine);
+
+        // When
+        when(this.fineStatusMapper.toStatusId(FineStatus.PENDING)).thenReturn(statusId);
+        when(this.dateMapper.toOffsetDateTime(paidAt)).thenReturn(offsetDateTime);
+        final var fineV1List = this.fineMapper.toFineV1List(fines);
+
+        // Then
+        assertNotNull(fineV1List);
+        assertEquals(1, fineV1List.size());
+        assertEquals(id, fineV1List.getFirst().getId());
+    }
+
+    /**
+     * Test to fine V1 list when fines list is empty then return empty list.
+     */
+    @Test
+    void testToFineV1List_whenFinesListIsEmpty_thenReturnEmptyList() {
+        // When
+        final var fineV1List = this.fineMapper.toFineV1List(List.of());
+
+        // Then
+        assertNotNull(fineV1List);
+        assertEquals(0, fineV1List.size());
+    }
+
+    /**
+     * Test to fine V1 list when fines list is null then return null.
+     */
+    @Test
+    void testToFineV1List_whenFinesListIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.fineMapper.toFineV1List(null));
     }
 }

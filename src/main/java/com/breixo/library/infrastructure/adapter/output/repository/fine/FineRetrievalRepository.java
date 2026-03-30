@@ -1,6 +1,6 @@
 package com.breixo.library.infrastructure.adapter.output.repository.fine;
 
-import java.util.Optional;
+import java.util.List;
 
 import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
 import com.breixo.library.domain.model.fine.Fine;
@@ -26,16 +26,10 @@ public class FineRetrievalRepository implements FineRetrievalPersistencePort {
 
     /** {@inheritDoc} */
     @Override
-    public Optional<Fine> find(@Valid @NotNull final FineSearchCriteriaCommand fineSearchCriteriaCommand) {
+    public List<Fine> find(@Valid @NotNull final FineSearchCriteriaCommand fineSearchCriteriaCommand) {
 
         final var fineEntities = this.fineMyBatisMapper.find(fineSearchCriteriaCommand);
 
-        if (fineEntities.isEmpty()) {
-            return Optional.empty();
-        }
-
-        final var fine = this.fineEntityMapper.toFine(fineEntities.getFirst());
-
-        return Optional.of(fine);
+        return this.fineEntityMapper.toFineList(fineEntities);
     }
 }

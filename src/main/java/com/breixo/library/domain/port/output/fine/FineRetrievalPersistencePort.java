@@ -1,6 +1,6 @@
 package com.breixo.library.domain.port.output.fine;
 
-import java.util.Optional;
+import java.util.List;
 
 import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
 import com.breixo.library.domain.model.fine.Fine;
@@ -15,7 +15,7 @@ public interface FineRetrievalPersistencePort {
      * Find.
      *
      * @param fineSearchCriteriaCommand the fine search criteria command.
-     * @return the fine, or empty if not found.
+     * @return the list of fines.
      */
-    Optional<Fine> find(@Valid @NotNull FineSearchCriteriaCommand fineSearchCriteriaCommand);
+    List<Fine> find(@Valid @NotNull FineSearchCriteriaCommand fineSearchCriteriaCommand);
 }
