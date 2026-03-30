@@ -182,7 +182,6 @@ Base path: `/v1/library`
 |---|---|---|---|
 | `GET` | `/books` | List all books | `200 GetBooksV1Response` |
 | `POST` | `/books` | Create a book | `201 BookV1Response` |
-| `GET` | `/books/{id}` | Get book by ID | `200 BookV1Response` |
 | `PATCH` | `/books/{id}` | Update book | `200 BookV1Response` |
 | `DELETE` | `/books/{id}` | Delete book | `204` |
 
@@ -204,7 +203,6 @@ Base path: `/v1/library`
 |---|---|---|---|
 | `GET` | `/users` | List all users | `200 GetUsersV1Response` |
 | `POST` | `/users` | Create a user | `201 UserV1Response` |
-| `GET` | `/users/{id}` | Get user by ID | `200 UserV1Response` |
 | `PATCH` | `/users/{id}` | Update user | `200 UserV1Response` |
 | `DELETE` | `/users/{id}` | Delete user | `204` |
 
