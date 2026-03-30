@@ -217,6 +217,38 @@ Base path: `/v1/library`
 }
 ```
 
+### Loans
+
+| Method | Endpoint | Description | Response |
+|---|---|---|---|
+| `GET` | `/loans` | List all loans | `200 GetLoansV1Response` |
+| `POST` | `/loans` | Create a loan | `201 LoanV1Response` |
+| `PATCH` | `/loans/{id}/return` | Return a loan | `200 LoanV1Response` |
+| `DELETE` | `/loans/{id}` | Delete a loan | `204` |
+
+**Current return flow (`PATCH /loans/{id}/return`)**
+- Updates the loan return information.
+- Calculates overdue fine amount through `FineCalculationService`.
+- Creates or updates a pending fine through `FineManagementService` when applicable.
+
+### Reservations
+
+| Method | Endpoint | Description | Response |
+|---|---|---|---|
+| `GET` | `/reservations` | List all reservations | `200 GetReservationsV1Response` |
+| `POST` | `/reservations` | Create a reservation | `201 ReservationV1Response` |
+| `PATCH` | `/reservations/{id}` | Update reservation | `200 ReservationV1Response` |
+| `DELETE` | `/reservations/{id}` | Delete reservation | `204` |
+
+### Fines
+
+| Method | Endpoint | Description | Response |
+|---|---|---|---|
+| `GET` | `/fines` | List all fines | `200 GetFinesV1Response` |
+| `POST` | `/fines` | Create a fine | `201 FineV1Response` |
+| `PATCH` | `/fines/{id}` | Update fine | `200 FineV1Response` |
+| `DELETE` | `/fines/{id}` | Delete fine | `204` |
+
 ### Error Response
 
 All errors return a consistent body:
