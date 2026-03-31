@@ -3,6 +3,7 @@ package com.breixo.library.domain.service;
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.enums.LoanStatus;
+import com.breixo.library.domain.service.loan.LoanStatusTransitionValidationServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

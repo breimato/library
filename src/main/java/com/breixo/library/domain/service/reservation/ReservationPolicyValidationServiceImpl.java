@@ -1,5 +1,6 @@
-package com.breixo.library.domain.service;
+package com.breixo.library.domain.service.reservation;
 
+import com.breixo.library.domain.port.input.reservation.ReservationPolicyValidationService;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Service;
 

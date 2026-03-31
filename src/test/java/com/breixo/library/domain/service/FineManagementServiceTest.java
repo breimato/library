@@ -15,6 +15,8 @@ import com.breixo.library.domain.port.output.fine.FineCreationPersistencePort;
 import com.breixo.library.domain.port.output.fine.FineRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.fine.FineUpdatePersistencePort;
 
+import com.breixo.library.domain.port.input.fine.FineCalculationService;
+import com.breixo.library.domain.port.input.loan.fine.FineManagementServiceImpl;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

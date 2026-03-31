@@ -1,5 +1,6 @@
-package com.breixo.library.domain.service;
+package com.breixo.library.domain.service.book;
 
+import com.breixo.library.domain.port.input.book.BookPolicyValidationService;
 import org.springframework.stereotype.Service;
 
 import com.breixo.library.domain.exception.BookException;

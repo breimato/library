@@ -11,7 +11,7 @@ import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.model.loan.enums.LoanStatus;
 import com.breixo.library.domain.port.output.loan.LoanRenewPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
-import com.breixo.library.domain.service.LoanStatusTransitionValidationService;
+import com.breixo.library.domain.port.input.loan.LoanStatusTransitionValidationService;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;

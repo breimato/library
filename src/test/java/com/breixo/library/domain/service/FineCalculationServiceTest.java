@@ -3,6 +3,7 @@ package com.breixo.library.domain.service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.breixo.library.domain.port.input.loan.fine.FineCalculationServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

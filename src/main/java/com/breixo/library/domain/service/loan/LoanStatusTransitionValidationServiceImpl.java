@@ -1,10 +1,11 @@
-package com.breixo.library.domain.service;
+package com.breixo.library.domain.service.loan;
 
 import java.util.EnumSet;
 
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.enums.LoanStatus;
+import com.breixo.library.domain.port.input.loan.LoanStatusTransitionValidationService;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Service;
 

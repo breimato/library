@@ -10,10 +10,10 @@ import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanCreationPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
-import com.breixo.library.domain.service.BookPolicyValidationService;
-import com.breixo.library.domain.service.LoanPolicyValidationService;
-import com.breixo.library.domain.service.ReservationPolicyValidationService;
-import com.breixo.library.domain.service.UserPolicyValidationService;
+import com.breixo.library.domain.port.input.book.BookPolicyValidationService;
+import com.breixo.library.domain.port.input.loan.LoanPolicyValidationService;
+import com.breixo.library.domain.port.input.reservation.ReservationPolicyValidationService;
+import com.breixo.library.domain.port.input.user.UserPolicyValidationService;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

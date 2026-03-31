@@ -1,7 +1,8 @@
-package com.breixo.library.domain.service;
+package com.breixo.library.domain.service.loan;
 
 import java.util.List;
 
+import com.breixo.library.domain.port.input.loan.LoanPolicyValidationService;
 import org.springframework.stereotype.Component;
 
 import com.breixo.library.domain.exception.LoanException;

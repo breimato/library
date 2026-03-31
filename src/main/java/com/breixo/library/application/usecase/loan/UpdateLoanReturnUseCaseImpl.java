@@ -12,8 +12,8 @@ import com.breixo.library.domain.model.loan.enums.LoanStatus;
 import com.breixo.library.domain.port.input.loan.UpdateLoanReturnUseCase;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanUpdatePersistencePort;
-import com.breixo.library.domain.service.FineManagementService;
-import com.breixo.library.domain.service.LoanStatusTransitionValidationService;
+import com.breixo.library.domain.port.input.fine.FineManagementService;
+import com.breixo.library.domain.port.input.loan.LoanStatusTransitionValidationService;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

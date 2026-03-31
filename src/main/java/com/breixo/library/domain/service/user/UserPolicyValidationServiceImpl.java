@@ -1,7 +1,8 @@
-package com.breixo.library.domain.service;
+package com.breixo.library.domain.service.user;
 
 import java.util.List;
 
+import com.breixo.library.domain.port.input.user.UserPolicyValidationService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.breixo.library.domain.service;
+package com.breixo.library.domain.port.input.loan.fine;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -8,6 +8,8 @@ import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
 import com.breixo.library.domain.command.fine.UpdateFineCommand;
 import com.breixo.library.domain.model.fine.enums.FineStatus;
 import com.breixo.library.domain.model.loan.Loan;
+import com.breixo.library.domain.port.input.fine.FineCalculationService;
+import com.breixo.library.domain.port.input.fine.FineManagementService;
 import com.breixo.library.domain.port.output.fine.FineCreationPersistencePort;
 import com.breixo.library.domain.port.output.fine.FineRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.fine.FineUpdatePersistencePort;

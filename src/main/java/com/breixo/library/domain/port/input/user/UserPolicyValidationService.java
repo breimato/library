@@ -1,4 +1,4 @@
-package com.breixo.library.domain.service;
+package com.breixo.library.domain.port.input.user;
 
 import java.util.List;
 

@@ -1,11 +1,11 @@
-package com.breixo.library.domain.service;
+package com.breixo.library.domain.port.input.loan.fine;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+import com.breixo.library.domain.port.input.fine.FineCalculationService;
 import jakarta.validation.constraints.NotNull;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Component;
 
 /** The Class Fine Calculation Service Impl. */
