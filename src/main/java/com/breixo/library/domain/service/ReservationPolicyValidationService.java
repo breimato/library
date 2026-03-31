@@ -6,10 +6,18 @@ import jakarta.validation.constraints.NotNull;
 public interface ReservationPolicyValidationService {
 
     /**
-     * Check reservation precedence.
+     * Check precedence.
      *
      * @param userId the user id
      * @param bookId the book id
      */
-    void checkReservationPrecedence(@NotNull Integer userId, @NotNull Integer bookId);
+    void checkPrecedence(@NotNull Integer userId, @NotNull Integer bookId);
+
+    /**
+     * Check no active reservation.
+     *
+     * @param userId the user id
+     * @param bookId the book id
+     */
+    void checkNoActiveReservation(@NotNull Integer userId, @NotNull Integer bookId);
 }

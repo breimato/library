@@ -171,4 +171,46 @@ public class ExceptionMessageConstants {
 
     /** The Constant RESERVATION_UPDATE_ERROR_MESSAGE_ERROR. */
     public static final String RESERVATION_UPDATE_ERROR_MESSAGE_ERROR = "Error: Reservation update failed";
+
+    /** The Constant RESERVATION_CREATION_ERROR_CODE_ERROR. */
+    public static final String RESERVATION_CREATION_ERROR_CODE_ERROR = "LIB-RESERVATION-003";
+
+    /** The Constant RESERVATION_CREATION_ERROR_MESSAGE_ERROR. */
+    public static final String RESERVATION_CREATION_ERROR_MESSAGE_ERROR = "Error: Reservation creation failed";
+
+    /** The Constant RESERVATION_USER_BLOCKED_CODE_ERROR. */
+    public static final String RESERVATION_USER_BLOCKED_CODE_ERROR = "LIB-RESERVATION-004";
+
+    /** The Constant RESERVATION_USER_BLOCKED_MESSAGE_ERROR. */
+    public static final String RESERVATION_USER_BLOCKED_MESSAGE_ERROR = "Error: User is blocked and cannot reserve books";
+
+    /** The Constant RESERVATION_USER_SUSPENDED_CODE_ERROR. */
+    public static final String RESERVATION_USER_SUSPENDED_CODE_ERROR = "LIB-RESERVATION-005";
+
+    /** The Constant RESERVATION_USER_SUSPENDED_MESSAGE_ERROR. */
+    public static final String RESERVATION_USER_SUSPENDED_MESSAGE_ERROR = "Error: User is suspended and cannot reserve books";
+
+    /** The Constant RESERVATION_USER_HAS_PENDING_FINES_CODE_ERROR. */
+    public static final String RESERVATION_USER_HAS_PENDING_FINES_CODE_ERROR = "LIB-RESERVATION-006";
+
+    /** The Constant RESERVATION_USER_HAS_PENDING_FINES_MESSAGE_ERROR. */
+    public static final String RESERVATION_USER_HAS_PENDING_FINES_MESSAGE_ERROR = "Error: User has pending fines and cannot reserve books";
+
+    /** The Constant RESERVATION_ALREADY_EXISTS_CODE_ERROR. */
+    public static final String RESERVATION_ALREADY_EXISTS_CODE_ERROR = "LIB-RESERVATION-007";
+
+    /** The Constant RESERVATION_ALREADY_EXISTS_MESSAGE_ERROR. */
+    public static final String RESERVATION_ALREADY_EXISTS_MESSAGE_ERROR = "Error: User already has an active reservation for this book";
+
+    /** The Constant RESERVATION_COPIES_AVAILABLE_CODE_ERROR. */
+    public static final String RESERVATION_COPIES_AVAILABLE_CODE_ERROR = "LIB-RESERVATION-008";
+
+    /** The Constant RESERVATION_COPIES_AVAILABLE_MESSAGE_ERROR. */
+    public static final String RESERVATION_COPIES_AVAILABLE_MESSAGE_ERROR = "Error: Book has available copies, user should borrow it directly";
+
+    /** The Constant RESERVATION_BOOK_RETIRED_CODE_ERROR. */
+    public static final String RESERVATION_BOOK_RETIRED_CODE_ERROR = "LIB-RESERVATION-009";
+
+    /** The Constant RESERVATION_BOOK_RETIRED_MESSAGE_ERROR. */
+    public static final String RESERVATION_BOOK_RETIRED_MESSAGE_ERROR = "Error: Book is retired and cannot be reserved";
 }

@@ -4,12 +4,15 @@ import com.breixo.library.domain.command.loan.CreateLoanCommand;
 import com.breixo.library.domain.event.LoanCreatedDomainEvent;
 import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.port.input.loan.CreateLoanUseCase;
+import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanCreationPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
-import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
+import com.breixo.library.domain.service.BookPolicyValidationService;
 import com.breixo.library.domain.service.LoanPolicyValidationService;
 import com.breixo.library.domain.service.ReservationPolicyValidationService;
+import com.breixo.library.domain.service.UserPolicyValidationService;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +32,12 @@ public class CreateLoanUseCaseImpl implements CreateLoanUseCase {
 
     /** The loan retrieval persistence port. */
     private final LoanRetrievalPersistencePort loanRetrievalPersistencePort;
+
+    /** The user policy validation service. */
+    private final UserPolicyValidationService userPolicyValidationService;
+
+    /** The book policy validation service. */
+    private final BookPolicyValidationService bookPolicyValidationService;
 
     /** The loan policy validation service. */
     private final LoanPolicyValidationService loanPolicyValidationService;
@@ -52,11 +61,13 @@ public class CreateLoanUseCaseImpl implements CreateLoanUseCase {
 
         final var loanList = this.loanRetrievalPersistencePort.findByUserId(user.id());
 
-        this.loanPolicyValidationService.checkUserHasNoPendingFines(loanList);
+        this.userPolicyValidationService.check(user, loanList);
 
-        this.loanPolicyValidationService.checkCanBorrow(user, book, loanList);
+        this.bookPolicyValidationService.checkIsBorrowable(book);
 
-        this.reservationPolicyValidationService.checkReservationPrecedence(user.id(), book.id());
+        this.loanPolicyValidationService.checkCanBorrow(book, loanList);
+
+        this.reservationPolicyValidationService.checkPrecedence(user.id(), book.id());
 
         final var loan = this.loanCreationPersistencePort.execute(createLoanCommand);
 
