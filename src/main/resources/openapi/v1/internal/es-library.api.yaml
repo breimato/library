@@ -41,27 +41,27 @@ components:
       $ref: './components/ApiErrorV1.yaml'
     BookV1:
       $ref: './components/BookV1.yaml'
+    UserV1:
+      $ref: './components/UserV1.yaml'
+    LoanV1:
+      $ref: './components/LoanV1.yaml'
+    FineV1:
+      $ref: './components/FineV1.yaml'
+    ReservationV1:
+      $ref: './components/ReservationV1.yaml'
     PostBookV1Request:
       $ref: './requests/PostBookV1Request.yaml'
     PatchBookV1Request:
       $ref: './requests/PatchBookV1Request.yaml'
-    UserV1:
-      $ref: './components/UserV1.yaml'
     PostUserV1Request:
       $ref: './requests/PostUserV1Request.yaml'
-    LoanV1:
-      $ref: './components/LoanV1.yaml'
     PostLoanV1Request:
       $ref: './requests/PostLoanV1Request.yaml'
     PatchLoanReturnV1Request:
       $ref: './requests/PatchLoanReturnV1Request.yaml'
     PatchLoanRenewV1Request:
       $ref: './requests/PatchLoanRenewV1Request.yaml'
-    FineV1:
-      $ref: './components/FineV1.yaml'
-    ReservationV1:
-      $ref: './components/ReservationV1.yaml'
-    
+
   responses:
     BadRequest:
       description: Bad Request
