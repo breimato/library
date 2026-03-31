@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.breixo.library.domain.command.loan.UpdateLoanReturnCommand;
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
+import com.breixo.library.domain.event.LoanReturnedDomainEvent;
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.Loan;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -51,6 +53,10 @@ class UpdateLoanReturnUseCaseTest {
         /** The fine management service. */
         @Mock
         FineManagementService fineManagementService;
+
+        /** The application event publisher. */
+        @Mock
+        ApplicationEventPublisher applicationEventPublisher;
 
         /**
          * Test execute when loan not found then throw loan exception.
@@ -175,6 +181,9 @@ class UpdateLoanReturnUseCaseTest {
                 verify(this.loanUpdatePersistencePort, times(1)).execute(updateLoanReturnCommand);
                 verify(this.fineManagementService, times(1)).execute(loanBeforeReturn,
                                 updateLoanReturnCommand.returnDate());
+                verify(this.applicationEventPublisher, times(1)).publishEvent(LoanReturnedDomainEvent.builder()
+                                .bookId(loanBeforeReturn.bookId())
+                                .build());
                 assertEquals(updatedLoan, resultLoan);
         }
 }

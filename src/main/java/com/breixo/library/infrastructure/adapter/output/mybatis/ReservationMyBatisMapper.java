@@ -74,6 +74,23 @@ public interface ReservationMyBatisMapper {
     void update(ReservationEntity reservationEntity);
 
     /**
+     * Mark expired.
+     *
+     * @return the number of reservations marked as expired.
+     */
+    @Update("update reservations set status_id = 3 where status_id = 0 and expires_at < current_timestamp")
+    int markExpired();
+
+    /**
+     * Mark notified by book id.
+     *
+     * @param bookId the book id.
+     * @return the number of reservations marked as notified.
+     */
+    @Update("update reservations set status_id = 1 where book_id = #{bookId} and status_id = 0")
+    int markNotifiedByBookId(Integer bookId);
+
+    /**
      * Delete.
      *
      * @param id the reservation identifier.

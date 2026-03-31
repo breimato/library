@@ -104,21 +104,18 @@ class LoanStatusTransitionValidationServiceImplTest {
     }
 
     /**
-     * Test validate transition when overdue to active then throw loan exception.
+     * Test validate transition when overdue to active then return.
      */
     @Test
-    void testValidateTransition_whenOverdueToActive_thenThrowLoanException() {
+    void testValidateTransition_whenOverdueToActive_thenReturn() {
 
         // Given
         final var currentStatus = LoanStatus.OVERDUE;
         final var newStatus = LoanStatus.ACTIVE;
 
         // When
-        final var exception = assertThrows(LoanException.class,
-                () -> this.loanStatusTransitionValidationService.execute(currentStatus, newStatus));
+        this.loanStatusTransitionValidationService.execute(currentStatus, newStatus);
 
-        // Then
-        assertEquals(ExceptionMessageConstants.LOAN_INVALID_STATUS_TRANSITION_CODE_ERROR, exception.getCode());
-        assertEquals(ExceptionMessageConstants.LOAN_INVALID_STATUS_TRANSITION_MESSAGE_ERROR, exception.getMessage());
+        // Then (no exception thrown)
     }
 }

@@ -1,0 +1,45 @@
+patch:
+  summary: "Patch Loan Renew V1"
+  description: "Renew a loan"
+  operationId: "PatchLoanRenewV1"
+  tags:
+    - patch-loan-renew-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Loan identifier"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/PatchLoanRenewV1Request.yaml'
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/LoanV1Response.yaml'
+    '400':
+      description: "Bad Request - Invalid due date"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '404':
+      description: "Not Found - Loan not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

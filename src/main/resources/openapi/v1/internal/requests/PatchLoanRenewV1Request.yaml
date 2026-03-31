@@ -1,0 +1,9 @@
+description: "Patch Loan Renew V1 Request"
+type: object
+required:
+  - dueDate
+properties:
+  dueDate:
+    type: string
+    format: date
+    description: "New due date"
