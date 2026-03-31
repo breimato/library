@@ -6,13 +6,14 @@ import com.breixo.library.domain.command.reservation.CreateReservationCommand;
 import com.breixo.library.domain.command.reservation.UpdateReservationCommand;
 import com.breixo.library.domain.model.reservation.Reservation;
 import com.breixo.library.infrastructure.adapter.output.entities.ReservationEntity;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
 import com.breixo.library.infrastructure.mapper.ReservationStatusMapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /** The Interface Reservation Entity Mapper. */
-@Mapper(componentModel = "spring", uses = ReservationStatusMapper.class)
+@Mapper(componentModel = "spring", uses = {ReservationStatusMapper.class, DateMapper.class})
 public interface ReservationEntityMapper {
 
     /**

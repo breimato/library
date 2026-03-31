@@ -1,10 +1,13 @@
 package com.breixo.library.infrastructure.adapter.output.mapper;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.breixo.library.domain.command.fine.CreateFineCommand;
 import com.breixo.library.domain.command.fine.UpdateFineCommand;
 import com.breixo.library.domain.model.fine.enums.FineStatus;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
 import com.breixo.library.infrastructure.adapter.output.entities.FineEntity;
 import com.breixo.library.infrastructure.mapper.FineStatusMapper;
 
@@ -34,6 +37,10 @@ class FineEntityMapperTest {
     @Mock
     FineStatusMapper fineStatusMapper;
 
+    /** The date mapper. */
+    @Mock
+    DateMapper dateMapper;
+
     /**
      * Test to fine when fine entity is valid then return mapped fine.
      */
@@ -43,19 +50,22 @@ class FineEntityMapperTest {
         // Given
         final var fineEntity = Instancio.create(FineEntity.class);
         final var fineStatus = Instancio.create(FineStatus.class);
+        final var paidAt = Instancio.create(LocalDateTime.class);
 
         // When
         when(this.fineStatusMapper.toFineStatus(fineEntity.getStatusId())).thenReturn(fineStatus);
+        when(this.dateMapper.toLocalDateTime(fineEntity.getPaidAt())).thenReturn(paidAt);
         final var fine = this.fineEntityMapper.toFine(fineEntity);
 
         // Then
         verify(this.fineStatusMapper, times(1)).toFineStatus(fineEntity.getStatusId());
+        verify(this.dateMapper, times(1)).toLocalDateTime(fineEntity.getPaidAt());
         assertNotNull(fine);
         assertEquals(fineEntity.getId(), fine.id());
         assertEquals(fineEntity.getLoanId(), fine.loanId());
         assertEquals(fineEntity.getAmountEuros(), fine.amountEuros());
         assertEquals(fineStatus, fine.status());
-        assertEquals(fineEntity.getPaidAt(), fine.paidAt());
+        assertEquals(paidAt, fine.paidAt());
     }
 
     /**
@@ -77,9 +87,11 @@ class FineEntityMapperTest {
         final var fineEntity = Instancio.create(FineEntity.class);
         final var fineEntities = List.of(fineEntity);
         final var fineStatus = Instancio.create(FineStatus.class);
+        final var paidAt = Instancio.create(LocalDateTime.class);
 
         // When
         when(this.fineStatusMapper.toFineStatus(fineEntity.getStatusId())).thenReturn(fineStatus);
+        when(this.dateMapper.toLocalDateTime(fineEntity.getPaidAt())).thenReturn(paidAt);
         final var fines = this.fineEntityMapper.toFineList(fineEntities);
 
         // Then
@@ -147,17 +159,20 @@ class FineEntityMapperTest {
         // Given
         final var updateFineCommand = Instancio.create(UpdateFineCommand.class);
         final var statusId = Instancio.create(Integer.class);
+        final var paidAt = Instancio.create(OffsetDateTime.class);
 
         // When
         when(this.fineStatusMapper.toStatusId(updateFineCommand.status())).thenReturn(statusId);
+        when(this.dateMapper.toOffsetDateTime(updateFineCommand.paidAt())).thenReturn(paidAt);
         final var fineEntity = this.fineEntityMapper.toFineEntity(updateFineCommand);
 
         // Then
         verify(this.fineStatusMapper, times(1)).toStatusId(updateFineCommand.status());
+        verify(this.dateMapper, times(1)).toOffsetDateTime(updateFineCommand.paidAt());
         assertNotNull(fineEntity);
         assertEquals(updateFineCommand.id(), fineEntity.getId());
         assertEquals(updateFineCommand.amountEuros(), fineEntity.getAmountEuros());
-        assertEquals(updateFineCommand.paidAt(), fineEntity.getPaidAt());
+        assertEquals(paidAt, fineEntity.getPaidAt());
         assertEquals(statusId, fineEntity.getStatusId());
     }
 

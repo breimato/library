@@ -1,7 +1,6 @@
 package com.breixo.library.infrastructure.adapter.output.entities;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 import lombok.Data;
@@ -23,5 +22,5 @@ public class FineEntity {
     private Integer statusId;
 
     /** The paid at. */
-    private LocalDateTime paidAt;
+    private OffsetDateTime paidAt;
 }
