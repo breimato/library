@@ -33,7 +33,7 @@ public class ReservationFulfillmentEventListener {
     @EventListener
     public void handleLoanCreatedEvent(final LoanCreatedDomainEvent loanCreatedDomainEvent) {
 
-        final boolean isPendingCompleted = this.completePendingReservationIfExists(loanCreatedDomainEvent);
+        final var isPendingCompleted = this.completePendingReservationIfExists(loanCreatedDomainEvent);
 
         if (BooleanUtils.isFalse(isPendingCompleted)) {
             this.completeNotifiedReservationIfExists(loanCreatedDomainEvent);
@@ -48,7 +48,8 @@ public class ReservationFulfillmentEventListener {
      */
     private boolean completePendingReservationIfExists(final LoanCreatedDomainEvent loanCreatedDomainEvent) {
 
-        final var pendingList = this.reservationRetrievalPersistencePort.getPendingByBookId(loanCreatedDomainEvent.bookId());
+        final var pendingList = this.reservationRetrievalPersistencePort
+                .getPendingByBookId(loanCreatedDomainEvent.bookId());
 
         final var userPendingReservation = pendingList.stream()
                 .filter(reservation -> reservation.userId().equals(loanCreatedDomainEvent.userId()))
@@ -58,7 +59,7 @@ public class ReservationFulfillmentEventListener {
             this.completeReservation(userPendingReservation.get().id(), loanCreatedDomainEvent.loanId());
             return true;
         }
-        
+
         return false;
     }
 
@@ -69,20 +70,22 @@ public class ReservationFulfillmentEventListener {
      */
     private void completeNotifiedReservationIfExists(final LoanCreatedDomainEvent loanCreatedDomainEvent) {
 
-        final var notifiedList = this.reservationRetrievalPersistencePort.getNotifiedByBookId(loanCreatedDomainEvent.bookId());
+        final var notifiedList = this.reservationRetrievalPersistencePort
+                .getNotifiedByBookId(loanCreatedDomainEvent.bookId());
 
         final var userNotifiedReservation = notifiedList.stream()
                 .filter(reservation -> reservation.userId().equals(loanCreatedDomainEvent.userId()))
                 .findFirst();
 
-        userNotifiedReservation.ifPresent(reservation -> this.completeReservation(reservation.id(), loanCreatedDomainEvent.loanId()));
+        userNotifiedReservation
+                .ifPresent(reservation -> this.completeReservation(reservation.id(), loanCreatedDomainEvent.loanId()));
     }
 
     /**
      * Complete reservation.
      *
      * @param reservationId the reservation id
-     * @param loanId the loan id
+     * @param loanId        the loan id
      */
     private void completeReservation(final Integer reservationId, final Integer loanId) {
 

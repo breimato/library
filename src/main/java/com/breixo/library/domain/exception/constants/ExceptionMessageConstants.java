@@ -130,6 +130,18 @@ public class ExceptionMessageConstants {
     /** The Constant LOAN_BOOK_RESERVED_BY_ANOTHER_USER_MESSAGE_ERROR. */
     public static final String LOAN_BOOK_RESERVED_BY_ANOTHER_USER_MESSAGE_ERROR = "Error: Loan cannot be created because book is reserved by another user";
 
+    /** The Constant LOAN_INVALID_STATUS_TRANSITION_CODE_ERROR. */
+    public static final String LOAN_INVALID_STATUS_TRANSITION_CODE_ERROR = "LIB-LOAN-009";
+
+    /** The Constant LOAN_INVALID_STATUS_TRANSITION_MESSAGE_ERROR. */
+    public static final String LOAN_INVALID_STATUS_TRANSITION_MESSAGE_ERROR = "Error: Invalid loan status transition";
+
+    /** The Constant LOAN_RETURN_DATE_INVALID_CODE_ERROR. */
+    public static final String LOAN_RETURN_DATE_INVALID_CODE_ERROR = "LIB-LOAN-010";
+
+    /** The Constant LOAN_RETURN_DATE_INVALID_MESSAGE_ERROR. */
+    public static final String LOAN_RETURN_DATE_INVALID_MESSAGE_ERROR = "Error: Return date cannot be in the future";
+
     /** The Constant FINE_NOT_FOUND_CODE_ERROR. */
     public static final String FINE_NOT_FOUND_CODE_ERROR = "LIB-FINE-001";
 
