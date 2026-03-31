@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /** The Class Update Fine Use Case Impl. */
 @Component
@@ -28,6 +29,7 @@ public class UpdateFineUseCaseImpl implements UpdateFineUseCase {
 
     /** {@inheritDoc} */
     @Override
+    @Transactional
     public Fine execute(@Valid @NotNull final UpdateFineCommand updateFineCommand) {
 
         this.validateFineExists(updateFineCommand);

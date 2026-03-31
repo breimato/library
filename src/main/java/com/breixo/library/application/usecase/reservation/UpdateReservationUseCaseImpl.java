@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /** The Class Update Reservation Use Case Impl. */
 @Component
@@ -28,6 +29,7 @@ public class UpdateReservationUseCaseImpl implements UpdateReservationUseCase {
 
     /** {@inheritDoc} */
     @Override
+    @Transactional
     public Reservation execute(@Valid @NotNull final UpdateReservationCommand updateReservationCommand) {
 
         this.validateReservationExists(updateReservationCommand);

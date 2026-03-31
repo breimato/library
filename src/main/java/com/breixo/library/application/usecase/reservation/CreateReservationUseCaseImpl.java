@@ -18,6 +18,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class CreateReservationUseCaseImpl implements CreateReservationUseCase {
 
     /** {@inheritDoc} */
     @Override
+    @Transactional
     public Reservation execute(@Valid @NotNull final CreateReservationCommand createReservationCommand) {
 
         final var user = this.userRetrievalPersistencePort.findById(createReservationCommand.userId());
@@ -62,6 +64,13 @@ public class CreateReservationUseCaseImpl implements CreateReservationUseCase {
         return this.reservationCreationPersistencePort.execute(createReservationCommand);
     }
 
+    /**
+     * Validate.
+     *
+     * @param user     the user
+     * @param book     the book
+     * @param loanList the loan list
+     */
     private void validate(final User user, final Book book, final List<Loan> loanList) {
 
         this.userPolicyValidationService.check(user, loanList);

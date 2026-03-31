@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /** The Class Create User Use Case Impl. */
 @Component
@@ -28,6 +29,7 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
 
     /** {@inheritDoc} */
     @Override
+    @Transactional
     public User execute(@Valid @NotNull final CreateUserCommand createUserCommand) {
 
         this.validateEmailNotExists(createUserCommand);
