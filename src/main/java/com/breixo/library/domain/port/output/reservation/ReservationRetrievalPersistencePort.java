@@ -28,6 +28,14 @@ public interface ReservationRetrievalPersistencePort {
     List<Reservation> getNotifiedByBookId(@NotNull Integer bookId);
 
     /**
+     * Gets active by book id.
+     *
+     * @param bookId the book id.
+     * @return the list of active reservations (pending and notified).
+     */
+    List<Reservation> getActiveByBookId(@NotNull Integer bookId);
+
+    /**
      * Find.
      *
      * @param reservationSearchCriteriaCommand the reservation search criteria command.

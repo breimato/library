@@ -1,9 +1,24 @@
 package com.breixo.library.application.usecase.loan;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.List;
 
+import org.instancio.Instancio;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
+
 import com.breixo.library.domain.command.loan.CreateLoanCommand;
-import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
 import com.breixo.library.domain.event.LoanCreatedDomainEvent;
 import com.breixo.library.domain.exception.BookException;
 import com.breixo.library.domain.exception.LoanException;
@@ -16,251 +31,220 @@ import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanCreationPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
+import com.breixo.library.domain.service.BookPolicyValidationService;
 import com.breixo.library.domain.service.LoanPolicyValidationService;
 import com.breixo.library.domain.service.ReservationPolicyValidationService;
-import org.springframework.context.ApplicationEventPublisher;
-import org.instancio.Instancio;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.ArgumentCaptor;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import com.breixo.library.domain.service.UserPolicyValidationService;
 
 /** The Class Create Loan Use Case Test. */
 @ExtendWith(MockitoExtension.class)
 class CreateLoanUseCaseTest {
 
-        /** The create loan use case. */
-        @InjectMocks
-        CreateLoanUseCaseImpl createLoanUseCase;
+    /** The create loan use case. */
+    @InjectMocks
+    CreateLoanUseCaseImpl createLoanUseCase;
 
-        /** The user retrieval persistence port. */
-        @Mock
-        UserRetrievalPersistencePort userRetrievalPersistencePort;
+    /** The user retrieval persistence port. */
+    @Mock
+    UserRetrievalPersistencePort userRetrievalPersistencePort;
 
-        /** The book retrieval persistence port. */
-        @Mock
-        BookRetrievalPersistencePort bookRetrievalPersistencePort;
+    /** The book retrieval persistence port. */
+    @Mock
+    BookRetrievalPersistencePort bookRetrievalPersistencePort;
 
-        /** The loan retrieval persistence port. */
-        @Mock
-        LoanRetrievalPersistencePort loanRetrievalPersistencePort;
+    /** The loan retrieval persistence port. */
+    @Mock
+    LoanRetrievalPersistencePort loanRetrievalPersistencePort;
 
-        /** The loan policy validation service. */
-        @Mock
-        LoanPolicyValidationService loanPolicyValidationService;
+    /** The user policy validation service. */
+    @Mock
+    UserPolicyValidationService userPolicyValidationService;
 
-        /** The loan creation persistence port. */
-        @Mock
-        LoanCreationPersistencePort loanCreationPersistencePort;
+    /** The book policy validation service. */
+    @Mock
+    BookPolicyValidationService bookPolicyValidationService;
 
-        /** The application event publisher. */
-        @Mock
-        ApplicationEventPublisher applicationEventPublisher;
+    /** The loan policy validation service. */
+    @Mock
+    LoanPolicyValidationService loanPolicyValidationService;
 
-        /** The reservation policy validation service. */
-        @Mock
-        ReservationPolicyValidationService reservationPolicyValidationService;
+    /** The reservation policy validation service. */
+    @Mock
+    ReservationPolicyValidationService reservationPolicyValidationService;
 
-        /**
-         * Test execute when user not found then throw user exception.
-         */
-        @Test
-        void testExecute_whenUserNotFound_thenThrowUserException() {
+    /** The loan creation persistence port. */
+    @Mock
+    LoanCreationPersistencePort loanCreationPersistencePort;
 
-                // Given
-                final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
-                final var userException = new UserException(
-                                ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
-                                ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR);
+    /** The application event publisher. */
+    @Mock
+    ApplicationEventPublisher applicationEventPublisher;
 
-                // When
-                when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenThrow(userException);
+    /** Test execute when user not found then throw user exception. */
+    @Test
+    void testExecute_whenUserNotFound_thenThrowUserException() {
 
-                // Then
-                final var exception = assertThrows(UserException.class,
-                                () -> this.createLoanUseCase.execute(createLoanCommand));
-                verify(this.userRetrievalPersistencePort, times(1)).findById(createLoanCommand.userId());
-                verify(this.bookRetrievalPersistencePort, times(0)).findById(createLoanCommand.bookId());
-                assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR, exception.getCode());
-                assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR, exception.getMessage());
-        }
+        // Given
+        final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
+        final var userException = new UserException(
+                ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
+                ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR);
 
-        /**
-         * Test execute when book not found then throw book exception.
-         */
-        @Test
-        void testExecute_whenBookNotFound_thenThrowBookException() {
+        // When
+        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenThrow(userException);
+        final var exception = assertThrows(UserException.class,
+                () -> this.createLoanUseCase.execute(createLoanCommand));
 
-                // Given
-                final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
-                final var user = Instancio.create(User.class);
-                final var bookException = new BookException(
-                                ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
-                                ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR);
-                final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
-                                .userId(user.id())
-                                .build();
+        // Then
+        verify(this.userRetrievalPersistencePort, times(1)).findById(createLoanCommand.userId());
+        verify(this.bookRetrievalPersistencePort, times(0)).findById(createLoanCommand.bookId());
+        assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR, exception.getCode());
+        assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR, exception.getMessage());
+    }
 
-                // When
-                when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
-                when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenThrow(bookException);
+    /** Test execute when book not found then throw book exception. */
+    @Test
+    void testExecute_whenBookNotFound_thenThrowBookException() {
 
-                // Then
-                final var exception = assertThrows(BookException.class,
-                                () -> this.createLoanUseCase.execute(createLoanCommand));
-                verify(this.userRetrievalPersistencePort, times(1)).findById(createLoanCommand.userId());
-                verify(this.bookRetrievalPersistencePort, times(1)).findById(createLoanCommand.bookId());
-                verify(this.loanRetrievalPersistencePort, times(0)).find(loanSearchCriteriaCommand);
-                assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR, exception.getCode());
-                assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, exception.getMessage());
-        }
+        // Given
+        final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
+        final var user = Instancio.create(User.class);
+        final var bookException = new BookException(
+                ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
+                ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR);
 
-        /**
-         * Test execute when policy rejected then throw loan exception.
-         */
-        @Test
-        void testExecute_whenPolicyRejected_thenThrowLoanException() {
+        // When
+        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
+        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenThrow(bookException);
+        final var exception = assertThrows(BookException.class,
+                () -> this.createLoanUseCase.execute(createLoanCommand));
 
-                // Given
-                final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
-                final var user = Instancio.create(User.class);
-                final var book = Instancio.create(Book.class);
-                final var loanList = List.of(Instancio.create(Loan.class));
-                final var loanException = new LoanException(
-                                ExceptionMessageConstants.USER_BLOCKED_CODE_ERROR,
-                                ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR);
+        // Then
+        verify(this.userRetrievalPersistencePort, times(1)).findById(createLoanCommand.userId());
+        verify(this.bookRetrievalPersistencePort, times(1)).findById(createLoanCommand.bookId());
+        assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR, exception.getCode());
+        assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, exception.getMessage());
+    }
 
-                // When
-                when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
-                when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(book);
-                when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
-                doThrow(loanException).when(this.loanPolicyValidationService).checkCanBorrow(user, book, loanList);
+    /** Test execute when user policy rejected then throw user exception. */
+    @Test
+    void testExecute_whenUserPolicyRejected_thenThrowUserException() {
 
-                // Then
-                final var exception = assertThrows(LoanException.class,
-                                () -> this.createLoanUseCase.execute(createLoanCommand));
+        // Given
+        final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
+        final var user = Instancio.create(User.class);
+        final var book = Instancio.create(Book.class);
+        final var loanList = List.of(Instancio.create(Loan.class));
+        final var userException = new UserException(
+                ExceptionMessageConstants.USER_BLOCKED_CODE_ERROR,
+                ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR);
 
-                verify(this.loanRetrievalPersistencePort, times(1)).findByUserId(user.id());
-                verify(this.loanPolicyValidationService, times(1)).checkCanBorrow(user, book, loanList);
-                verify(this.loanCreationPersistencePort, times(0)).execute(createLoanCommand);
-                assertEquals(ExceptionMessageConstants.USER_BLOCKED_CODE_ERROR, exception.getCode());
-                assertEquals(ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR, exception.getMessage());
-        }
+        // When
+        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
+        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(book);
+        when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
+        doThrow(userException).when(this.userPolicyValidationService).check(user, loanList);
+        final var exception = assertThrows(UserException.class,
+                () -> this.createLoanUseCase.execute(createLoanCommand));
 
-        /**
-         * Test execute when user has pending fines then throw loan exception.
-         */
-        @Test
-        void testExecute_whenUserHasPendingFines_thenThrowLoanException() {
+        // Then
+        verify(this.userPolicyValidationService, times(1)).check(user, loanList);
+        verify(this.bookPolicyValidationService, times(0)).checkIsBorrowable(book);
+        verify(this.loanCreationPersistencePort, times(0)).execute(createLoanCommand);
+        assertEquals(ExceptionMessageConstants.USER_BLOCKED_CODE_ERROR, exception.getCode());
+        assertEquals(ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR, exception.getMessage());
+    }
 
-                // Given
-                final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
-                final var user = Instancio.create(User.class);
-                final var book = Instancio.create(Book.class);
-                final var loanList = List.of(Instancio.create(Loan.class));
-                final var loanException = new LoanException(
-                                ExceptionMessageConstants.USER_HAS_PENDING_FINES_CODE_ERROR,
-                                ExceptionMessageConstants.USER_HAS_PENDING_FINES_MESSAGE_ERROR);
+    /** Test execute when book not borrowable then throw book exception. */
+    @Test
+    void testExecute_whenBookNotBorrowable_thenThrowBookException() {
 
-                // When
-                when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
-                when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(book);
-                when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
-                doThrow(loanException).when(this.loanPolicyValidationService).checkUserHasNoPendingFines(loanList);
+        // Given
+        final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
+        final var user = Instancio.create(User.class);
+        final var book = Instancio.create(Book.class);
+        final var loanList = List.of(Instancio.create(Loan.class));
+        final var bookException = new BookException(
+                ExceptionMessageConstants.BOOK_RETIRED_CODE_ERROR,
+                ExceptionMessageConstants.BOOK_RETIRED_MESSAGE_ERROR);
 
-                // Then
-                final var exception = assertThrows(LoanException.class,
-                                () -> this.createLoanUseCase.execute(createLoanCommand));
-                verify(this.loanPolicyValidationService, times(1)).checkUserHasNoPendingFines(loanList);
-                verify(this.loanPolicyValidationService, times(0)).checkCanBorrow(user, book, loanList);
-                verify(this.reservationPolicyValidationService, times(0)).checkReservationPrecedence(user.id(),
-                                book.id());
-                verify(this.loanCreationPersistencePort, times(0)).execute(createLoanCommand);
-                assertEquals(ExceptionMessageConstants.USER_HAS_PENDING_FINES_CODE_ERROR, exception.getCode());
-                assertEquals(ExceptionMessageConstants.USER_HAS_PENDING_FINES_MESSAGE_ERROR, exception.getMessage());
-        }
+        // When
+        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
+        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(book);
+        when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
+        doThrow(bookException).when(this.bookPolicyValidationService).checkIsBorrowable(book);
+        final var exception = assertThrows(BookException.class,
+                () -> this.createLoanUseCase.execute(createLoanCommand));
 
-        /**
-         * Test execute when book reserved by another user then throw loan exception.
-         */
-        @Test
-        void testExecute_whenBookReservedByAnotherUser_thenThrowLoanException() {
+        // Then
+        verify(this.bookPolicyValidationService, times(1)).checkIsBorrowable(book);
+        verify(this.loanPolicyValidationService, times(0)).checkCanBorrow(book, loanList);
+        verify(this.loanCreationPersistencePort, times(0)).execute(createLoanCommand);
+        assertEquals(ExceptionMessageConstants.BOOK_RETIRED_CODE_ERROR, exception.getCode());
+        assertEquals(ExceptionMessageConstants.BOOK_RETIRED_MESSAGE_ERROR, exception.getMessage());
+    }
 
-                // Given
-                final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
-                final var user = Instancio.create(User.class);
-                final var book = Instancio.create(Book.class);
-                final var loanList = List.of(Instancio.create(Loan.class));
-                final var loanException = new LoanException(
-                                ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_CODE_ERROR,
-                                ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_MESSAGE_ERROR);
+    /** Test execute when book reserved by another user then throw loan exception. */
+    @Test
+    void testExecute_whenBookReservedByAnotherUser_thenThrowLoanException() {
 
-                // When
-                when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
-                when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(book);
-                when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
-                doThrow(loanException).when(this.reservationPolicyValidationService)
-                                .checkReservationPrecedence(user.id(), book.id());
+        // Given
+        final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
+        final var user = Instancio.create(User.class);
+        final var book = Instancio.create(Book.class);
+        final var loanList = List.of(Instancio.create(Loan.class));
+        final var loanException = new LoanException(
+                ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_CODE_ERROR,
+                ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_MESSAGE_ERROR);
 
-                // Then
-                final var exception = assertThrows(LoanException.class,
-                                () -> this.createLoanUseCase.execute(createLoanCommand));
-                verify(this.loanPolicyValidationService, times(1)).checkCanBorrow(user, book, loanList);
-                verify(this.reservationPolicyValidationService, times(1)).checkReservationPrecedence(user.id(),
-                                book.id());
-                verify(this.loanCreationPersistencePort, times(0)).execute(createLoanCommand);
-                assertEquals(ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_CODE_ERROR,
-                                exception.getCode());
-                assertEquals(ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_MESSAGE_ERROR,
-                                exception.getMessage());
-        }
+        // When
+        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
+        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(book);
+        when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
+        doThrow(loanException).when(this.reservationPolicyValidationService)
+                .checkPrecedence(user.id(), book.id());
+        final var exception = assertThrows(LoanException.class,
+                () -> this.createLoanUseCase.execute(createLoanCommand));
 
-        /**
-         * Test execute when all conditions met then create loan and publish event.
-         */
-        @Test
-        void testExecute_whenAllConditionsMet_thenCreateLoanAndPublishEvent() {
+        // Then
+        verify(this.loanPolicyValidationService, times(1)).checkCanBorrow(book, loanList);
+        verify(this.reservationPolicyValidationService, times(1)).checkPrecedence(user.id(), book.id());
+        verify(this.loanCreationPersistencePort, times(0)).execute(createLoanCommand);
+        assertEquals(ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_CODE_ERROR, exception.getCode());
+        assertEquals(ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_MESSAGE_ERROR, exception.getMessage());
+    }
 
-                // Given
-                final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
-                final var user = Instancio.create(User.class);
-                final var book = Instancio.create(Book.class);
-                final var loanList = List.of(Instancio.create(Loan.class));
-                final var loan = Instancio.create(Loan.class);
+    /** Test execute when all conditions met then create loan and publish event. */
+    @Test
+    void testExecute_whenAllConditionsMet_thenCreateLoanAndPublishEvent() {
 
-                // When
-                when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
-                when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(book);
-                when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
-                when(this.loanCreationPersistencePort.execute(createLoanCommand)).thenReturn(loan);
+        // Given
+        final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
+        final var user = Instancio.create(User.class);
+        final var book = Instancio.create(Book.class);
+        final var loanList = List.of(Instancio.create(Loan.class));
+        final var loan = Instancio.create(Loan.class);
 
-                final var result = this.createLoanUseCase.execute(createLoanCommand);
+        // When
+        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
+        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(book);
+        when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
+        when(this.loanCreationPersistencePort.execute(createLoanCommand)).thenReturn(loan);
+        final var result = this.createLoanUseCase.execute(createLoanCommand);
 
-                // Then
-                verify(this.loanRetrievalPersistencePort, times(1)).findByUserId(user.id());
-                verify(this.loanPolicyValidationService, times(1)).checkUserHasNoPendingFines(loanList);
-                verify(this.loanPolicyValidationService, times(1)).checkCanBorrow(user, book, loanList);
-                verify(this.reservationPolicyValidationService, times(1)).checkReservationPrecedence(user.id(),
-                                book.id());
-                verify(this.loanCreationPersistencePort, times(1)).execute(createLoanCommand);
+        // Then
+        verify(this.userPolicyValidationService, times(1)).check(user, loanList);
+        verify(this.bookPolicyValidationService, times(1)).checkIsBorrowable(book);
+        verify(this.loanPolicyValidationService, times(1)).checkCanBorrow(book, loanList);
+        verify(this.reservationPolicyValidationService, times(1)).checkPrecedence(user.id(), book.id());
+        verify(this.loanCreationPersistencePort, times(1)).execute(createLoanCommand);
 
-                final ArgumentCaptor<LoanCreatedDomainEvent> eventCaptor = ArgumentCaptor
-                                .forClass(LoanCreatedDomainEvent.class);
-                verify(this.applicationEventPublisher, times(1)).publishEvent(eventCaptor.capture());
-                final var capturedEvent = eventCaptor.getValue();
-                assertEquals(user.id(), capturedEvent.userId());
-                assertEquals(book.id(), capturedEvent.bookId());
-                assertEquals(loan.id(), capturedEvent.loanId());
-
-                assertEquals(loan, result);
-        }
+        final var eventCaptor = ArgumentCaptor.forClass(LoanCreatedDomainEvent.class);
+        verify(this.applicationEventPublisher, times(1)).publishEvent(eventCaptor.capture());
+        final var capturedEvent = eventCaptor.getValue();
+        assertEquals(user.id(), capturedEvent.userId());
+        assertEquals(book.id(), capturedEvent.bookId());
+        assertEquals(loan.id(), capturedEvent.loanId());
+        assertEquals(loan, result);
+    }
 }

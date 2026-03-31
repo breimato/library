@@ -2,90 +2,31 @@ package com.breixo.library.domain.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.model.loan.enums.LoanStatus;
-import com.breixo.library.domain.model.user.User;
-import com.breixo.library.domain.model.user.enums.UserStatus;
 
-import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
-import com.breixo.library.domain.model.fine.enums.FineStatus;
-import com.breixo.library.domain.port.output.fine.FineRetrievalPersistencePort;
-
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.stereotype.Component;
 
 /** The Class Loan Policy Validation Service Impl. */
 @Component
-@RequiredArgsConstructor
 public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationService {
-
-    /** The fine retrieval persistence port. */
-    private final FineRetrievalPersistencePort fineRetrievalPersistencePort;
 
     /** The Constant MAX_ACTIVE_LOANS. */
     private static final int MAX_ACTIVE_LOANS = 3;
 
     /** {@inheritDoc} */
     @Override
-    public void checkCanBorrow(@Valid @NotNull final User user, @Valid @NotNull final Book book,
-            @NotNull final List<Loan> loanList) {
+    public void checkCanBorrow(@NotNull final Book book, @NotNull final List<Loan> loanList) {
 
-        this.validateUserStatus(user);
         this.validateUserLoans(loanList);
-        this.validateBookAvailability(book, loanList);
+
+        this.validateUserDoesNotHaveBookOnLoan(book, loanList);
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void checkUserHasNoPendingFines(@NotNull final List<Loan> loanList) {
-
-        final var hasPendingFines = loanList.stream()
-                .anyMatch(loan -> {
-
-                    final var fineSearchCriteriaCommand = FineSearchCriteriaCommand.builder()
-                            .loanId(loan.id())
-                            .statusId(FineStatus.PENDING.getId())
-                            .build();
-
-                    final var fineList = this.fineRetrievalPersistencePort.find(fineSearchCriteriaCommand);
-
-                    return CollectionUtils.isNotEmpty(fineList);
-                });
-
-        if (hasPendingFines) {
-            throw new LoanException(
-                    ExceptionMessageConstants.USER_HAS_PENDING_FINES_CODE_ERROR,
-                    ExceptionMessageConstants.USER_HAS_PENDING_FINES_MESSAGE_ERROR);
-        }
-    }
-
-
-    /**
-     * Validate user status.
-     *
-     * @param user the user
-     */
-    private void validateUserStatus(final User user) {
-
-        if (UserStatus.BLOCKED.getId().equals(user.status().getId())) {
-            throw new LoanException(
-                    ExceptionMessageConstants.USER_BLOCKED_CODE_ERROR,
-                    ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR);
-        }
-
-        if (UserStatus.SUSPENDED.getId().equals(user.status().getId())) {
-            throw new LoanException(
-                    ExceptionMessageConstants.USER_SUSPENDED_CODE_ERROR,
-                    ExceptionMessageConstants.USER_SUSPENDED_MESSAGE_ERROR);
-        }
-    }
-
 
     /**
      * Validate user loans.
@@ -114,14 +55,13 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
         }
     }
 
-
     /**
-     * Validate book availability.
+     * Validate user does not have book on loan.
      *
      * @param book     the book
      * @param loanList the loan list
      */
-    private void validateBookAvailability(final Book book, final List<Loan> loanList) {
+    private void validateUserDoesNotHaveBookOnLoan(final Book book, final List<Loan> loanList) {
 
         final var hasActiveLoanForThisBook = loanList.stream()
                 .anyMatch(loan -> loan.bookId().equals(book.id())
@@ -131,18 +71,6 @@ public class LoanPolicyValidationServiceImpl implements LoanPolicyValidationServ
             throw new LoanException(
                     ExceptionMessageConstants.LOAN_USER_ALREADY_HAS_BOOK_ON_LOAN_CODE_ERROR,
                     ExceptionMessageConstants.LOAN_USER_ALREADY_HAS_BOOK_ON_LOAN_MESSAGE_ERROR);
-        }
-
-        if (book.totalCopies().equals(0)) {
-            throw new LoanException(
-                    ExceptionMessageConstants.BOOK_RETIRED_CODE_ERROR,
-                    ExceptionMessageConstants.BOOK_RETIRED_MESSAGE_ERROR);
-        }
-
-        if (book.availableCopies().equals(0)) {
-            throw new LoanException(
-                    ExceptionMessageConstants.BOOK_COPIES_NOT_AVAILABLE_CODE_ERROR,
-                    ExceptionMessageConstants.BOOK_COPIES_NOT_AVAILABLE_MESSAGE_ERROR);
         }
     }
 }
