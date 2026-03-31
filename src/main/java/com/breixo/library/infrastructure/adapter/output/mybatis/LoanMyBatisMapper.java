@@ -3,6 +3,7 @@ package com.breixo.library.infrastructure.adapter.output.mybatis;
 import java.util.List;
 
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
+import com.breixo.library.domain.command.loan.UpdateLoanRenewCommand;
 import com.breixo.library.domain.command.loan.UpdateLoanReturnCommand;
 import com.breixo.library.infrastructure.adapter.output.entities.LoanEntity;
 
@@ -77,6 +78,19 @@ public interface LoanMyBatisMapper {
      */
     @Update("update loans set status_id = 2 where status_id = 0 and due_date < current_date")
     int markOverdue();
+
+    /**
+     * Renew.
+     *
+     * @param updateLoanRenewCommand the update loan renew command
+     */
+    @Update("""
+            update loans
+            set due_date  = #{dueDate},
+                status_id = 0
+            where id = #{id}
+            """)
+    void renew(UpdateLoanRenewCommand updateLoanRenewCommand);
 
     /**
      * Delete.

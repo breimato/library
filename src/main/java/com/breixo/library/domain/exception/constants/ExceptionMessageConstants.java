@@ -142,6 +142,12 @@ public class ExceptionMessageConstants {
     /** The Constant LOAN_RETURN_DATE_INVALID_MESSAGE_ERROR. */
     public static final String LOAN_RETURN_DATE_INVALID_MESSAGE_ERROR = "Error: Return date cannot be in the future";
 
+    /** The Constant LOAN_DUE_DATE_INVALID_CODE_ERROR. */
+    public static final String LOAN_DUE_DATE_INVALID_CODE_ERROR = "LIB-LOAN-011";
+
+    /** The Constant LOAN_DUE_DATE_INVALID_MESSAGE_ERROR. */
+    public static final String LOAN_DUE_DATE_INVALID_MESSAGE_ERROR = "Error: New due date must be after current due date";
+
     /** The Constant FINE_NOT_FOUND_CODE_ERROR. */
     public static final String FINE_NOT_FOUND_CODE_ERROR = "LIB-FINE-001";
 

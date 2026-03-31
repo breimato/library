@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.breixo.library.domain.command.loan.UpdateLoanReturnCommand;
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
+import com.breixo.library.domain.event.LoanReturnedDomainEvent;
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.Loan;
@@ -18,6 +19,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +39,9 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
 
     /** The fine management service. */
     private final FineManagementService fineManagementService;
+
+    /** The application event publisher. */
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     /** {@inheritDoc} */
     @Override
@@ -64,6 +69,10 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
         final var updatedLoan = this.loanUpdatePersistencePort.execute(updateLoanReturnCommand);
 
         this.fineManagementService.execute(loans.getFirst(), updateLoanReturnCommand.returnDate());
+
+        this.applicationEventPublisher.publishEvent(LoanReturnedDomainEvent.builder()
+                .bookId(loans.getFirst().bookId())
+                .build());
 
         return updatedLoan;
     }
