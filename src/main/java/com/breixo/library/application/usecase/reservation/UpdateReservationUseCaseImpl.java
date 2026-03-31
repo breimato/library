@@ -30,9 +30,22 @@ public class UpdateReservationUseCaseImpl implements UpdateReservationUseCase {
     @Override
     public Reservation execute(@Valid @NotNull final UpdateReservationCommand updateReservationCommand) {
 
+        this.validateReservationExists(updateReservationCommand);
+
+        return this.reservationUpdatePersistencePort.execute(updateReservationCommand);
+    }
+
+    /**
+     * Validate reservation exists.
+     *
+     * @param updateReservationCommand the update reservation command
+     */
+    private void validateReservationExists(final UpdateReservationCommand updateReservationCommand) {
+
         final var reservationSearchCriteriaCommand = ReservationSearchCriteriaCommand.builder()
                 .id(updateReservationCommand.id())
                 .build();
+
         final var reservations = this.reservationRetrievalPersistencePort.find(reservationSearchCriteriaCommand);
 
         if (CollectionUtils.isEmpty(reservations)) {
@@ -40,7 +53,5 @@ public class UpdateReservationUseCaseImpl implements UpdateReservationUseCase {
                     ExceptionMessageConstants.RESERVATION_NOT_FOUND_CODE_ERROR,
                     ExceptionMessageConstants.RESERVATION_NOT_FOUND_MESSAGE_ERROR);
         }
-
-        return this.reservationUpdatePersistencePort.execute(updateReservationCommand);
     }
 }

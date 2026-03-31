@@ -30,6 +30,18 @@ public class UpdateFineUseCaseImpl implements UpdateFineUseCase {
     @Override
     public Fine execute(@Valid @NotNull final UpdateFineCommand updateFineCommand) {
 
+        this.validateFineExists(updateFineCommand);
+
+        return this.fineUpdatePersistencePort.execute(updateFineCommand);
+    }
+
+    /**
+     * Validate fine exists.
+     *
+     * @param updateFineCommand the update fine command
+     */
+    private void validateFineExists(final UpdateFineCommand updateFineCommand) {
+
         final var fineSearchCriteriaCommand = FineSearchCriteriaCommand.builder().id(updateFineCommand.id()).build();
         final var fines = this.fineRetrievalPersistencePort.find(fineSearchCriteriaCommand);
 
@@ -38,7 +50,5 @@ public class UpdateFineUseCaseImpl implements UpdateFineUseCase {
                     ExceptionMessageConstants.FINE_NOT_FOUND_CODE_ERROR,
                     ExceptionMessageConstants.FINE_NOT_FOUND_MESSAGE_ERROR);
         }
-
-        return this.fineUpdatePersistencePort.execute(updateFineCommand);
     }
 }

@@ -24,9 +24,7 @@ public class LoanStatusTransitionValidationServiceImpl implements LoanStatusTran
 
         final var isValid = switch (currentStatus) {
 
-            case ACTIVE -> EnumSet.of(LoanStatus.ACTIVE, LoanStatus.RETURNED, LoanStatus.OVERDUE).contains(newStatus);
-
-            case OVERDUE -> EnumSet.of(LoanStatus.OVERDUE, LoanStatus.RETURNED, LoanStatus.ACTIVE).contains(newStatus);
+            case ACTIVE, OVERDUE -> EnumSet.of(LoanStatus.ACTIVE, LoanStatus.RETURNED, LoanStatus.OVERDUE).contains(newStatus);
 
             case RETURNED -> LoanStatus.RETURNED.equals(newStatus);
         };

@@ -30,6 +30,18 @@ public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
     @Override
     public User execute(@Valid @NotNull final UpdateUserCommand updateUserCommand) {
 
+        this.validateUserExists(updateUserCommand);
+
+        return this.userUpdatePersistencePort.execute(updateUserCommand);
+    }
+
+    /**
+     * Validate user exists.
+     *
+     * @param updateUserCommand the update user command
+     */
+    private void validateUserExists(final UpdateUserCommand updateUserCommand) {
+
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(updateUserCommand.id()).build();
         final var users = this.userRetrievalPersistencePort.find(userSearchCriteriaCommand);
 
@@ -38,7 +50,5 @@ public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
                     ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
                     ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR);
         }
-
-        return this.userUpdatePersistencePort.execute(updateUserCommand);
     }
 }

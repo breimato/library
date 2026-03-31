@@ -30,6 +30,18 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
     @Override
     public User execute(@Valid @NotNull final CreateUserCommand createUserCommand) {
 
+        this.validateEmailNotExists(createUserCommand);
+
+        return this.userCreationPersistencePort.execute(createUserCommand);
+    }
+
+    /**
+     * Validate email not exists.
+     *
+     * @param createUserCommand the create user command
+     */
+    private void validateEmailNotExists(final CreateUserCommand createUserCommand) {
+
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().email(createUserCommand.email()).build();
         final var users = this.userRetrievalPersistencePort.find(userSearchCriteriaCommand);
 
@@ -38,7 +50,5 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
                     ExceptionMessageConstants.USER_EMAIL_ALREADY_EXISTS_CODE_ERROR,
                     ExceptionMessageConstants.USER_EMAIL_ALREADY_EXISTS_MESSAGE_ERROR);
         }
-
-        return this.userCreationPersistencePort.execute(createUserCommand);
     }
 }

@@ -33,20 +33,20 @@ public class ReservationFulfillmentEventListener {
     @EventListener
     public void handleLoanCreatedEvent(final LoanCreatedDomainEvent loanCreatedDomainEvent) {
 
-        final var isPendingCompleted = this.completePendingReservationIfExists(loanCreatedDomainEvent);
+        final var isPendingCompleted = this.completePendingReservation(loanCreatedDomainEvent);
 
         if (BooleanUtils.isFalse(isPendingCompleted)) {
-            this.completeNotifiedReservationIfExists(loanCreatedDomainEvent);
+            this.completeNotifiedReservation(loanCreatedDomainEvent);
         }
     }
 
     /**
-     * Complete pending reservation if exists.
+     * Complete pending reservation.
      *
      * @param loanCreatedDomainEvent the loan created domain event
      * @return true, if pending reservation was completed
      */
-    private boolean completePendingReservationIfExists(final LoanCreatedDomainEvent loanCreatedDomainEvent) {
+    private boolean completePendingReservation(final LoanCreatedDomainEvent loanCreatedDomainEvent) {
 
         final var pendingList = this.reservationRetrievalPersistencePort
                 .getPendingByBookId(loanCreatedDomainEvent.bookId());
@@ -56,19 +56,21 @@ public class ReservationFulfillmentEventListener {
                 .findFirst();
 
         if (userPendingReservation.isPresent()) {
+
             this.completeReservation(userPendingReservation.get().id(), loanCreatedDomainEvent.loanId());
-            return true;
+
+            return Boolean.TRUE;
         }
 
-        return false;
+        return Boolean.FALSE;
     }
 
     /**
-     * Complete notified reservation if exists.
+     * Complete notified reservation.
      *
      * @param loanCreatedDomainEvent the loan created domain event
      */
-    private void completeNotifiedReservationIfExists(final LoanCreatedDomainEvent loanCreatedDomainEvent) {
+    private void completeNotifiedReservation(final LoanCreatedDomainEvent loanCreatedDomainEvent) {
 
         final var notifiedList = this.reservationRetrievalPersistencePort
                 .getNotifiedByBookId(loanCreatedDomainEvent.bookId());

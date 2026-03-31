@@ -37,27 +37,40 @@ public class UpdateLoanRenewUseCaseImpl implements UpdateLoanRenewUseCase {
     @Transactional
     public Loan execute(@Valid @NotNull final UpdateLoanRenewCommand updateLoanRenewCommand) {
 
-        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
-                .id(updateLoanRenewCommand.id())
-                .build();
-        final var loans = this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand);
-
-        if (CollectionUtils.isEmpty(loans)) {
-            throw new LoanException(
-                    ExceptionMessageConstants.LOAN_NOT_FOUND_CODE_ERROR,
-                    ExceptionMessageConstants.LOAN_NOT_FOUND_MESSAGE_ERROR);
-        }
-
-        final var loan = loans.getFirst();
+        final var loan = this.getLoan(updateLoanRenewCommand);
 
         this.loanStatusTransitionValidationService.execute(loan.status(), LoanStatus.ACTIVE);
 
-        if (!updateLoanRenewCommand.dueDate().isAfter(loan.dueDate())) {
+        if (updateLoanRenewCommand.dueDate().isBefore(loan.dueDate())) {
             throw new LoanException(
                     ExceptionMessageConstants.LOAN_DUE_DATE_INVALID_CODE_ERROR,
                     ExceptionMessageConstants.LOAN_DUE_DATE_INVALID_MESSAGE_ERROR);
         }
 
         return this.loanRenewPersistencePort.execute(updateLoanRenewCommand);
+    }
+
+
+    /**
+     * Validate loan.
+     *
+     * @param updateLoanRenewCommand the update loan renew command
+     * @return the loan
+     */
+    private Loan getLoan(final UpdateLoanRenewCommand updateLoanRenewCommand) {
+
+        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
+                .id(updateLoanRenewCommand.id())
+                .build();
+
+        final var loanList = this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand);
+
+        if (CollectionUtils.isEmpty(loanList)) {
+            throw new LoanException(
+                    ExceptionMessageConstants.LOAN_NOT_FOUND_CODE_ERROR,
+                    ExceptionMessageConstants.LOAN_NOT_FOUND_MESSAGE_ERROR);
+        }
+
+        return loanList.getFirst();
     }
 }

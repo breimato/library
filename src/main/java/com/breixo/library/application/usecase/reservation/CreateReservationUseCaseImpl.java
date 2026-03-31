@@ -1,7 +1,10 @@
 package com.breixo.library.application.usecase.reservation;
 
 import com.breixo.library.domain.command.reservation.CreateReservationCommand;
+import com.breixo.library.domain.model.book.Book;
+import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.model.reservation.Reservation;
+import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.port.input.reservation.CreateReservationUseCase;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
@@ -15,6 +18,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /** The Class Create Reservation Use Case Impl. */
 @Component
@@ -52,12 +57,17 @@ public class CreateReservationUseCaseImpl implements CreateReservationUseCase {
 
         final var loanList = this.loanRetrievalPersistencePort.findByUserId(user.id());
 
+        this.validate(user, book, loanList);
+
+        return this.reservationCreationPersistencePort.execute(createReservationCommand);
+    }
+
+    private void validate(final User user, final Book book, final List<Loan> loanList) {
+
         this.userPolicyValidationService.check(user, loanList);
 
         this.bookPolicyValidationService.checkIsReservable(book);
 
         this.reservationPolicyValidationService.checkNoActiveReservation(user.id(), book.id());
-
-        return this.reservationCreationPersistencePort.execute(createReservationCommand);
     }
 }

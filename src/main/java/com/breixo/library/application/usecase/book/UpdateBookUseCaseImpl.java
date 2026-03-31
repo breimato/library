@@ -30,6 +30,18 @@ public class UpdateBookUseCaseImpl implements UpdateBookUseCase {
     @Override
     public Book execute(@Valid @NotNull final UpdateBookCommand updateBookCommand) {
 
+        this.validateBookExists(updateBookCommand);
+
+        return this.bookUpdatePersistencePort.execute(updateBookCommand);
+    }
+
+    /**
+     * Validate book exists.
+     *
+     * @param updateBookCommand the update book command
+     */
+    private void validateBookExists(final UpdateBookCommand updateBookCommand) {
+
         final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(updateBookCommand.id()).build();
         final var books = this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand);
 
@@ -38,7 +50,5 @@ public class UpdateBookUseCaseImpl implements UpdateBookUseCase {
                     ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
                     ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR);
         }
-
-        return this.bookUpdatePersistencePort.execute(updateBookCommand);
     }
 }

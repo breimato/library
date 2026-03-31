@@ -2,7 +2,9 @@ package com.breixo.library.application.usecase.loan;
 
 import com.breixo.library.domain.command.loan.CreateLoanCommand;
 import com.breixo.library.domain.event.LoanCreatedDomainEvent;
+import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.model.loan.Loan;
+import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.port.input.loan.CreateLoanUseCase;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanCreationPersistencePort;
@@ -18,6 +20,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /** The Class Create Loan Use Case Impl. */
 @Component
@@ -61,13 +65,7 @@ public class CreateLoanUseCaseImpl implements CreateLoanUseCase {
 
         final var loanList = this.loanRetrievalPersistencePort.findByUserId(user.id());
 
-        this.userPolicyValidationService.check(user, loanList);
-
-        this.bookPolicyValidationService.checkIsBorrowable(book);
-
-        this.loanPolicyValidationService.checkCanBorrow(book, loanList);
-
-        this.reservationPolicyValidationService.checkPrecedence(user.id(), book.id());
+        this.validate(user, book, loanList);
 
         final var loan = this.loanCreationPersistencePort.execute(createLoanCommand);
 
@@ -80,5 +78,16 @@ public class CreateLoanUseCaseImpl implements CreateLoanUseCase {
         this.applicationEventPublisher.publishEvent(loanCreatedDomainEvent);
 
         return loan;
+    }
+
+    private void validate(final User user, final Book book, final List<Loan> loanList) {
+
+        this.userPolicyValidationService.check(user, loanList);
+
+        this.bookPolicyValidationService.checkIsBorrowable(book);
+
+        this.loanPolicyValidationService.checkCanBorrow(book, loanList);
+
+        this.reservationPolicyValidationService.checkPrecedence(user.id(), book.id());
     }
 }

@@ -48,15 +48,7 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
     @Transactional
     public Loan execute(@Valid @NotNull final UpdateLoanReturnCommand updateLoanReturnCommand) {
 
-        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder().id(updateLoanReturnCommand.id())
-                .build();
-        final var loans = this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand);
-
-        if (CollectionUtils.isEmpty(loans)) {
-            throw new LoanException(
-                    ExceptionMessageConstants.LOAN_NOT_FOUND_CODE_ERROR,
-                    ExceptionMessageConstants.LOAN_NOT_FOUND_MESSAGE_ERROR);
-        }
+        final var loan = this.getLoan(updateLoanReturnCommand);
 
         if (updateLoanReturnCommand.returnDate().isAfter(LocalDate.now())) {
             throw new LoanException(
@@ -64,17 +56,39 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
                     ExceptionMessageConstants.LOAN_RETURN_DATE_INVALID_MESSAGE_ERROR);
         }
 
-        this.loanStatusTransitionValidationService.execute(loans.getFirst().status(), LoanStatus.RETURNED);
+        this.loanStatusTransitionValidationService.execute(loan.status(), LoanStatus.RETURNED);
 
         final var updatedLoan = this.loanUpdatePersistencePort.execute(updateLoanReturnCommand);
 
-        this.fineManagementService.execute(loans.getFirst(), updateLoanReturnCommand.returnDate());
+        this.fineManagementService.execute(loan, updateLoanReturnCommand.returnDate());
 
         this.applicationEventPublisher.publishEvent(LoanReturnedDomainEvent.builder()
-                .bookId(loans.getFirst().bookId())
+                .bookId(loan.bookId())
                 .build());
 
         return updatedLoan;
     }
 
+    /**
+     * Gets the loan.
+     *
+     * @param updateLoanReturnCommand the update loan return command
+     * @return the loan
+     */
+    private Loan getLoan(final UpdateLoanReturnCommand updateLoanReturnCommand) {
+
+        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
+                .id(updateLoanReturnCommand.id())
+                .build();
+
+        final var loanList = this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand);
+
+        if (CollectionUtils.isEmpty(loanList)) {
+            throw new LoanException(
+                    ExceptionMessageConstants.LOAN_NOT_FOUND_CODE_ERROR,
+                    ExceptionMessageConstants.LOAN_NOT_FOUND_MESSAGE_ERROR);
+        }
+
+        return loanList.getFirst();
+    }
 }
