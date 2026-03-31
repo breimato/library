@@ -31,7 +31,7 @@ class ReservationPolicyValidationServiceImplTest {
     @Mock
     ReservationRetrievalPersistencePort reservationRetrievalPersistencePort;
 
-    /** The reservation policy validation service. */
+    /** The reservation policy validation service impl. */
     @InjectMocks
     ReservationPolicyValidationServiceImpl reservationPolicyValidationServiceImpl;
 
@@ -52,14 +52,13 @@ class ReservationPolicyValidationServiceImplTest {
                 .create();
 
         // When
-        when(this.reservationRetrievalPersistencePort.getPendingByBookId(bookId))
+        when(this.reservationRetrievalPersistencePort.getActiveByBookId(bookId))
                 .thenReturn(List.of(otherUserReservation));
-        when(this.reservationRetrievalPersistencePort.getNotifiedByBookId(bookId)).thenReturn(List.of());
         final var exception = assertThrows(LoanException.class,
                 () -> this.reservationPolicyValidationServiceImpl.checkPrecedence(userId, bookId));
 
         // Then
-        verify(this.reservationRetrievalPersistencePort, times(1)).getPendingByBookId(bookId);
+        verify(this.reservationRetrievalPersistencePort, times(1)).getActiveByBookId(bookId);
         assertEquals(ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_CODE_ERROR, exception.getCode());
         assertEquals(ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_MESSAGE_ERROR,
                 exception.getMessage());
@@ -81,13 +80,11 @@ class ReservationPolicyValidationServiceImplTest {
                 .create();
 
         // When
-        when(this.reservationRetrievalPersistencePort.getPendingByBookId(bookId)).thenReturn(List.of(ownReservation));
-        when(this.reservationRetrievalPersistencePort.getNotifiedByBookId(bookId)).thenReturn(List.of());
+        when(this.reservationRetrievalPersistencePort.getActiveByBookId(bookId)).thenReturn(List.of(ownReservation));
         assertDoesNotThrow(() -> this.reservationPolicyValidationServiceImpl.checkPrecedence(userId, bookId));
 
         // Then
-        verify(this.reservationRetrievalPersistencePort, times(1)).getPendingByBookId(bookId);
-        verify(this.reservationRetrievalPersistencePort, times(1)).getNotifiedByBookId(bookId);
+        verify(this.reservationRetrievalPersistencePort, times(1)).getActiveByBookId(bookId);
     }
 
     /**
@@ -106,13 +103,12 @@ class ReservationPolicyValidationServiceImplTest {
                 .create();
 
         // When
-        when(this.reservationRetrievalPersistencePort.getPendingByBookId(bookId)).thenReturn(List.of(ownReservation));
-        when(this.reservationRetrievalPersistencePort.getNotifiedByBookId(bookId)).thenReturn(List.of());
+        when(this.reservationRetrievalPersistencePort.getActiveByBookId(bookId)).thenReturn(List.of(ownReservation));
         final var exception = assertThrows(ReservationException.class,
                 () -> this.reservationPolicyValidationServiceImpl.checkNoActiveReservation(userId, bookId));
 
         // Then
-        verify(this.reservationRetrievalPersistencePort, times(1)).getPendingByBookId(bookId);
+        verify(this.reservationRetrievalPersistencePort, times(1)).getActiveByBookId(bookId);
         assertEquals(ExceptionMessageConstants.RESERVATION_ALREADY_EXISTS_CODE_ERROR, exception.getCode());
         assertEquals(ExceptionMessageConstants.RESERVATION_ALREADY_EXISTS_MESSAGE_ERROR, exception.getMessage());
     }
@@ -129,12 +125,10 @@ class ReservationPolicyValidationServiceImplTest {
         final var bookId = Instancio.create(Integer.class);
 
         // When
-        when(this.reservationRetrievalPersistencePort.getPendingByBookId(bookId)).thenReturn(List.of());
-        when(this.reservationRetrievalPersistencePort.getNotifiedByBookId(bookId)).thenReturn(List.of());
+        when(this.reservationRetrievalPersistencePort.getActiveByBookId(bookId)).thenReturn(List.of());
         assertDoesNotThrow(() -> this.reservationPolicyValidationServiceImpl.checkNoActiveReservation(userId, bookId));
 
         // Then
-        verify(this.reservationRetrievalPersistencePort, times(1)).getPendingByBookId(bookId);
-        verify(this.reservationRetrievalPersistencePort, times(1)).getNotifiedByBookId(bookId);
+        verify(this.reservationRetrievalPersistencePort, times(1)).getActiveByBookId(bookId);
     }
 }

@@ -51,6 +51,17 @@ public class ReservationRetrievalRepository implements ReservationRetrievalPersi
 
     /** {@inheritDoc} */
     @Override
+    public List<Reservation> getActiveByBookId(@NotNull final Integer bookId) {
+
+        final var activeStatusIds = List.of(ReservationStatus.PENDING.getId(), ReservationStatus.NOTIFIED.getId());
+
+        final var reservationEntities = this.reservationMyBatisMapper.findActiveByBookId(bookId, activeStatusIds);
+
+        return this.reservationEntityMapper.toReservationList(reservationEntities);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public List<Reservation> find(@Valid @NotNull final ReservationSearchCriteriaCommand reservationSearchCriteriaCommand) {
 
         final var reservationEntities = this.reservationMyBatisMapper.find(reservationSearchCriteriaCommand);
