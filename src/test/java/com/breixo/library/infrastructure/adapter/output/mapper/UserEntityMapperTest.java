@@ -4,8 +4,10 @@ import java.util.List;
 
 import com.breixo.library.domain.command.user.CreateUserCommand;
 import com.breixo.library.domain.command.user.UpdateUserCommand;
+import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.model.user.enums.UserStatus;
 import com.breixo.library.infrastructure.adapter.output.entities.UserEntity;
+import com.breixo.library.infrastructure.mapper.UserRoleMapper;
 import com.breixo.library.infrastructure.mapper.UserStatusMapper;
 
 import org.instancio.Instancio;
@@ -34,18 +36,24 @@ class UserEntityMapperTest {
     @Mock
     UserStatusMapper userStatusMapper;
 
+    /** The user role mapper. */
+    @Mock
+    UserRoleMapper userRoleMapper;
+
     /**
      * Test to user when user entity is valid then return mapped user.
      */
     @Test
     void testToUser_whenUserEntityIsValid_thenReturnMappedUser() {
-        
+
         // Given
         final var userEntity = Instancio.create(UserEntity.class);
         userEntity.setStatusId(UserStatus.ACTIVE.getId());
+        userEntity.setRoleId(UserRole.NORMAL.getId());
 
         // When
         when(this.userStatusMapper.toUserStatus(userEntity.getStatusId())).thenReturn(UserStatus.ACTIVE);
+        when(this.userRoleMapper.toUserRole(userEntity.getRoleId())).thenReturn(UserRole.NORMAL);
         final var user = this.userEntityMapper.toUser(userEntity);
 
         // Then
@@ -55,6 +63,7 @@ class UserEntityMapperTest {
         assertEquals(userEntity.getEmail(), user.email());
         assertEquals(userEntity.getPhone(), user.phone());
         assertEquals(UserStatus.ACTIVE, user.status());
+        assertEquals(UserRole.NORMAL, user.role());
     }
 
     /**
@@ -71,11 +80,12 @@ class UserEntityMapperTest {
      */
     @Test
     void testToUserEntity_whenCreateUserCommandIsValid_thenReturnMappedUserEntity() {
-        
+
         // Given
         final var createUserCommand = Instancio.create(CreateUserCommand.class);
 
         // When
+        when(this.userRoleMapper.toRoleId(createUserCommand.role())).thenReturn(createUserCommand.role().getId());
         final var userEntity = this.userEntityMapper.toUserEntity(createUserCommand);
 
         // Then
@@ -83,6 +93,7 @@ class UserEntityMapperTest {
         assertEquals(createUserCommand.name(), userEntity.getName());
         assertEquals(createUserCommand.email(), userEntity.getEmail());
         assertEquals(createUserCommand.phone(), userEntity.getPhone());
+        assertEquals(createUserCommand.role().getId(), userEntity.getRoleId());
     }
 
     /**
@@ -99,12 +110,13 @@ class UserEntityMapperTest {
      */
     @Test
     void testToUserEntity_whenUpdateUserCommandIsValid_thenReturnMappedUserEntity() {
-        
+
         // Given
         final var updateUserCommand = Instancio.create(UpdateUserCommand.class);
 
         // When
         when(this.userStatusMapper.toStatusId(updateUserCommand.status())).thenReturn(updateUserCommand.status().getId());
+        when(this.userRoleMapper.toRoleId(updateUserCommand.role())).thenReturn(updateUserCommand.role().getId());
         final var userEntity = this.userEntityMapper.toUserEntity(updateUserCommand);
 
         // Then
@@ -113,6 +125,7 @@ class UserEntityMapperTest {
         assertEquals(updateUserCommand.name(), userEntity.getName());
         assertEquals(updateUserCommand.phone(), userEntity.getPhone());
         assertEquals(updateUserCommand.status().getId(), userEntity.getStatusId());
+        assertEquals(updateUserCommand.role().getId(), userEntity.getRoleId());
     }
 
     /**
@@ -129,18 +142,21 @@ class UserEntityMapperTest {
      */
     @Test
     void testToUserList_whenUserEntitiesAreValid_thenReturnMappedUserList() {
-        
+
         // Given
         final var userEntity = Instancio.create(UserEntity.class);
         userEntity.setStatusId(UserStatus.ACTIVE.getId());
+        userEntity.setRoleId(UserRole.NORMAL.getId());
         final var userEntities = List.of(userEntity);
 
         // When
         when(this.userStatusMapper.toUserStatus(userEntity.getStatusId())).thenReturn(UserStatus.ACTIVE);
+        when(this.userRoleMapper.toUserRole(userEntity.getRoleId())).thenReturn(UserRole.NORMAL);
         final var users = this.userEntityMapper.toUserList(userEntities);
 
         // Then
         verify(this.userStatusMapper, times(1)).toUserStatus(userEntity.getStatusId());
+        verify(this.userRoleMapper, times(1)).toUserRole(userEntity.getRoleId());
         assertNotNull(users);
         assertEquals(1, users.size());
         assertEquals(userEntity.getId(), users.getFirst().id());

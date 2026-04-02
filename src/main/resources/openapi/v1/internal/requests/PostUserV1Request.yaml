@@ -13,3 +13,7 @@ properties:
   phone:
     type: string
     description: "User phone"
+  role:
+    type: integer
+    format: int32
+    description: "User role"

@@ -4,12 +4,13 @@ import java.util.List;
 
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.infrastructure.adapter.input.web.dto.UserV1Dto;
+import com.breixo.library.infrastructure.mapper.UserRoleMapper;
 import com.breixo.library.infrastructure.mapper.UserStatusMapper;
 
 import org.mapstruct.Mapper;
 
 /** The Interface User Mapper. */
-@Mapper(componentModel = "spring", uses = {UserStatusMapper.class})
+@Mapper(componentModel = "spring", uses = {UserStatusMapper.class, UserRoleMapper.class})
 public interface UserMapper {
 
     /**

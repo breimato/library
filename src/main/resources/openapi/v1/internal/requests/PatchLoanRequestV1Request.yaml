@@ -1,0 +1,10 @@
+description: "Patch Loan Request V1 Request"
+type: object
+properties:
+  status:
+    type: integer
+    format: int32
+    description: "Loan request status"
+  rejectionReason:
+    type: string
+    description: "Rejection reason"

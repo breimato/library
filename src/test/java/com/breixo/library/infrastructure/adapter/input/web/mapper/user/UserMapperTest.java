@@ -3,6 +3,7 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper.user;
 import java.util.List;
 
 import com.breixo.library.domain.model.user.User;
+import com.breixo.library.infrastructure.mapper.UserRoleMapper;
 import com.breixo.library.infrastructure.mapper.UserStatusMapper;
 
 import org.instancio.Instancio;
@@ -31,17 +32,22 @@ class UserMapperTest {
     @Mock
     UserStatusMapper userStatusMapper;
 
+    /** The user role mapper. */
+    @Mock
+    UserRoleMapper userRoleMapper;
+
     /**
      * Test to user v1 when user is valid then return mapped dto.
      */
     @Test
     void testToUserV1_whenUserIsValid_thenReturnMappedDto() {
-        
+
         // Given
         final var user = Instancio.create(User.class);
 
         // When
         when(this.userStatusMapper.toStatusId(user.status())).thenReturn(user.status().getId());
+        when(this.userRoleMapper.toRoleId(user.role())).thenReturn(user.role().getId());
         final var userV1Dto = this.userMapper.toUserV1(user);
 
         // Then
@@ -51,6 +57,7 @@ class UserMapperTest {
         assertEquals(user.email(), userV1Dto.getEmail());
         assertEquals(user.phone(), userV1Dto.getPhone());
         assertEquals(user.status().getId(), userV1Dto.getStatus());
+        assertEquals(user.role().getId(), userV1Dto.getRole());
     }
 
     /**
@@ -67,17 +74,19 @@ class UserMapperTest {
      */
     @Test
     void testToUserV1List_whenUsersAreValid_thenReturnMappedDtoList() {
-        
+
         // Given
         final var user = Instancio.create(User.class);
         final var users = List.of(user);
 
         // When
         when(this.userStatusMapper.toStatusId(user.status())).thenReturn(user.status().getId());
+        when(this.userRoleMapper.toRoleId(user.role())).thenReturn(user.role().getId());
         final var userV1DtoList = this.userMapper.toUserV1List(users);
 
         // Then
         verify(this.userStatusMapper, times(1)).toStatusId(user.status());
+        verify(this.userRoleMapper, times(1)).toRoleId(user.role());
         assertNotNull(userV1DtoList);
         assertEquals(1, userV1DtoList.size());
         assertEquals(user.id(), userV1DtoList.getFirst().getId());

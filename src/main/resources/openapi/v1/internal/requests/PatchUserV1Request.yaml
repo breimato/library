@@ -11,3 +11,7 @@ properties:
     type: integer
     format: int32
     description: "User status"
+  role:
+    type: integer
+    format: int32
+    description: "User role"

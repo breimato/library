@@ -1,0 +1,68 @@
+patch:
+  summary: "Patch Loan Request V1"
+  description: "Update a loan request"
+  operationId: "PatchLoanRequestV1"
+  tags:
+    - patch-loan-request-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Loan request identifier"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/PatchLoanRequestV1Request.yaml'
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/LoanRequestV1Response.yaml'
+    '404':
+      description: "Not Found - Loan request not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+delete:
+  summary: "Delete Loan Request V1"
+  description: "Delete a loan request"
+  operationId: "DeleteLoanRequestV1"
+  tags:
+    - delete-loan-request-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Loan request identifier"
+  responses:
+    '204':
+      description: "204 No Content"
+    '404':
+      description: "Not Found - Loan request not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

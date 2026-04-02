@@ -20,4 +20,7 @@ public class UserEntity {
 
     /** The status id. */
     private Integer statusId;
+
+    /** The role id. */
+    private Integer roleId;
 }

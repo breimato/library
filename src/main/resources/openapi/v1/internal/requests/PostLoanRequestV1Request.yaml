@@ -1,0 +1,14 @@
+description: "Post Loan Request V1 Request"
+type: object
+required:
+  - userId
+  - bookId
+properties:
+  userId:
+    type: integer
+    format: int32
+    description: "User identifier"
+  bookId:
+    type: integer
+    format: int32
+    description: "Book identifier"
