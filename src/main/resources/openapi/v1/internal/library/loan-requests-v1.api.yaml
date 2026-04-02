@@ -1,0 +1,56 @@
+get:
+  summary: "Get Loan Requests V1"
+  description: "Get all loan requests"
+  operationId: "GetLoanRequestsV1"
+  tags:
+    - get-loan-requests-v1
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/GetLoanRequestsV1Request.yaml'
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/GetLoanRequestsV1Response.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+post:
+  summary: "Post Loan Request V1"
+  description: "Create a new loan request"
+  operationId: "PostLoanRequestV1"
+  tags:
+    - post-loan-request-v1
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../requests/PostLoanRequestV1Request.yaml'
+  responses:
+    '201':
+      description: "201 Created"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/LoanRequestV1Response.yaml'
+    '404':
+      description: "Not Found - User or book not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

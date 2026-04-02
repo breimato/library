@@ -29,7 +29,8 @@ public interface UserMyBatisMapper {
                 name,
                 email,
                 phone,
-                status_id
+                status_id,
+                role_id
             from users
             <where>
                 <if test="id != null">and id = #{id}</if>
@@ -47,7 +48,7 @@ public interface UserMyBatisMapper {
      * @param userEntity the user entity.
      */
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    @Insert("insert into users (name, email, phone, status_id) values (#{name}, #{email}, #{phone}, 0)")
+    @Insert("insert into users (name, email, phone, status_id, role_id) values (#{name}, #{email}, #{phone}, 0, #{roleId})")
     void insert(UserEntity userEntity);
 
     /**
@@ -62,6 +63,7 @@ public interface UserMyBatisMapper {
                 <if test="name != null">name = #{name},</if>
                 <if test="phone != null">phone = #{phone},</if>
                 <if test="statusId != null">status_id = #{statusId},</if>
+                <if test="roleId != null">role_id = #{roleId},</if>
             </set>
             where id = #{id}
             </script>

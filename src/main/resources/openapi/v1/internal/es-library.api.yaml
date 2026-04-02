@@ -34,6 +34,11 @@ paths:
     $ref: './library/reservations-v1.api.yaml'
   /v1/library/reservations/{id}:
     $ref: './library/reservations-id-v1.api.yaml'
+  # Loan Requests
+  /v1/library/loan-requests:
+    $ref: './library/loan-requests-v1.api.yaml'
+  /v1/library/loan-requests/{id}:
+    $ref: './library/loan-requests-id-v1.api.yaml'
 
 components:
   schemas:
@@ -55,6 +60,16 @@ components:
       $ref: './requests/PatchBookV1Request.yaml'
     PostUserV1Request:
       $ref: './requests/PostUserV1Request.yaml'
+    PatchUserV1Request:
+      $ref: './requests/PatchUserV1Request.yaml'
+    LoanRequestV1:
+      $ref: './components/LoanRequestV1.yaml'
+    PostLoanRequestV1Request:
+      $ref: './requests/PostLoanRequestV1Request.yaml'
+    PatchLoanRequestV1Request:
+      $ref: './requests/PatchLoanRequestV1Request.yaml'
+    GetLoanRequestsV1Request:
+      $ref: './requests/GetLoanRequestsV1Request.yaml'
     PostLoanV1Request:
       $ref: './requests/PostLoanV1Request.yaml'
     PatchLoanReturnV1Request:

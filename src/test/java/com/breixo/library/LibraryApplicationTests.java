@@ -32,6 +32,9 @@ class LibraryApplicationTests {
     @MockBean
     ReservationMyBatisMapper reservationMyBatisMapper;
 
+    @MockBean
+    LoanRequestMyBatisMapper loanRequestMyBatisMapper;
+
     @Test
     void contextLoads() {
     }

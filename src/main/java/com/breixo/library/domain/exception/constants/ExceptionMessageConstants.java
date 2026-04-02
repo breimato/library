@@ -219,4 +219,22 @@ public class ExceptionMessageConstants {
 
     /** The Constant RESERVATION_BOOK_RETIRED_MESSAGE_ERROR. */
     public static final String RESERVATION_BOOK_RETIRED_MESSAGE_ERROR = "Error: Book is retired and cannot be reserved";
+
+    /** The Constant LOAN_REQUEST_NOT_FOUND_CODE_ERROR. */
+    public static final String LOAN_REQUEST_NOT_FOUND_CODE_ERROR = "LIB-LOANREQ-001";
+
+    /** The Constant LOAN_REQUEST_NOT_FOUND_MESSAGE_ERROR. */
+    public static final String LOAN_REQUEST_NOT_FOUND_MESSAGE_ERROR = "Error: Loan request not found";
+
+    /** The Constant LOAN_REQUEST_CREATION_ERROR_CODE_ERROR. */
+    public static final String LOAN_REQUEST_CREATION_ERROR_CODE_ERROR = "LIB-LOANREQ-002";
+
+    /** The Constant LOAN_REQUEST_CREATION_ERROR_MESSAGE_ERROR. */
+    public static final String LOAN_REQUEST_CREATION_ERROR_MESSAGE_ERROR = "Error: Loan request creation failed";
+
+    /** The Constant LOAN_REQUEST_UPDATE_ERROR_CODE_ERROR. */
+    public static final String LOAN_REQUEST_UPDATE_ERROR_CODE_ERROR = "LIB-LOANREQ-003";
+
+    /** The Constant LOAN_REQUEST_UPDATE_ERROR_MESSAGE_ERROR. */
+    public static final String LOAN_REQUEST_UPDATE_ERROR_MESSAGE_ERROR = "Error: Loan request update failed";
 }

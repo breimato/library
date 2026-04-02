@@ -7,13 +7,14 @@ import com.breixo.library.domain.command.user.UpdateUserCommand;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.infrastructure.adapter.output.entities.UserEntity;
 
+import com.breixo.library.infrastructure.mapper.UserRoleMapper;
 import com.breixo.library.infrastructure.mapper.UserStatusMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 
 /** The Interface User Entity Mapper. */
-@Mapper(componentModel = "spring", uses = {UserStatusMapper.class})
+@Mapper(componentModel = "spring", uses = {UserStatusMapper.class, UserRoleMapper.class})
 public interface UserEntityMapper {
 
     /**
@@ -23,6 +24,7 @@ public interface UserEntityMapper {
      * @return the user.
      */
     @Mapping(source = "statusId", target = "status")
+    @Mapping(source = "roleId", target = "role")
     User toUser(UserEntity userEntity);
 
     /**
@@ -41,6 +43,7 @@ public interface UserEntityMapper {
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "statusId", ignore = true)
+    @Mapping(source = "role", target = "roleId")
     UserEntity toUserEntity(CreateUserCommand createUserCommand);
 
     /**
@@ -50,6 +53,7 @@ public interface UserEntityMapper {
      * @return the user entity.
      */
     @Mapping(source = "status", target = "statusId")
+    @Mapping(source = "role", target = "roleId")
     @Mapping(target = "email", ignore = true)
     UserEntity toUserEntity(UpdateUserCommand updateUserCommand);
 }

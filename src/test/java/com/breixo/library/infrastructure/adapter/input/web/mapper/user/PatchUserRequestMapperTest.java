@@ -1,7 +1,9 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.user;
 
+import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.model.user.enums.UserStatus;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchUserV1Request;
+import com.breixo.library.infrastructure.mapper.UserRoleMapper;
 import com.breixo.library.infrastructure.mapper.UserStatusMapper;
 
 import org.instancio.Instancio;
@@ -14,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /** The Class Patch User Request Mapper Test. */
@@ -28,27 +32,36 @@ class PatchUserRequestMapperTest {
     @Mock
     UserStatusMapper userStatusMapper;
 
+    /** The user role mapper. */
+    @Mock
+    UserRoleMapper userRoleMapper;
+
     /**
      * Test to update user command when request is valid then return mapped command.
      */
     @Test
     void testToUpdateUserCommand_whenRequestIsValid_thenReturnMappedCommand() {
-        
+
         // Given
         final var id = Instancio.create(Integer.class);
         final var patchUserV1RequestDto = Instancio.create(PatchUserV1Request.class);
         final var userStatus = Instancio.create(UserStatus.class);
+        final var userRole = Instancio.create(UserRole.class);
 
         // When
         when(this.userStatusMapper.toUserStatus(patchUserV1RequestDto.getStatus())).thenReturn(userStatus);
+        when(this.userRoleMapper.toUserRole(patchUserV1RequestDto.getRole())).thenReturn(userRole);
         final var updateUserCommand = this.patchUserRequestMapper.toUpdateUserCommand(id, patchUserV1RequestDto);
 
         // Then
+        verify(this.userStatusMapper, times(1)).toUserStatus(patchUserV1RequestDto.getStatus());
+        verify(this.userRoleMapper, times(1)).toUserRole(patchUserV1RequestDto.getRole());
         assertNotNull(updateUserCommand);
         assertEquals(id, updateUserCommand.id());
         assertEquals(patchUserV1RequestDto.getName(), updateUserCommand.name());
         assertEquals(patchUserV1RequestDto.getPhone(), updateUserCommand.phone());
         assertEquals(userStatus, updateUserCommand.status());
+        assertEquals(userRole, updateUserCommand.role());
     }
 
     /**
@@ -65,21 +78,26 @@ class PatchUserRequestMapperTest {
      */
     @Test
     void testToUpdateUserCommand_whenIdIsNull_thenReturnCommandWithNullId() {
-        
+
         // Given
         final var patchUserV1RequestDto = Instancio.create(PatchUserV1Request.class);
         final var userStatus = Instancio.create(UserStatus.class);
+        final var userRole = Instancio.create(UserRole.class);
 
         // When
         when(this.userStatusMapper.toUserStatus(patchUserV1RequestDto.getStatus())).thenReturn(userStatus);
+        when(this.userRoleMapper.toUserRole(patchUserV1RequestDto.getRole())).thenReturn(userRole);
         final var updateUserCommand = this.patchUserRequestMapper.toUpdateUserCommand(null, patchUserV1RequestDto);
 
         // Then
+        verify(this.userStatusMapper, times(1)).toUserStatus(patchUserV1RequestDto.getStatus());
+        verify(this.userRoleMapper, times(1)).toUserRole(patchUserV1RequestDto.getRole());
         assertNotNull(updateUserCommand);
         assertNull(updateUserCommand.id());
         assertEquals(patchUserV1RequestDto.getName(), updateUserCommand.name());
         assertEquals(patchUserV1RequestDto.getPhone(), updateUserCommand.phone());
         assertEquals(userStatus, updateUserCommand.status());
+        assertEquals(userRole, updateUserCommand.role());
     }
 
     /**

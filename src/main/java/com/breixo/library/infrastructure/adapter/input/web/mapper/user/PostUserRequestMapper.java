@@ -3,10 +3,12 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper.user;
 import com.breixo.library.domain.command.user.CreateUserCommand;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PostUserV1RequestDto;
 
+import com.breixo.library.infrastructure.mapper.UserRoleMapper;
+
 import org.mapstruct.Mapper;
 
 /** The Interface Post User Request Mapper. */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {UserRoleMapper.class})
 public interface PostUserRequestMapper {
 
     /**

@@ -2,13 +2,14 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper.user;
 
 import com.breixo.library.domain.command.user.UpdateUserCommand;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchUserV1Request;
+import com.breixo.library.infrastructure.mapper.UserRoleMapper;
 import com.breixo.library.infrastructure.mapper.UserStatusMapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /** The Interface Patch User Request Mapper. */
-@Mapper(componentModel = "spring", uses = {UserStatusMapper.class})
+@Mapper(componentModel = "spring", uses = {UserStatusMapper.class, UserRoleMapper.class})
 public interface PatchUserRequestMapper {
 
     /**
@@ -22,5 +23,6 @@ public interface PatchUserRequestMapper {
     @Mapping(source = "patchUserV1RequestDto.name", target = "name")
     @Mapping(source = "patchUserV1RequestDto.phone", target = "phone")
     @Mapping(source = "patchUserV1RequestDto.status", target = "status")
+    @Mapping(source = "patchUserV1RequestDto.role", target = "role")
     UpdateUserCommand toUpdateUserCommand(Integer id, PatchUserV1Request patchUserV1RequestDto);
 }
