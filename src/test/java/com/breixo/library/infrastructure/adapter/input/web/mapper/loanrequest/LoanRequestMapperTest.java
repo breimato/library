@@ -80,6 +80,7 @@ class LoanRequestMapperTest {
         final var loanRequestV1List = this.loanRequestMapper.toLoanRequestV1List(loanRequests);
 
         // Then
+        verify(this.loanRequestStatusMapper, times(1)).toStatusId(loanRequest.status());
         assertNotNull(loanRequestV1List);
         assertEquals(1, loanRequestV1List.size());
         assertEquals(loanRequest.id(), loanRequestV1List.getFirst().getId());

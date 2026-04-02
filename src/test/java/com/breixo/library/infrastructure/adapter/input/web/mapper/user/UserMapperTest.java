@@ -51,6 +51,8 @@ class UserMapperTest {
         final var userV1Dto = this.userMapper.toUserV1(user);
 
         // Then
+        verify(this.userStatusMapper, times(1)).toStatusId(user.status());
+        verify(this.userRoleMapper, times(1)).toRoleId(user.role());
         assertNotNull(userV1Dto);
         assertEquals(user.id(), userV1Dto.getId());
         assertEquals(user.name(), userV1Dto.getName());

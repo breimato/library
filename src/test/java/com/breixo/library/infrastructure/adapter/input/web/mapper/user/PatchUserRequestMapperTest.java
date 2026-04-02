@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /** The Class Patch User Request Mapper Test. */
@@ -52,6 +54,8 @@ class PatchUserRequestMapperTest {
         final var updateUserCommand = this.patchUserRequestMapper.toUpdateUserCommand(id, patchUserV1RequestDto);
 
         // Then
+        verify(this.userStatusMapper, times(1)).toUserStatus(patchUserV1RequestDto.getStatus());
+        verify(this.userRoleMapper, times(1)).toUserRole(patchUserV1RequestDto.getRole());
         assertNotNull(updateUserCommand);
         assertEquals(id, updateUserCommand.id());
         assertEquals(patchUserV1RequestDto.getName(), updateUserCommand.name());
@@ -86,6 +90,8 @@ class PatchUserRequestMapperTest {
         final var updateUserCommand = this.patchUserRequestMapper.toUpdateUserCommand(null, patchUserV1RequestDto);
 
         // Then
+        verify(this.userStatusMapper, times(1)).toUserStatus(patchUserV1RequestDto.getStatus());
+        verify(this.userRoleMapper, times(1)).toUserRole(patchUserV1RequestDto.getRole());
         assertNotNull(updateUserCommand);
         assertNull(updateUserCommand.id());
         assertEquals(patchUserV1RequestDto.getName(), updateUserCommand.name());

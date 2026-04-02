@@ -14,6 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /** The Class Patch Loan Request Request Mapper Test. */
@@ -46,6 +48,7 @@ class PatchLoanRequestRequestMapperTest {
                 this.patchLoanRequestRequestMapper.toUpdateLoanRequestCommand(id, patchLoanRequestV1Request);
 
         // Then
+        verify(this.loanRequestStatusMapper, times(1)).toLoanRequestStatus(patchLoanRequestV1Request.getStatus());
         assertNotNull(updateLoanRequestCommand);
         assertEquals(id, updateLoanRequestCommand.id());
         assertEquals(loanRequestStatus, updateLoanRequestCommand.status());

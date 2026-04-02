@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,6 +51,7 @@ class LoanRequestEntityMapperTest {
         final var loanRequest = this.loanRequestEntityMapper.toLoanRequest(loanRequestEntity);
 
         // Then
+        verify(this.loanRequestStatusMapper, times(1)).toLoanRequestStatus(loanRequestEntity.getStatusId());
         assertNotNull(loanRequest);
         assertEquals(loanRequestEntity.getId(), loanRequest.id());
         assertEquals(loanRequestEntity.getUserId(), loanRequest.userId());
@@ -111,6 +113,7 @@ class LoanRequestEntityMapperTest {
         final var loanRequestEntity = this.loanRequestEntityMapper.toLoanRequestEntity(updateLoanRequestCommand);
 
         // Then
+        verify(this.loanRequestStatusMapper, times(1)).toStatusId(updateLoanRequestCommand.status());
         assertNotNull(loanRequestEntity);
         assertEquals(updateLoanRequestCommand.id(), loanRequestEntity.getId());
         assertEquals(updateLoanRequestCommand.status().getId(), loanRequestEntity.getStatusId());

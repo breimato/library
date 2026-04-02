@@ -14,6 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /** The Class Post User Request Mapper Test. */
@@ -43,6 +45,7 @@ class PostUserRequestMapperTest {
         final var createUserCommand = this.postUserRequestMapper.toCreateUserCommand(request);
 
         // Then
+        verify(this.userRoleMapper, times(1)).toUserRole(request.getRole());
         assertNotNull(createUserCommand);
         assertEquals(request.getName(), createUserCommand.name());
         assertEquals(request.getEmail(), createUserCommand.email());

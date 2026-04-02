@@ -57,6 +57,8 @@ class UserEntityMapperTest {
         final var user = this.userEntityMapper.toUser(userEntity);
 
         // Then
+        verify(this.userStatusMapper, times(1)).toUserStatus(userEntity.getStatusId());
+        verify(this.userRoleMapper, times(1)).toUserRole(userEntity.getRoleId());
         assertNotNull(user);
         assertEquals(userEntity.getId(), user.id());
         assertEquals(userEntity.getName(), user.name());
@@ -89,6 +91,7 @@ class UserEntityMapperTest {
         final var userEntity = this.userEntityMapper.toUserEntity(createUserCommand);
 
         // Then
+        verify(this.userRoleMapper, times(1)).toRoleId(createUserCommand.role());
         assertNotNull(userEntity);
         assertEquals(createUserCommand.name(), userEntity.getName());
         assertEquals(createUserCommand.email(), userEntity.getEmail());
@@ -120,6 +123,8 @@ class UserEntityMapperTest {
         final var userEntity = this.userEntityMapper.toUserEntity(updateUserCommand);
 
         // Then
+        verify(this.userStatusMapper, times(1)).toStatusId(updateUserCommand.status());
+        verify(this.userRoleMapper, times(1)).toRoleId(updateUserCommand.role());
         assertNotNull(userEntity);
         assertEquals(updateUserCommand.id(), userEntity.getId());
         assertEquals(updateUserCommand.name(), userEntity.getName());
