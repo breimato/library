@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.breixo.library.domain.command.loanrequest.LoanRequestSearchCriteriaCommand;
 import com.breixo.library.domain.command.loanrequest.UpdateLoanRequestCommand;
+import com.breixo.library.domain.exception.LoanRequestException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.infrastructure.adapter.output.entities.LoanRequestEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.LoanRequestEntityMapper;
@@ -17,6 +19,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,7 +52,7 @@ class LoanRequestUpdateRepositoryTest {
         final var loanRequestEntity = Instancio.create(LoanRequestEntity.class);
         final var updatedLoanRequestEntity = Instancio.create(LoanRequestEntity.class);
         final var loanRequest = Instancio.create(LoanRequest.class);
-        final var searchCriteria = LoanRequestSearchCriteriaCommand.builder().id(loanRequestEntity.getId()).build();
+        final var searchCriteria = LoanRequestSearchCriteriaCommand.builder().id(updateLoanRequestCommand.id()).build();
 
         // When
         when(this.loanRequestEntityMapper.toLoanRequestEntity(updateLoanRequestCommand)).thenReturn(loanRequestEntity);
@@ -62,5 +66,28 @@ class LoanRequestUpdateRepositoryTest {
         verify(this.loanRequestMyBatisMapper, times(1)).find(searchCriteria);
         verify(this.loanRequestEntityMapper, times(1)).toLoanRequest(updatedLoanRequestEntity);
         assertEquals(loanRequest, result);
+    }
+
+    /**
+     * Test execute when update throws exception then throw loan request exception.
+     */
+    @Test
+    void testExecute_whenUpdateThrowsException_thenThrowLoanRequestException() {
+
+        // Given
+        final var updateLoanRequestCommand = Instancio.create(UpdateLoanRequestCommand.class);
+        final var loanRequestEntity = Instancio.create(LoanRequestEntity.class);
+
+        // When
+        when(this.loanRequestEntityMapper.toLoanRequestEntity(updateLoanRequestCommand)).thenReturn(loanRequestEntity);
+        doThrow(new RuntimeException()).when(this.loanRequestMyBatisMapper).update(loanRequestEntity);
+        final var loanRequestException = assertThrows(LoanRequestException.class,
+                () -> this.loanRequestUpdateRepository.execute(updateLoanRequestCommand));
+
+        // Then
+        verify(this.loanRequestEntityMapper, times(1)).toLoanRequestEntity(updateLoanRequestCommand);
+        verify(this.loanRequestMyBatisMapper, times(1)).update(loanRequestEntity);
+        assertEquals(ExceptionMessageConstants.LOAN_REQUEST_UPDATE_ERROR_CODE_ERROR, loanRequestException.getCode());
+        assertEquals(ExceptionMessageConstants.LOAN_REQUEST_UPDATE_ERROR_MESSAGE_ERROR, loanRequestException.getMessage());
     }
 }

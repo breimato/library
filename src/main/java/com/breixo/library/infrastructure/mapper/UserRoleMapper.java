@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.mapper;
 
+import java.util.Objects;
+
 import com.breixo.library.domain.model.user.enums.UserRole;
 
 import org.mapstruct.Mapper;
@@ -15,7 +17,7 @@ public interface UserRoleMapper {
      * @return the integer value.
      */
     default Integer toRoleId(final UserRole userRole) {
-        return userRole != null ? userRole.getId() : UserRole.NORMAL.getId();
+        return Objects.nonNull(userRole) ? userRole.getId() : UserRole.NORMAL.getId();
     }
 
     /**

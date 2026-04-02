@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.breixo.library.domain.command.loanrequest.CreateLoanRequestCommand;
 import com.breixo.library.domain.command.loanrequest.LoanRequestSearchCriteriaCommand;
+import com.breixo.library.domain.exception.LoanRequestException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.infrastructure.adapter.output.entities.LoanRequestEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.LoanRequestEntityMapper;
@@ -17,6 +19,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,5 +66,28 @@ class LoanRequestCreationRepositoryTest {
         verify(this.loanRequestMyBatisMapper, times(1)).find(searchCriteria);
         verify(this.loanRequestEntityMapper, times(1)).toLoanRequest(createdLoanRequestEntity);
         assertEquals(loanRequest, result);
+    }
+
+    /**
+     * Test execute when insert throws exception then throw loan request exception.
+     */
+    @Test
+    void testExecute_whenInsertThrowsException_thenThrowLoanRequestException() {
+
+        // Given
+        final var createLoanRequestCommand = Instancio.create(CreateLoanRequestCommand.class);
+        final var loanRequestEntity = Instancio.create(LoanRequestEntity.class);
+
+        // When
+        when(this.loanRequestEntityMapper.toLoanRequestEntity(createLoanRequestCommand)).thenReturn(loanRequestEntity);
+        doThrow(new RuntimeException()).when(this.loanRequestMyBatisMapper).insert(loanRequestEntity);
+        final var loanRequestException = assertThrows(LoanRequestException.class,
+                () -> this.loanRequestCreationRepository.execute(createLoanRequestCommand));
+
+        // Then
+        verify(this.loanRequestEntityMapper, times(1)).toLoanRequestEntity(createLoanRequestCommand);
+        verify(this.loanRequestMyBatisMapper, times(1)).insert(loanRequestEntity);
+        assertEquals(ExceptionMessageConstants.LOAN_REQUEST_CREATION_ERROR_CODE_ERROR, loanRequestException.getCode());
+        assertEquals(ExceptionMessageConstants.LOAN_REQUEST_CREATION_ERROR_MESSAGE_ERROR, loanRequestException.getMessage());
     }
 }
