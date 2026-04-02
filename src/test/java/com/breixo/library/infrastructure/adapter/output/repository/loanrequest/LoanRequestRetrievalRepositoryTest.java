@@ -101,6 +101,8 @@ class LoanRequestRetrievalRepositoryTest {
         final var result = this.loanRequestRetrievalRepository.findById(id);
 
         // Then
+        verify(this.loanRequestMyBatisMapper, times(1)).find(searchCriteria);
+        verify(this.loanRequestEntityMapper, times(1)).toLoanRequestList(List.of(loanRequestEntity));
         assertEquals(loanRequest, result);
     }
 
@@ -121,6 +123,8 @@ class LoanRequestRetrievalRepositoryTest {
                 () -> this.loanRequestRetrievalRepository.findById(id));
 
         // Then
+        verify(this.loanRequestMyBatisMapper, times(1)).find(searchCriteria);
+        verify(this.loanRequestEntityMapper, times(1)).toLoanRequestList(List.of());
         assertEquals(ExceptionMessageConstants.LOAN_REQUEST_NOT_FOUND_MESSAGE_ERROR, exception.getMessage());
     }
 }

@@ -19,6 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /** The Class Create Loan Request Use Case Test. */
@@ -60,6 +62,9 @@ class CreateLoanRequestUseCaseTest {
         final var result = this.createLoanRequestUseCase.execute(createLoanRequestCommand);
 
         // Then
+        verify(this.userRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.userId());
+        verify(this.bookRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.bookId());
+        verify(this.loanRequestCreationPersistencePort, times(1)).execute(createLoanRequestCommand);
         assertEquals(loanRequest, result);
     }
 
@@ -78,6 +83,9 @@ class CreateLoanRequestUseCaseTest {
 
         // Then
         assertThrows(UserException.class, () -> this.createLoanRequestUseCase.execute(createLoanRequestCommand));
+        verify(this.userRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.userId());
+        verify(this.bookRetrievalPersistencePort, times(0)).findById(createLoanRequestCommand.bookId());
+        verify(this.loanRequestCreationPersistencePort, times(0)).execute(createLoanRequestCommand);
     }
 
     /**
@@ -97,5 +105,8 @@ class CreateLoanRequestUseCaseTest {
 
         // Then
         assertThrows(BookException.class, () -> this.createLoanRequestUseCase.execute(createLoanRequestCommand));
+        verify(this.userRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.userId());
+        verify(this.bookRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.bookId());
+        verify(this.loanRequestCreationPersistencePort, times(0)).execute(createLoanRequestCommand);
     }
 }
