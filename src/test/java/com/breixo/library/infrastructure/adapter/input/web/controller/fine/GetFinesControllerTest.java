@@ -12,6 +12,7 @@ import com.breixo.library.infrastructure.adapter.input.web.mapper.fine.GetFinesV
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +20,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -61,7 +65,16 @@ class GetFinesControllerTest {
     /** Sets the up. */
     @BeforeEach
     void setUp() {
+        var auth = new UsernamePasswordAuthenticationToken(
+            1, null, List.of(new SimpleGrantedAuthority("ROLE_MANAGER")));
+        SecurityContextHolder.getContext().setAuthentication(auth);
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.getFinesController).build();
+    }
+
+    /** Tear down. */
+    @AfterEach
+    void tearDown() {
+        SecurityContextHolder.clearContext();
     }
 
     /**

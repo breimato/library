@@ -9,13 +9,17 @@ import lombok.Builder;
 /**
  * The Record Update User Command.
  *
- * @param id     The id.
- * @param name   The name.
- * @param phone  The phone.
- * @param status The status.
- * @param role   The role.
+ * @param id                    The id.
+ * @param name                  The name.
+ * @param phone                 The phone.
+ * @param status                The status.
+ * @param role                  The role.
+ * @param authenticatedUserId   The authenticated user id.
+ * @param authenticatedUserRole The authenticated user role.
  */
 @Builder
-public record UpdateUserCommand(@NotNull Integer id, String name, String phone, UserStatus status, UserRole role) {
+public record UpdateUserCommand(@NotNull Integer id, String name, String phone, UserStatus status, UserRole role,
+                                @NotNull Integer authenticatedUserId,
+                                @NotNull UserRole authenticatedUserRole) {
 
 }

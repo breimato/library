@@ -23,5 +23,7 @@ public interface PatchReservationRequestMapper {
     @Mapping(source = "patchReservationV1Request.loanId", target = "loanId")
     @Mapping(source = "patchReservationV1Request.expiresAt", target = "expiresAt")
     @Mapping(source = "patchReservationV1Request.status", target = "status")
+    @Mapping(target = "authenticatedUserId", ignore = true)
+    @Mapping(target = "authenticatedUserRole", ignore = true)
     UpdateReservationCommand toUpdateReservationCommand(Integer id, PatchReservationV1Request patchReservationV1Request);
 }

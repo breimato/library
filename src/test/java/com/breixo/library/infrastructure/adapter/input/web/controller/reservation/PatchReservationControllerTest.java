@@ -8,9 +8,12 @@ import com.breixo.library.infrastructure.adapter.input.web.dto.ReservationV1Resp
 import com.breixo.library.infrastructure.adapter.input.web.mapper.reservation.PatchReservationRequestMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.reservation.ReservationResponseMapper;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,9 +21,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -60,7 +67,16 @@ class PatchReservationControllerTest {
     /** Sets the up. */
     @BeforeEach
     void setUp() {
+        var auth = new UsernamePasswordAuthenticationToken(
+            1, null, List.of(new SimpleGrantedAuthority("ROLE_MANAGER")));
+        SecurityContextHolder.getContext().setAuthentication(auth);
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.patchReservationController).build();
+    }
+
+    /** Tear down. */
+    @AfterEach
+    void tearDown() {
+        SecurityContextHolder.clearContext();
     }
 
     /**
@@ -79,7 +95,7 @@ class PatchReservationControllerTest {
         // When
         when(this.patchReservationRequestMapper.toUpdateReservationCommand(id, patchReservationV1Request))
                 .thenReturn(updateReservationCommand);
-        when(this.updateReservationUseCase.execute(updateReservationCommand)).thenReturn(reservation);
+        when(this.updateReservationUseCase.execute(any())).thenReturn(reservation);
         when(this.reservationResponseMapper.toReservationV1Response(reservation)).thenReturn(reservationV1Response);
 
         this.mockMvc.perform(patch(URL, id)
@@ -91,7 +107,7 @@ class PatchReservationControllerTest {
 
         // Then
         verify(this.patchReservationRequestMapper, times(1)).toUpdateReservationCommand(id, patchReservationV1Request);
-        verify(this.updateReservationUseCase, times(1)).execute(updateReservationCommand);
+        verify(this.updateReservationUseCase, times(1)).execute(any());
         verify(this.reservationResponseMapper, times(1)).toReservationV1Response(reservation);
     }
 }

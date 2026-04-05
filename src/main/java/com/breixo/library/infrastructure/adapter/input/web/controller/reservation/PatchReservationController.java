@@ -1,11 +1,13 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.reservation;
 
+import com.breixo.library.domain.command.reservation.UpdateReservationCommand;
 import com.breixo.library.domain.port.input.reservation.UpdateReservationUseCase;
 import com.breixo.library.infrastructure.adapter.input.web.api.PatchReservationV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchReservationV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.ReservationV1Response;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.reservation.PatchReservationRequestMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.reservation.ReservationResponseMapper;
+import com.breixo.library.infrastructure.adapter.input.web.security.AuthenticatedUserContextHelper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +33,17 @@ public class PatchReservationController implements PatchReservationV1Api {
             final Integer id,
             final PatchReservationV1Request patchReservationV1Request) {
 
-        final var updateReservationCommand =
+        final var baseCommand =
                 this.patchReservationRequestMapper.toUpdateReservationCommand(id, patchReservationV1Request);
+
+        final var updateReservationCommand = UpdateReservationCommand.builder()
+                .id(baseCommand.id())
+                .loanId(baseCommand.loanId())
+                .expiresAt(baseCommand.expiresAt())
+                .status(baseCommand.status())
+                .authenticatedUserId(AuthenticatedUserContextHelper.getAuthenticatedUserId())
+                .authenticatedUserRole(AuthenticatedUserContextHelper.getAuthenticatedUserRole())
+                .build();
 
         final var reservation = this.updateReservationUseCase.execute(updateReservationCommand);
 

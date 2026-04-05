@@ -46,7 +46,9 @@ class UpdateReservationUseCaseTest {
     void testExecute_whenReservationExists_thenUpdateAndReturnReservation() {
 
         // Given
-        final var updateReservationCommand = Instancio.create(UpdateReservationCommand.class);
+        final var updateReservationCommand = Instancio.of(UpdateReservationCommand.class)
+            .set(org.instancio.Select.field("authenticatedUserRole"), com.breixo.library.domain.model.user.enums.UserRole.MANAGER)
+            .create();
         final var existingReservation = Instancio.create(Reservation.class);
         final var updatedReservation = Instancio.create(Reservation.class);
         final var reservationSearchCriteriaCommand = ReservationSearchCriteriaCommand.builder()

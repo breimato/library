@@ -5,11 +5,13 @@ import com.breixo.library.infrastructure.adapter.input.web.api.DeleteFineV1Api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 /** The Class Delete Fine Controller. */
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('MANAGER')")
 public class DeleteFineController implements DeleteFineV1Api {
 
     /** The Fine Deletion Persistence Port. */

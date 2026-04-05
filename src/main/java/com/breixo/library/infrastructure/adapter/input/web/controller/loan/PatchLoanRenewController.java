@@ -1,11 +1,13 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.loan;
 
+import com.breixo.library.domain.command.loan.UpdateLoanRenewCommand;
 import com.breixo.library.domain.port.input.loan.UpdateLoanRenewUseCase;
 import com.breixo.library.infrastructure.adapter.input.web.api.PatchLoanRenewV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.LoanV1ResponseDto;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchLoanRenewV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loan.LoanResponseMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loan.PatchLoanRenewRequestMapper;
+import com.breixo.library.infrastructure.adapter.input.web.security.AuthenticatedUserContextHelper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +32,14 @@ public class PatchLoanRenewController implements PatchLoanRenewV1Api {
     public ResponseEntity<LoanV1ResponseDto> patchLoanRenewV1(
             final Integer id, final PatchLoanRenewV1Request patchLoanRenewV1Request) {
 
-        final var updateLoanRenewCommand = this.patchLoanRenewRequestMapper
-                .toUpdateLoanRenewCommand(id, patchLoanRenewV1Request);
+        final var baseCommand = this.patchLoanRenewRequestMapper.toUpdateLoanRenewCommand(id, patchLoanRenewV1Request);
+
+        final var updateLoanRenewCommand = UpdateLoanRenewCommand.builder()
+                .id(baseCommand.id())
+                .dueDate(baseCommand.dueDate())
+                .authenticatedUserId(AuthenticatedUserContextHelper.getAuthenticatedUserId())
+                .authenticatedUserRole(AuthenticatedUserContextHelper.getAuthenticatedUserRole())
+                .build();
 
         final var loan = this.updateLoanRenewUseCase.execute(updateLoanRenewCommand);
 

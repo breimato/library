@@ -55,5 +55,6 @@ public interface UserEntityMapper {
     @Mapping(source = "status", target = "statusId")
     @Mapping(source = "role", target = "roleId")
     @Mapping(target = "email", ignore = true)
+    @Mapping(target = "passwordHash", ignore = true)
     UserEntity toUserEntity(UpdateUserCommand updateUserCommand);
 }

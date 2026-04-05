@@ -24,5 +24,7 @@ public interface PatchUserRequestMapper {
     @Mapping(source = "patchUserV1RequestDto.phone", target = "phone")
     @Mapping(source = "patchUserV1RequestDto.status", target = "status")
     @Mapping(source = "patchUserV1RequestDto.role", target = "role")
+    @Mapping(target = "authenticatedUserId", ignore = true)
+    @Mapping(target = "authenticatedUserRole", ignore = true)
     UpdateUserCommand toUpdateUserCommand(Integer id, PatchUserV1Request patchUserV1RequestDto);
 }

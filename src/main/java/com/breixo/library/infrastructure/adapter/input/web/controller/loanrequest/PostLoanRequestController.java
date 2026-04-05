@@ -1,11 +1,13 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.loanrequest;
 
+import com.breixo.library.domain.command.loanrequest.CreateLoanRequestCommand;
 import com.breixo.library.domain.port.input.loanrequest.CreateLoanRequestUseCase;
 import com.breixo.library.infrastructure.adapter.input.web.api.PostLoanRequestV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.LoanRequestV1Response;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PostLoanRequestV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loanrequest.LoanRequestResponseMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loanrequest.PostLoanRequestRequestMapper;
+import com.breixo.library.infrastructure.adapter.input.web.security.AuthenticatedUserContextHelper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,8 +32,15 @@ public class PostLoanRequestController implements PostLoanRequestV1Api {
     @Override
     public ResponseEntity<LoanRequestV1Response> postLoanRequestV1(final PostLoanRequestV1Request postLoanRequestV1Request) {
 
-        final var createLoanRequestCommand =
+        final var baseCommand =
                 this.postLoanRequestRequestMapper.toCreateLoanRequestCommand(postLoanRequestV1Request);
+
+        final var createLoanRequestCommand = CreateLoanRequestCommand.builder()
+                .userId(baseCommand.userId())
+                .bookId(baseCommand.bookId())
+                .authenticatedUserId(AuthenticatedUserContextHelper.getAuthenticatedUserId())
+                .authenticatedUserRole(AuthenticatedUserContextHelper.getAuthenticatedUserRole())
+                .build();
 
         final var loanRequest = this.createLoanRequestUseCase.execute(createLoanRequestCommand);
 

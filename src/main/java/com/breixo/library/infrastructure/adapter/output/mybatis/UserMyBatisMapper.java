@@ -30,7 +30,8 @@ public interface UserMyBatisMapper {
                 email,
                 phone,
                 status_id,
-                role_id
+                role_id,
+                password_hash
             from users
             <where>
                 <if test="id != null">and id = #{id}</if>
@@ -48,7 +49,7 @@ public interface UserMyBatisMapper {
      * @param userEntity the user entity.
      */
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    @Insert("insert into users (name, email, phone, status_id, role_id) values (#{name}, #{email}, #{phone}, 0, #{roleId})")
+    @Insert("insert into users (name, email, phone, status_id, role_id, password_hash) values (#{name}, #{email}, #{phone}, 0, #{roleId}, #{passwordHash})")
     void insert(UserEntity userEntity);
 
     /**

@@ -8,8 +8,11 @@ import com.breixo.library.infrastructure.adapter.input.web.dto.UserV1ResponseDto
 import com.breixo.library.infrastructure.adapter.input.web.mapper.user.PatchUserRequestMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.user.UserResponseMapper;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,9 +20,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -59,7 +66,16 @@ class PatchUserControllerTest {
     /** Sets the up. */
     @BeforeEach
     void setUp() {
+        var auth = new UsernamePasswordAuthenticationToken(
+            1, null, List.of(new SimpleGrantedAuthority("ROLE_MANAGER")));
+        SecurityContextHolder.getContext().setAuthentication(auth);
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.patchUserController).build();
+    }
+
+    /** Tear down. */
+    @AfterEach
+    void tearDown() {
+        SecurityContextHolder.clearContext();
     }
 
     /**
@@ -77,7 +93,7 @@ class PatchUserControllerTest {
 
         // When
         when(this.patchUserRequestMapper.toUpdateUserCommand(id, patchUserV1RequestDto)).thenReturn(updateUserCommand);
-        when(this.updateUserUseCase.execute(updateUserCommand)).thenReturn(user);
+        when(this.updateUserUseCase.execute(any())).thenReturn(user);
         when(this.userResponseMapper.toUserV1Response(user)).thenReturn(userV1ResponseDto);
 
         this.mockMvc.perform(patch(URL, id)
@@ -89,7 +105,7 @@ class PatchUserControllerTest {
 
         // Then
         verify(this.patchUserRequestMapper, times(1)).toUpdateUserCommand(id, patchUserV1RequestDto);
-        verify(this.updateUserUseCase, times(1)).execute(updateUserCommand);
+        verify(this.updateUserUseCase, times(1)).execute(any());
         verify(this.userResponseMapper, times(1)).toUserV1Response(user);
     }
 }

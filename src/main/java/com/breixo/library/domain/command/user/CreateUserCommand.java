@@ -8,12 +8,14 @@ import lombok.Builder;
 /**
  * The Record Create User Command.
  *
- * @param name  The name.
- * @param email The email.
- * @param phone The phone.
- * @param role  The role.
+ * @param name         The name.
+ * @param email        The email.
+ * @param phone        The phone.
+ * @param role         The role.
+ * @param passwordHash The password hash.
  */
 @Builder
-public record CreateUserCommand(@NotBlank String name, @NotBlank String email, String phone, UserRole role) {
+public record CreateUserCommand(@NotBlank String name, @NotBlank String email, String phone, UserRole role,
+                                @NotBlank String passwordHash) {
 
 }

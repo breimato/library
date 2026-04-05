@@ -17,9 +17,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,6 +58,10 @@ class PostUserControllerTest {
     @Mock
     UserResponseMapper userResponseMapper;
 
+    /** The password encoder. */
+    @Mock
+    PasswordEncoder passwordEncoder;
+
     /** Sets the up. */
     @BeforeEach
     void setUp() {
@@ -75,8 +81,9 @@ class PostUserControllerTest {
         final var userV1ResponseDto = Instancio.create(UserV1ResponseDto.class);
 
         // When
+        when(this.passwordEncoder.encode(any())).thenReturn("hashed");
         when(this.postUserRequestMapper.toCreateUserCommand(postUserV1RequestDto)).thenReturn(createUserCommand);
-        when(this.createUserUseCase.execute(createUserCommand)).thenReturn(user);
+        when(this.createUserUseCase.execute(any())).thenReturn(user);
         when(this.userResponseMapper.toUserV1Response(user)).thenReturn(userV1ResponseDto);
 
         this.mockMvc.perform(post(URL)
@@ -88,7 +95,7 @@ class PostUserControllerTest {
 
         // Then
         verify(this.postUserRequestMapper, times(1)).toCreateUserCommand(postUserV1RequestDto);
-        verify(this.createUserUseCase, times(1)).execute(createUserCommand);
+        verify(this.createUserUseCase, times(1)).execute(any());
         verify(this.userResponseMapper, times(1)).toUserV1Response(user);
     }
 }

@@ -21,5 +21,7 @@ public interface PatchLoanRequestRequestMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "patchLoanRequestV1Request.status", target = "status")
     @Mapping(source = "patchLoanRequestV1Request.rejectionReason", target = "rejectionReason")
+    @Mapping(target = "authenticatedUserId", ignore = true)
+    @Mapping(target = "authenticatedUserRole", ignore = true)
     UpdateLoanRequestCommand toUpdateLoanRequestCommand(Integer id, PatchLoanRequestV1Request patchLoanRequestV1Request);
 }

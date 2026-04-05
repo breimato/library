@@ -9,11 +9,13 @@ import com.breixo.library.infrastructure.adapter.input.web.mapper.book.PatchBook
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 /** The Class Patch Book Controller. */
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('MANAGER')")
 public class PatchBookController implements PatchBookV1Api {
 
     /** The update book use case. */

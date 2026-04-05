@@ -5,11 +5,13 @@ import com.breixo.library.infrastructure.adapter.input.web.api.DeleteLoanRequest
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 /** The Class Delete Loan Request Controller. */
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('MANAGER')")
 public class DeleteLoanRequestController implements DeleteLoanRequestV1Api {
 
     /** The loan request deletion persistence port. */

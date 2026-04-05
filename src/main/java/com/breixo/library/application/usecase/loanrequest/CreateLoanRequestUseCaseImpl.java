@@ -1,7 +1,10 @@
 package com.breixo.library.application.usecase.loanrequest;
 
 import com.breixo.library.domain.command.loanrequest.CreateLoanRequestCommand;
+import com.breixo.library.domain.exception.AuthorizationException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
+import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.loanrequest.CreateLoanRequestUseCase;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestCreationPersistencePort;
@@ -31,6 +34,13 @@ public class CreateLoanRequestUseCaseImpl implements CreateLoanRequestUseCase {
     @Override
     @Transactional
     public LoanRequest execute(@Valid @NotNull final CreateLoanRequestCommand createLoanRequestCommand) {
+
+        if (UserRole.NORMAL.equals(createLoanRequestCommand.authenticatedUserRole())
+                && !createLoanRequestCommand.userId().equals(createLoanRequestCommand.authenticatedUserId())) {
+            throw new AuthorizationException(
+                    ExceptionMessageConstants.AUTH_RESOURCE_OWNERSHIP_CODE_ERROR,
+                    ExceptionMessageConstants.AUTH_RESOURCE_OWNERSHIP_MESSAGE_ERROR);
+        }
 
         this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId());
 

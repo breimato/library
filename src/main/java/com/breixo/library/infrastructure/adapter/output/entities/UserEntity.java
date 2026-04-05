@@ -23,4 +23,7 @@ public class UserEntity {
 
     /** The role id. */
     private Integer roleId;
+
+    /** The password hash. */
+    private String passwordHash;
 }

@@ -1,11 +1,14 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.reservation;
 
+import com.breixo.library.domain.command.reservation.ReservationSearchCriteriaCommand;
+import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.output.reservation.ReservationRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.api.GetReservationsV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetReservationsV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetReservationsV1Response;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.reservation.GetReservationsV1RequestMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.reservation.ReservationMapper;
+import com.breixo.library.infrastructure.adapter.input.web.security.AuthenticatedUserContextHelper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +32,18 @@ public class GetReservationsController implements GetReservationsV1Api {
     @Override
     public ResponseEntity<GetReservationsV1Response> getReservationsV1(final GetReservationsV1Request getReservationsV1Request) {
 
-        final var reservationSearchCriteriaCommand =
+        var reservationSearchCriteriaCommand =
                 this.getReservationsV1RequestMapper.toReservationSearchCriteriaCommand(getReservationsV1Request);
+
+        if (UserRole.NORMAL.equals(AuthenticatedUserContextHelper.getAuthenticatedUserRole())) {
+            reservationSearchCriteriaCommand = ReservationSearchCriteriaCommand.builder()
+                    .id(reservationSearchCriteriaCommand.getId())
+                    .bookId(reservationSearchCriteriaCommand.getBookId())
+                    .loanId(reservationSearchCriteriaCommand.getLoanId())
+                    .statusId(reservationSearchCriteriaCommand.getStatusId())
+                    .userId(AuthenticatedUserContextHelper.getAuthenticatedUserId())
+                    .build();
+        }
 
         final var reservations = this.reservationRetrievalPersistencePort.find(reservationSearchCriteriaCommand);
 

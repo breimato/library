@@ -1,11 +1,14 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.loan;
 
+import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
+import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.api.GetLoansV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetLoansV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetLoansV1ResponseDto;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loan.GetLoansV1RequestMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loan.LoanMapper;
+import com.breixo.library.infrastructure.adapter.input.web.security.AuthenticatedUserContextHelper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +32,16 @@ public class GetLoansController implements GetLoansV1Api {
     @Override
     public ResponseEntity<GetLoansV1ResponseDto> getLoansV1(final GetLoansV1Request getLoansV1Request) {
 
-        final var loanSearchCriteriaCommand = this.getLoansV1RequestMapper.toLoanSearchCriteriaCommand(getLoansV1Request);
+        var loanSearchCriteriaCommand = this.getLoansV1RequestMapper.toLoanSearchCriteriaCommand(getLoansV1Request);
+
+        if (UserRole.NORMAL.equals(AuthenticatedUserContextHelper.getAuthenticatedUserRole())) {
+            loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder()
+                    .id(loanSearchCriteriaCommand.getId())
+                    .bookId(loanSearchCriteriaCommand.getBookId())
+                    .statusId(loanSearchCriteriaCommand.getStatusId())
+                    .userId(AuthenticatedUserContextHelper.getAuthenticatedUserId())
+                    .build();
+        }
 
         final var loans = this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand);
 

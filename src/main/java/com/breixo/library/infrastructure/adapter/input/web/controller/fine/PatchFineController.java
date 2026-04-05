@@ -9,11 +9,13 @@ import com.breixo.library.infrastructure.adapter.input.web.mapper.fine.PatchFine
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 /** The Class Patch Fine Controller. */
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('MANAGER')")
 public class PatchFineController implements PatchFineV1Api {
 
     /** The update fine use case. */

@@ -25,16 +25,20 @@ public interface FineMyBatisMapper {
     @Select("""
             <script>
             select
-                id,
-                loan_id,
-                amount_euros,
-                status_id,
-                paid_at
-            from fines
+                f.id,
+                f.loan_id,
+                f.amount_euros,
+                f.status_id,
+                f.paid_at
+            from fines f
+            <if test="userId != null">
+            join loans l on l.id = f.loan_id
+            </if>
             <where>
-                <if test="id != null">and id = #{id}</if>
-                <if test="loanId != null">and loan_id = #{loanId}</if>
-                <if test="statusId != null">and status_id = #{statusId}</if>
+                <if test="id != null">and f.id = #{id}</if>
+                <if test="loanId != null">and f.loan_id = #{loanId}</if>
+                <if test="statusId != null">and f.status_id = #{statusId}</if>
+                <if test="userId != null">and l.user_id = #{userId}</if>
             </where>
             </script>
             """)

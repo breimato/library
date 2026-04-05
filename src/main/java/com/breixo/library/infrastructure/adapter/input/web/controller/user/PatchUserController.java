@@ -1,11 +1,13 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.user;
 
+import com.breixo.library.domain.command.user.UpdateUserCommand;
 import com.breixo.library.domain.port.input.user.UpdateUserUseCase;
 import com.breixo.library.infrastructure.adapter.input.web.api.PatchUserV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchUserV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.UserV1ResponseDto;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.user.PatchUserRequestMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.user.UserResponseMapper;
+import com.breixo.library.infrastructure.adapter.input.web.security.AuthenticatedUserContextHelper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,17 @@ public class PatchUserController implements PatchUserV1Api {
     @Override
     public ResponseEntity<UserV1ResponseDto> patchUserV1(final Integer id, final PatchUserV1Request patchUserV1RequestDto) {
 
-        final var updateUserCommand = this.patchUserRequestMapper.toUpdateUserCommand(id, patchUserV1RequestDto);
+        final var baseCommand = this.patchUserRequestMapper.toUpdateUserCommand(id, patchUserV1RequestDto);
+
+        final var updateUserCommand = UpdateUserCommand.builder()
+                .id(baseCommand.id())
+                .name(baseCommand.name())
+                .phone(baseCommand.phone())
+                .status(baseCommand.status())
+                .role(baseCommand.role())
+                .authenticatedUserId(AuthenticatedUserContextHelper.getAuthenticatedUserId())
+                .authenticatedUserRole(AuthenticatedUserContextHelper.getAuthenticatedUserRole())
+                .build();
 
         final var user = this.updateUserUseCase.execute(updateUserCommand);
 

@@ -9,11 +9,13 @@ import com.breixo.library.infrastructure.adapter.input.web.mapper.user.UserMappe
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 /** The Class Get Users Controller. */
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('MANAGER')")
 public class GetUsersController implements GetUsersV1Api {
 
     /** The user retrieval persistence port. */

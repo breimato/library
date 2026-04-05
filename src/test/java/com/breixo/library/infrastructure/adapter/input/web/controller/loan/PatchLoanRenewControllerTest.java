@@ -8,9 +8,12 @@ import com.breixo.library.infrastructure.adapter.input.web.dto.PatchLoanRenewV1R
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loan.LoanResponseMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loan.PatchLoanRenewRequestMapper;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,9 +21,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -60,7 +67,16 @@ class PatchLoanRenewControllerTest {
     /** Sets the up. */
     @BeforeEach
     void setUp() {
+        var auth = new UsernamePasswordAuthenticationToken(
+            1, null, List.of(new SimpleGrantedAuthority("ROLE_MANAGER")));
+        SecurityContextHolder.getContext().setAuthentication(auth);
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.patchLoanRenewController).build();
+    }
+
+    /** Tear down. */
+    @AfterEach
+    void tearDown() {
+        SecurityContextHolder.clearContext();
     }
 
     /**
@@ -79,7 +95,7 @@ class PatchLoanRenewControllerTest {
         // When
         when(this.patchLoanRenewRequestMapper.toUpdateLoanRenewCommand(id, patchLoanRenewV1Request))
                 .thenReturn(updateLoanRenewCommand);
-        when(this.updateLoanRenewUseCase.execute(updateLoanRenewCommand)).thenReturn(loan);
+        when(this.updateLoanRenewUseCase.execute(any())).thenReturn(loan);
         when(this.loanResponseMapper.toLoanV1Response(loan)).thenReturn(loanV1ResponseDto);
 
         this.mockMvc.perform(patch(URL, id)
@@ -91,7 +107,7 @@ class PatchLoanRenewControllerTest {
 
         // Then
         verify(this.patchLoanRenewRequestMapper, times(1)).toUpdateLoanRenewCommand(id, patchLoanRenewV1Request);
-        verify(this.updateLoanRenewUseCase, times(1)).execute(updateLoanRenewCommand);
+        verify(this.updateLoanRenewUseCase, times(1)).execute(any());
         verify(this.loanResponseMapper, times(1)).toLoanV1Response(loan);
     }
 }

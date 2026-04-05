@@ -19,5 +19,7 @@ public interface PatchLoanRenewRequestMapper {
      */
     @Mapping(source = "id", target = "id")
     @Mapping(source = "patchLoanRenewV1Request.dueDate", target = "dueDate")
+    @Mapping(target = "authenticatedUserId", ignore = true)
+    @Mapping(target = "authenticatedUserRole", ignore = true)
     UpdateLoanRenewCommand toUpdateLoanRenewCommand(Integer id, PatchLoanRenewV1Request patchLoanRenewV1Request);
 }

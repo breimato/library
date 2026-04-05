@@ -2,9 +2,11 @@ package com.breixo.library.application.usecase.reservation;
 
 import com.breixo.library.domain.command.reservation.ReservationSearchCriteriaCommand;
 import com.breixo.library.domain.command.reservation.UpdateReservationCommand;
+import com.breixo.library.domain.exception.AuthorizationException;
 import com.breixo.library.domain.exception.ReservationException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.reservation.Reservation;
+import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.reservation.UpdateReservationUseCase;
 import com.breixo.library.domain.port.output.reservation.ReservationRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.reservation.ReservationUpdatePersistencePort;
@@ -32,17 +34,25 @@ public class UpdateReservationUseCaseImpl implements UpdateReservationUseCase {
     @Transactional
     public Reservation execute(@Valid @NotNull final UpdateReservationCommand updateReservationCommand) {
 
-        this.validateReservationExists(updateReservationCommand);
+        final var reservation = this.getReservation(updateReservationCommand);
+
+        if (UserRole.NORMAL.equals(updateReservationCommand.authenticatedUserRole())
+                && !reservation.userId().equals(updateReservationCommand.authenticatedUserId())) {
+            throw new AuthorizationException(
+                    ExceptionMessageConstants.AUTH_RESOURCE_OWNERSHIP_CODE_ERROR,
+                    ExceptionMessageConstants.AUTH_RESOURCE_OWNERSHIP_MESSAGE_ERROR);
+        }
 
         return this.reservationUpdatePersistencePort.execute(updateReservationCommand);
     }
 
     /**
-     * Validate reservation exists.
+     * Get reservation by id from command.
      *
      * @param updateReservationCommand the update reservation command
+     * @return the reservation
      */
-    private void validateReservationExists(final UpdateReservationCommand updateReservationCommand) {
+    private Reservation getReservation(final UpdateReservationCommand updateReservationCommand) {
 
         final var reservationSearchCriteriaCommand = ReservationSearchCriteriaCommand.builder()
                 .id(updateReservationCommand.id())
@@ -55,5 +65,7 @@ public class UpdateReservationUseCaseImpl implements UpdateReservationUseCase {
                     ExceptionMessageConstants.RESERVATION_NOT_FOUND_CODE_ERROR,
                     ExceptionMessageConstants.RESERVATION_NOT_FOUND_MESSAGE_ERROR);
         }
+
+        return reservations.getFirst();
     }
 }

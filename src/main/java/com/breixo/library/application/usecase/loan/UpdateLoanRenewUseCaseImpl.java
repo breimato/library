@@ -2,14 +2,16 @@ package com.breixo.library.application.usecase.loan;
 
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
 import com.breixo.library.domain.command.loan.UpdateLoanRenewCommand;
+import com.breixo.library.domain.exception.AuthorizationException;
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.model.loan.enums.LoanStatus;
+import com.breixo.library.domain.model.user.enums.UserRole;
+import com.breixo.library.domain.port.input.loan.LoanStatusTransitionValidationService;
 import com.breixo.library.domain.port.input.loan.UpdateLoanRenewUseCase;
 import com.breixo.library.domain.port.output.loan.LoanRenewPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
-import com.breixo.library.domain.port.input.loan.LoanStatusTransitionValidationService;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -38,6 +40,13 @@ public class UpdateLoanRenewUseCaseImpl implements UpdateLoanRenewUseCase {
     public Loan execute(@Valid @NotNull final UpdateLoanRenewCommand updateLoanRenewCommand) {
 
         final var loan = this.getLoan(updateLoanRenewCommand);
+
+        if (UserRole.NORMAL.equals(updateLoanRenewCommand.authenticatedUserRole())
+                && !loan.userId().equals(updateLoanRenewCommand.authenticatedUserId())) {
+            throw new AuthorizationException(
+                    ExceptionMessageConstants.AUTH_RESOURCE_OWNERSHIP_CODE_ERROR,
+                    ExceptionMessageConstants.AUTH_RESOURCE_OWNERSHIP_MESSAGE_ERROR);
+        }
 
         this.loanStatusTransitionValidationService.execute(loan.status(), LoanStatus.ACTIVE);
 

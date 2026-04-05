@@ -9,15 +9,16 @@ import lombok.Builder;
 /**
  * The Record User.
  *
- * @param id     The id.
- * @param name   The name.
- * @param email  The email.
- * @param phone  The phone.
- * @param status The status.
- * @param role   The role.
+ * @param id           The id.
+ * @param name         The name.
+ * @param email        The email.
+ * @param phone        The phone.
+ * @param status       The status.
+ * @param role         The role.
+ * @param passwordHash The password hash.
  */
 @Builder
 public record User(@NotNull Integer id, @NotBlank String name, @NotBlank String email, String phone,
-                   @NotNull UserStatus status, @NotNull UserRole role) {
+                   @NotNull UserStatus status, @NotNull UserRole role, String passwordHash) {
 
 }

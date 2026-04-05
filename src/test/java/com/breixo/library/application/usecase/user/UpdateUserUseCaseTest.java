@@ -7,10 +7,12 @@ import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
 import com.breixo.library.domain.exception.UserException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.user.User;
+import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.user.UserUpdatePersistencePort;
 
 import org.instancio.Instancio;
+import static org.instancio.Select.field;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -44,7 +46,10 @@ class UpdateUserUseCaseTest {
     void testExecute_whenUserExists_thenUpdateAndReturnUser() {
         
         // Given
-        final var updateUserCommand = Instancio.create(UpdateUserCommand.class);
+        final var updateUserCommand = Instancio.of(UpdateUserCommand.class)
+            .set(field("authenticatedUserRole"), UserRole.MANAGER)
+            .ignore(field("role"))
+            .create();
         final var existingUser = Instancio.create(User.class);
         final var updatedUser = Instancio.create(User.class);
         final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(updateUserCommand.id()).build();

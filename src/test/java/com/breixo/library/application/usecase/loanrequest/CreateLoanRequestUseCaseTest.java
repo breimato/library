@@ -10,7 +10,9 @@ import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestCreationPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 
+import com.breixo.library.domain.model.user.enums.UserRole;
 import org.instancio.Instancio;
+import static org.instancio.Select.field;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -50,7 +52,9 @@ class CreateLoanRequestUseCaseTest {
     void testExecute_whenUserAndBookExist_thenCreateAndReturnLoanRequest() {
 
         // Given
-        final var createLoanRequestCommand = Instancio.create(CreateLoanRequestCommand.class);
+        final var createLoanRequestCommand = Instancio.of(CreateLoanRequestCommand.class)
+            .set(org.instancio.Select.field("authenticatedUserRole"), com.breixo.library.domain.model.user.enums.UserRole.MANAGER)
+            .create();
         final var user = Instancio.create(User.class);
         final var book = Instancio.create(Book.class);
         final var loanRequest = Instancio.create(LoanRequest.class);
@@ -75,7 +79,9 @@ class CreateLoanRequestUseCaseTest {
     void testExecute_whenUserDoesNotExist_thenThrowUserException() {
 
         // Given
-        final var createLoanRequestCommand = Instancio.create(CreateLoanRequestCommand.class);
+        final var createLoanRequestCommand = Instancio.of(CreateLoanRequestCommand.class)
+            .set(field("authenticatedUserRole"), UserRole.MANAGER)
+            .create();
 
         // When
         when(this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId()))
@@ -95,7 +101,9 @@ class CreateLoanRequestUseCaseTest {
     void testExecute_whenBookDoesNotExist_thenThrowBookException() {
 
         // Given
-        final var createLoanRequestCommand = Instancio.create(CreateLoanRequestCommand.class);
+        final var createLoanRequestCommand = Instancio.of(CreateLoanRequestCommand.class)
+            .set(field("authenticatedUserRole"), UserRole.MANAGER)
+            .create();
         final var user = Instancio.create(User.class);
 
         // When

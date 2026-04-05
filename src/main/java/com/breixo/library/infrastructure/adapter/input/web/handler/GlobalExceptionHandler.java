@@ -2,6 +2,7 @@ package com.breixo.library.infrastructure.adapter.input.web.handler;
 
 import java.util.Set;
 
+import com.breixo.library.domain.exception.AuthorizationException;
 import com.breixo.library.domain.exception.IsbnException;
 import com.breixo.library.domain.exception.LibraryException;
 import com.breixo.library.domain.exception.LoanException;
@@ -23,6 +24,24 @@ public class GlobalExceptionHandler {
             ExceptionMessageConstants.BOOK_COPIES_NOT_AVAILABLE_CODE_ERROR,
             ExceptionMessageConstants.BOOK_RETIRED_CODE_ERROR
     );
+
+    /**
+     * Handle authorization exception.
+     *
+     * @param ex the exception.
+     * @return the response entity.
+     */
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ApiErrorV1> handleAuthorizationException(final AuthorizationException ex) {
+        final var apiErrorV1 = ApiErrorV1.builder()
+                .code(ex.getCode())
+                .message(ex.getMessage())
+                .build();
+        final var status = ExceptionMessageConstants.AUTH_INVALID_CREDENTIALS_CODE_ERROR.equals(ex.getCode())
+                ? HttpStatus.UNAUTHORIZED
+                : HttpStatus.FORBIDDEN;
+        return ResponseEntity.status(status).body(apiErrorV1);
+    }
 
     /**
      * Handle loan exception.

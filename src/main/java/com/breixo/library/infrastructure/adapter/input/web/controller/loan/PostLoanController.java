@@ -10,11 +10,13 @@ import com.breixo.library.infrastructure.adapter.input.web.mapper.loan.PostLoanR
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 /** The Class Post Loan Controller. */
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('MANAGER')")
 public class PostLoanController implements PostLoanV1Api {
 
     /** The create loan use case. */

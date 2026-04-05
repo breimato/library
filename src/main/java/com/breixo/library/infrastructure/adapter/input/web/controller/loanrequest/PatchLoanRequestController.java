@@ -1,11 +1,13 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.loanrequest;
 
+import com.breixo.library.domain.command.loanrequest.UpdateLoanRequestCommand;
 import com.breixo.library.domain.port.input.loanrequest.UpdateLoanRequestUseCase;
 import com.breixo.library.infrastructure.adapter.input.web.api.PatchLoanRequestV1Api;
 import com.breixo.library.infrastructure.adapter.input.web.dto.LoanRequestV1Response;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchLoanRequestV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loanrequest.LoanRequestResponseMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loanrequest.PatchLoanRequestRequestMapper;
+import com.breixo.library.infrastructure.adapter.input.web.security.AuthenticatedUserContextHelper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +33,16 @@ public class PatchLoanRequestController implements PatchLoanRequestV1Api {
             final Integer id,
             final PatchLoanRequestV1Request patchLoanRequestV1Request) {
 
-        final var updateLoanRequestCommand =
+        final var baseCommand =
                 this.patchLoanRequestRequestMapper.toUpdateLoanRequestCommand(id, patchLoanRequestV1Request);
+
+        final var updateLoanRequestCommand = UpdateLoanRequestCommand.builder()
+                .id(baseCommand.id())
+                .status(baseCommand.status())
+                .rejectionReason(baseCommand.rejectionReason())
+                .authenticatedUserId(AuthenticatedUserContextHelper.getAuthenticatedUserId())
+                .authenticatedUserRole(AuthenticatedUserContextHelper.getAuthenticatedUserRole())
+                .build();
 
         final var loanRequest = this.updateLoanRequestUseCase.execute(updateLoanRequestCommand);
 

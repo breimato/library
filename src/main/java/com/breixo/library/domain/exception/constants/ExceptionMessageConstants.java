@@ -237,4 +237,28 @@ public class ExceptionMessageConstants {
 
     /** The Constant LOAN_REQUEST_UPDATE_ERROR_MESSAGE_ERROR. */
     public static final String LOAN_REQUEST_UPDATE_ERROR_MESSAGE_ERROR = "Error: Loan request update failed";
+
+    /** The Constant AUTH_INSUFFICIENT_ROLE_CODE_ERROR. */
+    public static final String AUTH_INSUFFICIENT_ROLE_CODE_ERROR = "LIB-AUTH-001";
+
+    /** The Constant AUTH_INSUFFICIENT_ROLE_MESSAGE_ERROR. */
+    public static final String AUTH_INSUFFICIENT_ROLE_MESSAGE_ERROR = "Error: Access denied - insufficient role";
+
+    /** The Constant AUTH_RESOURCE_OWNERSHIP_CODE_ERROR. */
+    public static final String AUTH_RESOURCE_OWNERSHIP_CODE_ERROR = "LIB-AUTH-002";
+
+    /** The Constant AUTH_RESOURCE_OWNERSHIP_MESSAGE_ERROR. */
+    public static final String AUTH_RESOURCE_OWNERSHIP_MESSAGE_ERROR = "Error: Access denied - resource belongs to another user";
+
+    /** The Constant AUTH_CANNOT_MODIFY_OWN_ROLE_CODE_ERROR. */
+    public static final String AUTH_CANNOT_MODIFY_OWN_ROLE_CODE_ERROR = "LIB-AUTH-003";
+
+    /** The Constant AUTH_CANNOT_MODIFY_OWN_ROLE_MESSAGE_ERROR. */
+    public static final String AUTH_CANNOT_MODIFY_OWN_ROLE_MESSAGE_ERROR = "Error: Access denied - cannot modify own role or status";
+
+    /** The Constant AUTH_INVALID_CREDENTIALS_CODE_ERROR. */
+    public static final String AUTH_INVALID_CREDENTIALS_CODE_ERROR = "LIB-AUTH-004";
+
+    /** The Constant AUTH_INVALID_CREDENTIALS_MESSAGE_ERROR. */
+    public static final String AUTH_INVALID_CREDENTIALS_MESSAGE_ERROR = "Error: Invalid email or password";
 }
