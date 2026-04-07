@@ -237,4 +237,40 @@ public class ExceptionMessageConstants {
 
     /** The Constant LOAN_REQUEST_UPDATE_ERROR_MESSAGE_ERROR. */
     public static final String LOAN_REQUEST_UPDATE_ERROR_MESSAGE_ERROR = "Error: Loan request update failed";
+
+    /** The Constant LOAN_REQUEST_INVALID_STATUS_TRANSITION_CODE_ERROR. */
+    public static final String LOAN_REQUEST_INVALID_STATUS_TRANSITION_CODE_ERROR = "LIB-LOANREQ-004";
+
+    /** The Constant LOAN_REQUEST_INVALID_STATUS_TRANSITION_MESSAGE_ERROR. */
+    public static final String LOAN_REQUEST_INVALID_STATUS_TRANSITION_MESSAGE_ERROR = "Error: Invalid loan request status transition";
+
+    /** The Constant LOAN_REQUEST_USER_HAS_PENDING_FINES_CODE_ERROR. */
+    public static final String LOAN_REQUEST_USER_HAS_PENDING_FINES_CODE_ERROR = "LIB-LOANREQ-005";
+
+    /** The Constant LOAN_REQUEST_USER_HAS_PENDING_FINES_MESSAGE_ERROR. */
+    public static final String LOAN_REQUEST_USER_HAS_PENDING_FINES_MESSAGE_ERROR = "Error: Loan request cannot be created because user has pending fines";
+
+    /** The Constant LOAN_REQUEST_USER_ACTIVE_LOANS_LIMIT_REACHED_CODE_ERROR. */
+    public static final String LOAN_REQUEST_USER_ACTIVE_LOANS_LIMIT_REACHED_CODE_ERROR = "LIB-LOANREQ-006";
+
+    /** The Constant LOAN_REQUEST_USER_ACTIVE_LOANS_LIMIT_REACHED_MESSAGE_ERROR. */
+    public static final String LOAN_REQUEST_USER_ACTIVE_LOANS_LIMIT_REACHED_MESSAGE_ERROR = "Error: Loan request cannot be created because user has reached the maximum number of active loans";
+
+    /** The Constant LOAN_REQUEST_BOOK_AVAILABLE_CODE_ERROR. */
+    public static final String LOAN_REQUEST_BOOK_AVAILABLE_CODE_ERROR = "LIB-LOANREQ-007";
+
+    /** The Constant LOAN_REQUEST_BOOK_AVAILABLE_MESSAGE_ERROR. */
+    public static final String LOAN_REQUEST_BOOK_AVAILABLE_MESSAGE_ERROR = "Error: Book has available copies, user should borrow it directly instead of requesting";
+
+    /** The Constant FORBIDDEN_ACTION_CODE_ERROR. */
+    public static final String FORBIDDEN_ACTION_CODE_ERROR = "LIB-AUTH-001";
+
+    /** The Constant FORBIDDEN_ACTION_MESSAGE_ERROR. */
+    public static final String FORBIDDEN_ACTION_MESSAGE_ERROR = "Error: You do not have permission to perform this action";
+
+    /** The Constant FORBIDDEN_OWN_RESOURCE_CODE_ERROR. */
+    public static final String FORBIDDEN_OWN_RESOURCE_CODE_ERROR = "LIB-AUTH-002";
+
+    /** The Constant FORBIDDEN_OWN_RESOURCE_MESSAGE_ERROR. */
+    public static final String FORBIDDEN_OWN_RESOURCE_MESSAGE_ERROR = "Error: You can only perform this action on your own resources";
 }

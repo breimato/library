@@ -28,10 +28,12 @@ public class PostLoanRequestController implements PostLoanRequestV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<LoanRequestV1Response> postLoanRequestV1(final PostLoanRequestV1Request postLoanRequestV1Request) {
+    public ResponseEntity<LoanRequestV1Response> postLoanRequestV1(
+            final Integer xRequesterId,
+            final PostLoanRequestV1Request postLoanRequestV1Request) {
 
         final var createLoanRequestCommand =
-                this.postLoanRequestRequestMapper.toCreateLoanRequestCommand(postLoanRequestV1Request);
+                this.postLoanRequestRequestMapper.toCreateLoanRequestCommand(xRequesterId, postLoanRequestV1Request);
 
         final var loanRequest = this.createLoanRequestUseCase.execute(createLoanRequestCommand);
 

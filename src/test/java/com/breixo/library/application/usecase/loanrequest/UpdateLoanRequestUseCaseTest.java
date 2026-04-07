@@ -4,6 +4,8 @@ import com.breixo.library.domain.command.loanrequest.UpdateLoanRequestCommand;
 import com.breixo.library.domain.exception.LoanRequestException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
+import com.breixo.library.domain.model.user.enums.UserRole;
+import com.breixo.library.domain.port.input.user.AuthorizationService;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestUpdatePersistencePort;
 
@@ -16,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,6 +39,10 @@ class UpdateLoanRequestUseCaseTest {
     @Mock
     LoanRequestUpdatePersistencePort loanRequestUpdatePersistencePort;
 
+    /** The authorization service. */
+    @Mock
+    AuthorizationService authorizationService;
+
     /**
      * Test execute when loan request exists then update and return loan request.
      */
@@ -50,13 +57,21 @@ class UpdateLoanRequestUseCaseTest {
         // When
         when(this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id()))
                 .thenReturn(existingLoanRequest);
+        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+                updateLoanRequestCommand.requesterId(),
+                existingLoanRequest.userId(),
+                UserRole.MANAGER);
         when(this.loanRequestUpdatePersistencePort.execute(updateLoanRequestCommand)).thenReturn(updatedLoanRequest);
-        final var result = this.updateLoanRequestUseCase.execute(updateLoanRequestCommand);
+        final var actualLoanRequest = this.updateLoanRequestUseCase.execute(updateLoanRequestCommand);
 
         // Then
         verify(this.loanRequestRetrievalPersistencePort, times(1)).findById(updateLoanRequestCommand.id());
+        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+                updateLoanRequestCommand.requesterId(),
+                existingLoanRequest.userId(),
+                UserRole.MANAGER);
         verify(this.loanRequestUpdatePersistencePort, times(1)).execute(updateLoanRequestCommand);
-        assertEquals(updatedLoanRequest, result);
+        assertEquals(updatedLoanRequest, actualLoanRequest);
     }
 
     /**

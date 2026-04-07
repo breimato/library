@@ -28,9 +28,9 @@ public class PostBookController implements PostBookV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<BookV1ResponseDto> postBookV1(final PostBookV1Request postBookV1Request) {
+    public ResponseEntity<BookV1ResponseDto> postBookV1(final Integer xRequesterId, final PostBookV1Request postBookV1Request) {
 
-        final var createBookCommand = this.postBookRequestMapper.toCreateBookCommand(postBookV1Request);
+        final var createBookCommand = this.postBookRequestMapper.toCreateBookCommand(xRequesterId, postBookV1Request);
 
         final var book = this.bookCreationPersistencePort.execute(createBookCommand);
 

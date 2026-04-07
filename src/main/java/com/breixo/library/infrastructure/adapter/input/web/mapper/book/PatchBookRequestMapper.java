@@ -14,15 +14,17 @@ public interface PatchBookRequestMapper {
      * To update book command.
      *
      * @param id                 The book identifier.
+     * @param requesterId        The requester id.
      * @param patchBookV1Request The patch book v1 request.
      * @return The update book command.
      */
     @Mapping(source = "id", target = "id")
+    @Mapping(source = "requesterId", target = "requesterId")
     @Mapping(source = "patchBookV1Request.title", target = "title")
     @Mapping(source = "patchBookV1Request.author", target = "author")
     @Mapping(source = "patchBookV1Request.genre", target = "genre")
     @Mapping(source = "patchBookV1Request.totalCopies", target = "totalCopies")
     @Mapping(source = "patchBookV1Request.availableCopies", target = "availableCopies")
-    UpdateBookCommand toUpdateBookCommand(Integer id, PatchBookV1Request patchBookV1Request);
+    UpdateBookCommand toUpdateBookCommand(Integer id, Integer requesterId, PatchBookV1Request patchBookV1Request);
 
 }

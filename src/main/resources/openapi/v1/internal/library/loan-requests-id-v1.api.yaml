@@ -12,6 +12,13 @@ patch:
         type: integer
         format: int32
       description: "Loan request identifier"
+    - name: X-Requester-Id
+      in: header
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Identifier of the user performing the action"
   requestBody:
     required: true
     content:
@@ -51,6 +58,13 @@ delete:
         type: integer
         format: int32
       description: "Loan request identifier"
+    - name: X-Requester-Id
+      in: header
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Identifier of the user performing the action"
   responses:
     '204':
       description: "204 No Content"

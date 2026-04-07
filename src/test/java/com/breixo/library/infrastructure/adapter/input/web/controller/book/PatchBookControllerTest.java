@@ -70,17 +70,19 @@ class PatchBookControllerTest {
         
         // Given
         final var id = Instancio.create(Integer.class);
+        final var requesterId = Instancio.create(Integer.class);
         final var patchBookV1Request = Instancio.create(PatchBookV1Request.class);
         final var updateBookCommand = Instancio.create(UpdateBookCommand.class);
         final var book = Instancio.create(Book.class);
         final var bookV1ResponseDto = Instancio.create(BookV1ResponseDto.class);
 
         // When
-        when(this.patchBookRequestMapper.toUpdateBookCommand(id, patchBookV1Request)).thenReturn(updateBookCommand);
+        when(this.patchBookRequestMapper.toUpdateBookCommand(id, requesterId, patchBookV1Request)).thenReturn(updateBookCommand);
         when(this.updateBookUseCase.execute(updateBookCommand)).thenReturn(book);
         when(this.bookResponseMapper.toBookV1Response(book)).thenReturn(bookV1ResponseDto);
 
         this.mockMvc.perform(patch(URL, id)
+                        .header("X-Requester-Id", requesterId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(patchBookV1Request))
                         .accept(MediaType.APPLICATION_JSON))
@@ -88,7 +90,7 @@ class PatchBookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Then
-        verify(this.patchBookRequestMapper, times(1)).toUpdateBookCommand(id, patchBookV1Request);
+        verify(this.patchBookRequestMapper, times(1)).toUpdateBookCommand(id, requesterId, patchBookV1Request);
         verify(this.updateBookUseCase, times(1)).execute(updateBookCommand);
         verify(this.bookResponseMapper, times(1)).toBookV1Response(book);
     }

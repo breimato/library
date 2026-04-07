@@ -8,11 +8,12 @@ import lombok.Builder;
 /**
  * The Record Update Loan Request Command.
  *
+ * @param requesterId     The requester id (from X-Requester-Id header).
  * @param id              The id.
  * @param status          The status.
  * @param rejectionReason The rejection reason.
  */
 @Builder
-public record UpdateLoanRequestCommand(@NotNull Integer id, LoanRequestStatus status, String rejectionReason) {
+public record UpdateLoanRequestCommand(@NotNull Integer requesterId, @NotNull Integer id, LoanRequestStatus status, String rejectionReason) {
 
 }

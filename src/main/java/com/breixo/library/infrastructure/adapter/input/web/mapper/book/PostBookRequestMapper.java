@@ -13,9 +13,17 @@ public interface PostBookRequestMapper {
     /**
      * To create book command.
      *
+     * @param requesterId       The requester id.
      * @param postBookV1Request The post book v1 request.
      * @return The create book command.
      */
-    CreateBookCommand toCreateBookCommand(PostBookV1Request postBookV1Request);
+    @org.mapstruct.Mapping(source = "requesterId", target = "requesterId")
+    @org.mapstruct.Mapping(source = "postBookV1Request.isbn", target = "isbn")
+    @org.mapstruct.Mapping(source = "postBookV1Request.title", target = "title")
+    @org.mapstruct.Mapping(source = "postBookV1Request.author", target = "author")
+    @org.mapstruct.Mapping(source = "postBookV1Request.genre", target = "genre")
+    @org.mapstruct.Mapping(source = "postBookV1Request.totalCopies", target = "totalCopies")
+    @org.mapstruct.Mapping(source = "postBookV1Request.availableCopies", target = "availableCopies")
+    CreateBookCommand toCreateBookCommand(Integer requesterId, PostBookV1Request postBookV1Request);
 
 }

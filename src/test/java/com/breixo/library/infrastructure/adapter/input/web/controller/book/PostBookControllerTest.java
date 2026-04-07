@@ -69,17 +69,19 @@ class PostBookControllerTest {
     void testPostBookV1_whenRequestIsValid_thenReturnCreatedResponse() throws Exception {
         
         // Given
+        final var requesterId = Instancio.create(Integer.class);
         final var postBookV1Request = Instancio.create(PostBookV1Request.class);
         final var createBookCommand = Instancio.create(CreateBookCommand.class);
         final var book = Instancio.create(Book.class);
         final var bookV1ResponseDto = Instancio.create(BookV1ResponseDto.class);
 
         // When
-        when(this.postBookRequestMapper.toCreateBookCommand(postBookV1Request)).thenReturn(createBookCommand);
+        when(this.postBookRequestMapper.toCreateBookCommand(requesterId, postBookV1Request)).thenReturn(createBookCommand);
         when(this.bookCreationPersistencePort.execute(createBookCommand)).thenReturn(book);
         when(this.bookResponseMapper.toBookV1Response(book)).thenReturn(bookV1ResponseDto);
 
         this.mockMvc.perform(post(URL)
+                        .header("X-Requester-Id", requesterId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(postBookV1Request))
                         .accept(MediaType.APPLICATION_JSON))
@@ -87,7 +89,7 @@ class PostBookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Then
-        verify(this.postBookRequestMapper, times(1)).toCreateBookCommand(postBookV1Request);
+        verify(this.postBookRequestMapper, times(1)).toCreateBookCommand(requesterId, postBookV1Request);
         verify(this.bookCreationPersistencePort, times(1)).execute(createBookCommand);
         verify(this.bookResponseMapper, times(1)).toBookV1Response(book);
     }

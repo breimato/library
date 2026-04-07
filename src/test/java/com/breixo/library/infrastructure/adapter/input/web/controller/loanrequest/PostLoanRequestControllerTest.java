@@ -69,18 +69,20 @@ class PostLoanRequestControllerTest {
     void testPostLoanRequestV1_whenRequestIsValid_thenReturnCreatedResponse() throws Exception {
 
         // Given
+        final var requesterId = Instancio.create(Integer.class);
         final var postLoanRequestV1Request = Instancio.create(PostLoanRequestV1Request.class);
         final var createLoanRequestCommand = Instancio.create(CreateLoanRequestCommand.class);
         final var loanRequest = Instancio.create(LoanRequest.class);
         final var loanRequestV1Response = Instancio.create(LoanRequestV1Response.class);
 
         // When
-        when(this.postLoanRequestRequestMapper.toCreateLoanRequestCommand(postLoanRequestV1Request))
+        when(this.postLoanRequestRequestMapper.toCreateLoanRequestCommand(requesterId, postLoanRequestV1Request))
                 .thenReturn(createLoanRequestCommand);
         when(this.createLoanRequestUseCase.execute(createLoanRequestCommand)).thenReturn(loanRequest);
         when(this.loanRequestResponseMapper.toLoanRequestV1Response(loanRequest)).thenReturn(loanRequestV1Response);
 
         this.mockMvc.perform(post(URL)
+                        .header("X-Requester-Id", requesterId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(postLoanRequestV1Request))
                         .accept(MediaType.APPLICATION_JSON))
@@ -88,7 +90,7 @@ class PostLoanRequestControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Then
-        verify(this.postLoanRequestRequestMapper, times(1)).toCreateLoanRequestCommand(postLoanRequestV1Request);
+        verify(this.postLoanRequestRequestMapper, times(1)).toCreateLoanRequestCommand(requesterId, postLoanRequestV1Request);
         verify(this.createLoanRequestUseCase, times(1)).execute(createLoanRequestCommand);
         verify(this.loanRequestResponseMapper, times(1)).toLoanRequestV1Response(loanRequest);
     }

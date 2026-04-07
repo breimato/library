@@ -49,9 +49,11 @@ class DeleteLoanRequestControllerTest {
 
         // Given
         final var id = Instancio.create(Integer.class);
+        final var requesterId = Instancio.create(Integer.class);
 
         // When
-        this.mockMvc.perform(delete(URL, id))
+        this.mockMvc.perform(delete(URL, id)
+                        .header("X-Requester-Id", requesterId))
                 .andExpect(status().isNoContent());
 
         // Then

@@ -17,8 +17,9 @@ public class DeleteBookController implements DeleteBookV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<Void> deleteBookV1(final Integer id) {
+    public ResponseEntity<Void> deleteBookV1(final Integer id, final Integer xRequesterId) {
 
+        // TODO: In the future, proxy through a Use Case to validate the xRequesterId permissions before deletion
         this.bookDeletionPersistencePort.execute(id);
 
         return ResponseEntity.noContent().build();

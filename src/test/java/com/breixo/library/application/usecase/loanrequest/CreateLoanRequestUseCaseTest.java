@@ -3,9 +3,12 @@ package com.breixo.library.application.usecase.loanrequest;
 import com.breixo.library.domain.command.loanrequest.CreateLoanRequestCommand;
 import com.breixo.library.domain.exception.BookException;
 import com.breixo.library.domain.exception.UserException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.domain.model.user.User;
+import com.breixo.library.domain.model.user.enums.UserRole;
+import com.breixo.library.domain.port.input.user.AuthorizationService;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestCreationPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
@@ -19,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,6 +47,10 @@ class CreateLoanRequestUseCaseTest {
     @Mock
     LoanRequestCreationPersistencePort loanRequestCreationPersistencePort;
 
+    /** The authorization service. */
+    @Mock
+    AuthorizationService authorizationService;
+
     /**
      * Test execute when user and book exist then create and return loan request.
      */
@@ -56,16 +64,24 @@ class CreateLoanRequestUseCaseTest {
         final var loanRequest = Instancio.create(LoanRequest.class);
 
         // When
+        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+                createLoanRequestCommand.requesterId(),
+                createLoanRequestCommand.userId(),
+                UserRole.MANAGER);
         when(this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId())).thenReturn(user);
         when(this.bookRetrievalPersistencePort.findById(createLoanRequestCommand.bookId())).thenReturn(book);
         when(this.loanRequestCreationPersistencePort.execute(createLoanRequestCommand)).thenReturn(loanRequest);
-        final var result = this.createLoanRequestUseCase.execute(createLoanRequestCommand);
+        final var actualLoanRequest = this.createLoanRequestUseCase.execute(createLoanRequestCommand);
 
         // Then
+        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+                createLoanRequestCommand.requesterId(),
+                createLoanRequestCommand.userId(),
+                UserRole.MANAGER);
         verify(this.userRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.userId());
         verify(this.bookRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.bookId());
         verify(this.loanRequestCreationPersistencePort, times(1)).execute(createLoanRequestCommand);
-        assertEquals(loanRequest, result);
+        assertEquals(loanRequest, actualLoanRequest);
     }
 
     /**
@@ -78,11 +94,21 @@ class CreateLoanRequestUseCaseTest {
         final var createLoanRequestCommand = Instancio.create(CreateLoanRequestCommand.class);
 
         // When
+        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+                createLoanRequestCommand.requesterId(),
+                createLoanRequestCommand.userId(),
+                UserRole.MANAGER);
         when(this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId()))
-                .thenThrow(new UserException("LIB-USER-001", "Error: User not found"));
+                .thenThrow(new UserException(
+                        ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR));
 
         // Then
         assertThrows(UserException.class, () -> this.createLoanRequestUseCase.execute(createLoanRequestCommand));
+        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+                createLoanRequestCommand.requesterId(),
+                createLoanRequestCommand.userId(),
+                UserRole.MANAGER);
         verify(this.userRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.userId());
         verify(this.bookRetrievalPersistencePort, times(0)).findById(createLoanRequestCommand.bookId());
         verify(this.loanRequestCreationPersistencePort, times(0)).execute(createLoanRequestCommand);
@@ -99,12 +125,22 @@ class CreateLoanRequestUseCaseTest {
         final var user = Instancio.create(User.class);
 
         // When
+        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+                createLoanRequestCommand.requesterId(),
+                createLoanRequestCommand.userId(),
+                UserRole.MANAGER);
         when(this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId())).thenReturn(user);
         when(this.bookRetrievalPersistencePort.findById(createLoanRequestCommand.bookId()))
-                .thenThrow(new BookException("LIB-BOOK-001", "Error: Book not found"));
+                .thenThrow(new BookException(
+                        ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR));
 
         // Then
         assertThrows(BookException.class, () -> this.createLoanRequestUseCase.execute(createLoanRequestCommand));
+        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+                createLoanRequestCommand.requesterId(),
+                createLoanRequestCommand.userId(),
+                UserRole.MANAGER);
         verify(this.userRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.userId());
         verify(this.bookRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.bookId());
         verify(this.loanRequestCreationPersistencePort, times(0)).execute(createLoanRequestCommand);

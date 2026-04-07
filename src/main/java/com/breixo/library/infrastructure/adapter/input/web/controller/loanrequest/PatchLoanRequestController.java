@@ -29,10 +29,11 @@ public class PatchLoanRequestController implements PatchLoanRequestV1Api {
     @Override
     public ResponseEntity<LoanRequestV1Response> patchLoanRequestV1(
             final Integer id,
+            final Integer xRequesterId,
             final PatchLoanRequestV1Request patchLoanRequestV1Request) {
 
         final var updateLoanRequestCommand =
-                this.patchLoanRequestRequestMapper.toUpdateLoanRequestCommand(id, patchLoanRequestV1Request);
+                this.patchLoanRequestRequestMapper.toUpdateLoanRequestCommand(id, xRequesterId, patchLoanRequestV1Request);
 
         final var loanRequest = this.updateLoanRequestUseCase.execute(updateLoanRequestCommand);
 

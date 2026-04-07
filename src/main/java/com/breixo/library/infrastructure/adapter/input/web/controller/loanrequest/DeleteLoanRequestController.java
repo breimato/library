@@ -17,8 +17,9 @@ public class DeleteLoanRequestController implements DeleteLoanRequestV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<Void> deleteLoanRequestV1(final Integer id) {
+    public ResponseEntity<Void> deleteLoanRequestV1(final Integer id, final Integer xRequesterId) {
 
+        // TODO: In the future, proxy through a Use Case to validate the xRequesterId permissions before deletion
         this.loanRequestDeletionPersistencePort.execute(id);
 
         return ResponseEntity.noContent().build();

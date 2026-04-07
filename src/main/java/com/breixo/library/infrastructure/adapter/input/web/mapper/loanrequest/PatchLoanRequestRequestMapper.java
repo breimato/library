@@ -15,11 +15,13 @@ public interface PatchLoanRequestRequestMapper {
      * To update loan request command.
      *
      * @param id                       The loan request identifier.
+     * @param requesterId              The requester id (from X-Requester-Id header).
      * @param patchLoanRequestV1Request The patch loan request V1 request.
      * @return The update loan request command.
      */
     @Mapping(source = "id", target = "id")
+    @Mapping(source = "requesterId", target = "requesterId")
     @Mapping(source = "patchLoanRequestV1Request.status", target = "status")
     @Mapping(source = "patchLoanRequestV1Request.rejectionReason", target = "rejectionReason")
-    UpdateLoanRequestCommand toUpdateLoanRequestCommand(Integer id, PatchLoanRequestV1Request patchLoanRequestV1Request);
+    UpdateLoanRequestCommand toUpdateLoanRequestCommand(Integer id, Integer requesterId, PatchLoanRequestV1Request patchLoanRequestV1Request);
 }

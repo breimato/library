@@ -6,6 +6,7 @@ import lombok.Builder;
 /**
  * The Record Update Book Command.
  *
+ * @param requesterId     The requester id.
  * @param id              The id.
  * @param title           The title.
  * @param author          The author.
@@ -14,7 +15,7 @@ import lombok.Builder;
  * @param availableCopies The available copies.
  */
 @Builder
-public record UpdateBookCommand(@NotNull Integer id, String title, String author, String genre,
+public record UpdateBookCommand(@NotNull Integer requesterId, @NotNull Integer id, String title, String author, String genre,
                                 Integer totalCopies, Integer availableCopies) {
 
 }

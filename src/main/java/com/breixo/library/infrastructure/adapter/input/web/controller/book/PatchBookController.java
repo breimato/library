@@ -27,9 +27,9 @@ public class PatchBookController implements PatchBookV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<BookV1ResponseDto> patchBookV1(final Integer id, final PatchBookV1Request patchBookV1Request) {
+    public ResponseEntity<BookV1ResponseDto> patchBookV1(final Integer id, final Integer xRequesterId, final PatchBookV1Request patchBookV1Request) {
 
-        final var updateBookCommand = this.patchBookRequestMapper.toUpdateBookCommand(id, patchBookV1Request);
+        final var updateBookCommand = this.patchBookRequestMapper.toUpdateBookCommand(id, xRequesterId, patchBookV1Request);
 
         final var book = this.updateBookUseCase.execute(updateBookCommand);
 

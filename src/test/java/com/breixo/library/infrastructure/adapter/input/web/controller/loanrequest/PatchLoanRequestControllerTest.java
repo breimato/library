@@ -70,18 +70,20 @@ class PatchLoanRequestControllerTest {
 
         // Given
         final var id = Instancio.create(Integer.class);
+        final var requesterId = Instancio.create(Integer.class);
         final var patchLoanRequestV1Request = Instancio.create(PatchLoanRequestV1Request.class);
         final var updateLoanRequestCommand = Instancio.create(UpdateLoanRequestCommand.class);
         final var loanRequest = Instancio.create(LoanRequest.class);
         final var loanRequestV1Response = Instancio.create(LoanRequestV1Response.class);
 
         // When
-        when(this.patchLoanRequestRequestMapper.toUpdateLoanRequestCommand(id, patchLoanRequestV1Request))
+        when(this.patchLoanRequestRequestMapper.toUpdateLoanRequestCommand(id, requesterId, patchLoanRequestV1Request))
                 .thenReturn(updateLoanRequestCommand);
         when(this.updateLoanRequestUseCase.execute(updateLoanRequestCommand)).thenReturn(loanRequest);
         when(this.loanRequestResponseMapper.toLoanRequestV1Response(loanRequest)).thenReturn(loanRequestV1Response);
 
         this.mockMvc.perform(patch(URL, id)
+                        .header("X-Requester-Id", requesterId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(patchLoanRequestV1Request))
                         .accept(MediaType.APPLICATION_JSON))
@@ -89,7 +91,7 @@ class PatchLoanRequestControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         // Then
-        verify(this.patchLoanRequestRequestMapper, times(1)).toUpdateLoanRequestCommand(id, patchLoanRequestV1Request);
+        verify(this.patchLoanRequestRequestMapper, times(1)).toUpdateLoanRequestCommand(id, requesterId, patchLoanRequestV1Request);
         verify(this.updateLoanRequestUseCase, times(1)).execute(updateLoanRequestCommand);
         verify(this.loanRequestResponseMapper, times(1)).toLoanRequestV1Response(loanRequest);
     }

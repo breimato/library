@@ -36,14 +36,16 @@ class PostBookRequestMapperTest {
     void testToCreateBookCommand_whenRequestIsValid_thenReturnMappedCommand() {
         
         // Given
+        final var requesterId = Instancio.create(Integer.class);
         final var postBookV1Request = Instancio.create(PostBookV1Request.class);
         postBookV1Request.setIsbn(VALID_ISBN);
 
         // When
-        final var createBookCommand = this.postBookRequestMapper.toCreateBookCommand(postBookV1Request);
+        final var createBookCommand = this.postBookRequestMapper.toCreateBookCommand(requesterId, postBookV1Request);
 
         // Then
         assertNotNull(createBookCommand);
+        assertEquals(requesterId, createBookCommand.requesterId());
         assertEquals(postBookV1Request.getIsbn(), createBookCommand.isbn().getValue());
         assertEquals(postBookV1Request.getTitle(), createBookCommand.title());
         assertEquals(postBookV1Request.getAuthor(), createBookCommand.author());
@@ -53,11 +55,33 @@ class PostBookRequestMapperTest {
     }
 
     /**
-     * Test to create book command when request is null then return null.
+     * Test to create book command when request is null then return command with only id.
      */
     @Test
-    void testToCreateBookCommand_whenRequestIsNull_thenReturnNull() {
+    void testToCreateBookCommand_whenRequestIsNull_thenReturnCommandWithOnlyId() {
+        // Given
+        final var requesterId = Instancio.create(Integer.class);
+
+        // When 
+        final var createBookCommand = this.postBookRequestMapper.toCreateBookCommand(requesterId, null);
+
+        // Then
+        assertNotNull(createBookCommand);
+        assertEquals(requesterId, createBookCommand.requesterId());
+        assertNull(createBookCommand.isbn());
+        assertNull(createBookCommand.title());
+        assertNull(createBookCommand.author());
+        assertNull(createBookCommand.genre());
+        assertNull(createBookCommand.totalCopies());
+        assertNull(createBookCommand.availableCopies());
+    }
+
+    /**
+     * Test to create book command when all params are null then return null.
+     */
+    @Test
+    void testToCreateBookCommand_whenAllParamsAreNull_thenReturnNull() {
         // When / Then
-        assertNull(this.postBookRequestMapper.toCreateBookCommand(null));
+        assertNull(this.postBookRequestMapper.toCreateBookCommand(null, null));
     }
 }

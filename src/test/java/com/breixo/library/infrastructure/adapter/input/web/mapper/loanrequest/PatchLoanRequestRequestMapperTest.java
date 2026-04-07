@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PatchLoanRequestRequestMapperTest {
 
+
     /** The patch loan request request mapper. */
     @InjectMocks
     PatchLoanRequestRequestMapperImpl patchLoanRequestRequestMapper;
@@ -37,6 +38,7 @@ class PatchLoanRequestRequestMapperTest {
     void testToUpdateLoanRequestCommand_whenRequestIsValid_thenReturnCommand() {
 
         // Given
+        final var requesterId = Instancio.create(Integer.class);
         final var id = Instancio.create(Integer.class);
         final var patchLoanRequestV1Request = Instancio.create(PatchLoanRequestV1Request.class);
         final var loanRequestStatus = Instancio.create(LoanRequestStatus.class);
@@ -45,12 +47,13 @@ class PatchLoanRequestRequestMapperTest {
         when(this.loanRequestStatusMapper.toLoanRequestStatus(patchLoanRequestV1Request.getStatus()))
                 .thenReturn(loanRequestStatus);
         final var updateLoanRequestCommand =
-                this.patchLoanRequestRequestMapper.toUpdateLoanRequestCommand(id, patchLoanRequestV1Request);
+                this.patchLoanRequestRequestMapper.toUpdateLoanRequestCommand(id, requesterId, patchLoanRequestV1Request);
 
         // Then
         verify(this.loanRequestStatusMapper, times(1)).toLoanRequestStatus(patchLoanRequestV1Request.getStatus());
         assertNotNull(updateLoanRequestCommand);
         assertEquals(id, updateLoanRequestCommand.id());
+        assertEquals(requesterId, updateLoanRequestCommand.requesterId());
         assertEquals(loanRequestStatus, updateLoanRequestCommand.status());
         assertEquals(patchLoanRequestV1Request.getRejectionReason(), updateLoanRequestCommand.rejectionReason());
     }
@@ -61,7 +64,7 @@ class PatchLoanRequestRequestMapperTest {
     @Test
     void testToUpdateLoanRequestCommand_whenBothParamsAreNull_thenReturnNull() {
         // When / Then
-        assertNull(this.patchLoanRequestRequestMapper.toUpdateLoanRequestCommand(null, null));
+        assertNull(this.patchLoanRequestRequestMapper.toUpdateLoanRequestCommand(null, null, null));
     }
 
     /**
@@ -71,15 +74,17 @@ class PatchLoanRequestRequestMapperTest {
     void testToUpdateLoanRequestCommand_whenRequestIsNull_thenReturnCommandWithOnlyId() {
 
         // Given
+        final var requesterId = Instancio.create(Integer.class);
         final var id = Instancio.create(Integer.class);
 
         // When
         final var updateLoanRequestCommand =
-                this.patchLoanRequestRequestMapper.toUpdateLoanRequestCommand(id, null);
+                this.patchLoanRequestRequestMapper.toUpdateLoanRequestCommand(id, requesterId, null);
 
         // Then
         assertNotNull(updateLoanRequestCommand);
         assertEquals(id, updateLoanRequestCommand.id());
+        assertEquals(requesterId, updateLoanRequestCommand.requesterId());
         assertNull(updateLoanRequestCommand.status());
         assertNull(updateLoanRequestCommand.rejectionReason());
     }

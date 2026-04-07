@@ -50,9 +50,12 @@ class DeleteBookControllerTest {
         
         // Given
         final var id = Instancio.create(Integer.class);
+        final var requesterId = Instancio.create(Integer.class);
 
         // When
-        this.mockMvc.perform(delete(URL, id).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(delete(URL, id)
+                        .header("X-Requester-Id", requesterId)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
         // Then

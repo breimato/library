@@ -29,6 +29,14 @@ post:
   operationId: "PostLoanRequestV1"
   tags:
     - post-loan-request-v1
+  parameters:
+    - name: X-Requester-Id
+      in: header
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Identifier of the user performing the action"
   requestBody:
     required: true
     content:

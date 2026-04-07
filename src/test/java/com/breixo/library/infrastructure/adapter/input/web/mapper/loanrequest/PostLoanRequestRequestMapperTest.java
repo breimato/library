@@ -27,24 +27,45 @@ class PostLoanRequestRequestMapperTest {
     void testToCreateLoanRequestCommand_whenRequestIsValid_thenReturnCommand() {
 
         // Given
+        final var requesterId = Instancio.create(Integer.class);
         final var postLoanRequestV1Request = Instancio.create(PostLoanRequestV1Request.class);
 
         // When
         final var createLoanRequestCommand =
-                this.postLoanRequestRequestMapper.toCreateLoanRequestCommand(postLoanRequestV1Request);
+                this.postLoanRequestRequestMapper.toCreateLoanRequestCommand(requesterId, postLoanRequestV1Request);
 
         // Then
         assertNotNull(createLoanRequestCommand);
+        assertEquals(requesterId, createLoanRequestCommand.requesterId());
         assertEquals(postLoanRequestV1Request.getUserId(), createLoanRequestCommand.userId());
         assertEquals(postLoanRequestV1Request.getBookId(), createLoanRequestCommand.bookId());
     }
 
     /**
-     * Test to create loan request command when request is null then return null.
+     * Test mapping when request is null then return command with only requesterId.
      */
     @Test
-    void testToCreateLoanRequestCommand_whenRequestIsNull_thenReturnNull() {
+    void testToCreateLoanRequestCommand_whenRequestIsNull_thenReturnCommandWithOnlyId() {
+        
+        // Given
+        final var requesterId = Instancio.create(Integer.class);
+        
+        // When
+        final var createLoanRequestCommand = this.postLoanRequestRequestMapper.toCreateLoanRequestCommand(requesterId, null);
+
+        // Then
+        assertNotNull(createLoanRequestCommand);
+        assertEquals(requesterId, createLoanRequestCommand.requesterId());
+        assertNull(createLoanRequestCommand.userId());
+        assertNull(createLoanRequestCommand.bookId());
+    }
+
+    /**
+     * Test mapping when all parameters are null then return null.
+     */
+    @Test
+    void testToCreateLoanRequestCommand_whenAllParamsAreNull_thenReturnNull() {
         // When / Then
-        assertNull(this.postLoanRequestRequestMapper.toCreateLoanRequestCommand(null));
+        assertNull(this.postLoanRequestRequestMapper.toCreateLoanRequestCommand(null, null));
     }
 }

@@ -29,6 +29,14 @@ post:
   operationId: "PostBookV1"
   tags:
     - post-book-v1
+  parameters:
+    - name: X-Requester-Id
+      in: header
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Identifier of the user performing the action"
   requestBody:
     required: true
     content:
