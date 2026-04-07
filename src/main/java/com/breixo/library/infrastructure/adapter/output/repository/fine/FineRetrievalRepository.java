@@ -32,4 +32,15 @@ public class FineRetrievalRepository implements FineRetrievalPersistencePort {
 
         return this.fineEntityMapper.toFineList(fineEntities);
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Fine> findByUserId(@NotNull final Integer userId) {
+
+        final var fineSearchCriteriaCommand = FineSearchCriteriaCommand.builder()
+                .userId(userId)
+                .build();
+
+        return this.find(fineSearchCriteriaCommand);
+    }
 }

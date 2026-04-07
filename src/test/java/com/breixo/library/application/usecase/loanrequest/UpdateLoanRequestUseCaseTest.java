@@ -4,9 +4,8 @@ import com.breixo.library.domain.command.loanrequest.UpdateLoanRequestCommand;
 import com.breixo.library.domain.event.loanrequest.LoanRequestApprovedDomainEvent;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.domain.model.loanrequest.enums.LoanRequestStatus;
-import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.loanrequest.LoanRequestMachineStatusService;
-import com.breixo.library.domain.port.input.user.AuthorizationService;
+import com.breixo.library.domain.port.input.loanrequest.LoanRequestPolicyValidationService;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestUpdatePersistencePort;
 
@@ -40,9 +39,9 @@ class UpdateLoanRequestUseCaseTest {
     @Mock
     LoanRequestUpdatePersistencePort loanRequestUpdatePersistencePort;
 
-    /** The authorization service. */
+    /** The loan request policy validation service. */
     @Mock
-    AuthorizationService authorizationService;
+    LoanRequestPolicyValidationService loanRequestPolicyValidationService;
 
     /** The loan request machine status service. */
     @Mock
@@ -71,20 +70,20 @@ class UpdateLoanRequestUseCaseTest {
 
         // When
         when(this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id())).thenReturn(existingLoanRequest);
-        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+        doNothing().when(this.loanRequestPolicyValidationService).validateTransitionAuthorization(
                 updateLoanRequestCommand.requesterId(),
                 existingLoanRequest.userId(),
-                UserRole.MANAGER);
+                updateLoanRequestCommand.status());
         when(this.loanRequestUpdatePersistencePort.execute(updateLoanRequestCommand)).thenReturn(updatedLoanRequest);
-        
+
         final var actualLoanRequest = this.updateLoanRequestUseCase.execute(updateLoanRequestCommand);
 
         // Then
         verify(this.loanRequestRetrievalPersistencePort, times(1)).findById(updateLoanRequestCommand.id());
-        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+        verify(this.loanRequestPolicyValidationService, times(1)).validateTransitionAuthorization(
                 updateLoanRequestCommand.requesterId(),
                 existingLoanRequest.userId(),
-                UserRole.MANAGER);
+                updateLoanRequestCommand.status());
         verify(this.loanRequestMachineStatusService, times(0)).execute(existingLoanRequest.status(), existingLoanRequest.status());
         verify(this.loanRequestUpdatePersistencePort, times(1)).execute(updateLoanRequestCommand);
         verify(this.applicationEventPublisher, times(0)).publishEvent(LoanRequestApprovedDomainEvent.builder().build());
@@ -115,23 +114,23 @@ class UpdateLoanRequestUseCaseTest {
 
         // When
         when(this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id())).thenReturn(existingLoanRequest);
-        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+        doNothing().when(this.loanRequestPolicyValidationService).validateTransitionAuthorization(
                 updateLoanRequestCommand.requesterId(),
                 existingLoanRequest.userId(),
-                UserRole.MANAGER);
+                updateLoanRequestCommand.status());
         doNothing().when(this.loanRequestMachineStatusService).execute(
                 LoanRequestStatus.PENDING, LoanRequestStatus.APPROVED);
         when(this.loanRequestUpdatePersistencePort.execute(updateLoanRequestCommand)).thenReturn(updatedLoanRequest);
         doNothing().when(this.applicationEventPublisher).publishEvent(loanRequestApprovedDomainEvent);
-        
+
         final var actualLoanRequest = this.updateLoanRequestUseCase.execute(updateLoanRequestCommand);
 
         // Then
         verify(this.loanRequestRetrievalPersistencePort, times(1)).findById(updateLoanRequestCommand.id());
-        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+        verify(this.loanRequestPolicyValidationService, times(1)).validateTransitionAuthorization(
                 updateLoanRequestCommand.requesterId(),
                 existingLoanRequest.userId(),
-                UserRole.MANAGER);
+                updateLoanRequestCommand.status());
         verify(this.loanRequestMachineStatusService, times(1)).execute(
                 LoanRequestStatus.PENDING, LoanRequestStatus.APPROVED);
         verify(this.loanRequestUpdatePersistencePort, times(1)).execute(updateLoanRequestCommand);

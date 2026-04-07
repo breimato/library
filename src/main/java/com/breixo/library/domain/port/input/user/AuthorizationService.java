@@ -7,12 +7,12 @@ import jakarta.validation.constraints.NotNull;
 public interface AuthorizationService {
 
     /**
-     * Require role.
+     * Require minimum role.
      *
      * @param requesterId the requester id
-     * @param requiredRole the required role
+     * @param minimumRole the minimum role required (inclusive)
      */
-    void requireRole(@NotNull Integer requesterId, @NotNull UserRole requiredRole);
+    void requireMinimumRole(@NotNull Integer requesterId, @NotNull UserRole minimumRole);
 
     /**
      * Require own resource or role.

@@ -20,6 +20,8 @@ paths:
     $ref: './library/loans-v1.api.yaml'
   /v1/library/loans/{id}:
     $ref: './library/loans-id-v1.api.yaml'
+  /v1/library/users/{id}/loans:
+    $ref: './library/users-id-loans-v1.api.yaml'
   /v1/library/loans/{id}/return:
     $ref: './library/loans-id-return-v1.api.yaml'
   /v1/library/loans/{id}/renew:
@@ -29,11 +31,15 @@ paths:
     $ref: './library/fines-v1.api.yaml'
   /v1/library/fines/{id}:
     $ref: './library/fines-id-v1.api.yaml'
+  /v1/library/users/{id}/fines:
+    $ref: './library/users-id-fines-v1.api.yaml'
   # Reservations
   /v1/library/reservations:
     $ref: './library/reservations-v1.api.yaml'
   /v1/library/reservations/{id}:
     $ref: './library/reservations-id-v1.api.yaml'
+  /v1/library/users/{id}/reservations:
+    $ref: './library/users-id-reservations-v1.api.yaml'
   # Loan Requests
   /v1/library/loan-requests:
     $ref: './library/loan-requests-v1.api.yaml'

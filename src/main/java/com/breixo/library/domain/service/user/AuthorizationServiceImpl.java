@@ -21,11 +21,13 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     /** {@inheritDoc} */
     @Override
-    public void requireRole(@NotNull final Integer requesterId, @NotNull final UserRole requiredRole) {
+    public void requireMinimumRole(@NotNull final Integer requesterId, @NotNull final UserRole minimumRole) {
 
         final var user = this.userRetrievalPersistencePort.findById(requesterId);
 
-        if (BooleanUtils.isFalse(user.role().getId().equals(requiredRole.getId()))) {
+        final var hasEnoughRole = user.role().getId() >= minimumRole.getId();
+
+        if (BooleanUtils.isFalse(hasEnoughRole)) {
             throw new ForbiddenActionException(
                     ExceptionMessageConstants.FORBIDDEN_ACTION_CODE_ERROR,
                     ExceptionMessageConstants.FORBIDDEN_ACTION_MESSAGE_ERROR);
@@ -48,4 +50,5 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                     ExceptionMessageConstants.FORBIDDEN_OWN_RESOURCE_MESSAGE_ERROR);
         }
     }
+
 }

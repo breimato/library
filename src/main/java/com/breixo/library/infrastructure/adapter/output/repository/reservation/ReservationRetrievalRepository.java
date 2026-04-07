@@ -68,4 +68,15 @@ public class ReservationRetrievalRepository implements ReservationRetrievalPersi
 
         return this.reservationEntityMapper.toReservationList(reservationEntities);
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Reservation> findByUserId(@NotNull final Integer userId) {
+
+        final var reservationSearchCriteriaCommand = ReservationSearchCriteriaCommand.builder()
+                .userId(userId)
+                .build();
+
+        return this.find(reservationSearchCriteriaCommand);
+    }
 }

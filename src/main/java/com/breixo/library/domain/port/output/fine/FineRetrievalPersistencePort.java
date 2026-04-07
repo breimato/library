@@ -18,4 +18,12 @@ public interface FineRetrievalPersistencePort {
      * @return the list of fines.
      */
     List<Fine> find(@Valid @NotNull FineSearchCriteriaCommand fineSearchCriteriaCommand);
+
+    /**
+     * Find by user id.
+     *
+     * @param userId the user id.
+     * @return the list of fines.
+     */
+    List<Fine> findByUserId(@NotNull Integer userId);
 }

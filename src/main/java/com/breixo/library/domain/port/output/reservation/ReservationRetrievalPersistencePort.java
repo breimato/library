@@ -42,4 +42,12 @@ public interface ReservationRetrievalPersistencePort {
      * @return the list of reservations.
      */
     List<Reservation> find(@Valid @NotNull ReservationSearchCriteriaCommand reservationSearchCriteriaCommand);
+
+    /**
+     * Find by user id.
+     *
+     * @param userId the user id.
+     * @return the list of reservations.
+     */
+    List<Reservation> findByUserId(@NotNull Integer userId);
 }

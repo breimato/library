@@ -1,0 +1,46 @@
+get:
+  summary: "Get User Loans V1"
+  description: "Get all loans for a specific user. Requester must be the user themselves or a manager/admin."
+  operationId: "GetUserLoansV1"
+  tags:
+    - get-user-loans-v1
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "User identifier"
+    - name: X-Requester-Id
+      in: header
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: "Identifier of the user performing the action"
+  responses:
+    '200':
+      description: "200 OK"
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/GetLoansV1Response.yaml'
+    '403':
+      description: "Forbidden - Cannot access another user's loans"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '404':
+      description: "Not Found - User not found"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: '../components/ApiErrorV1.yaml'

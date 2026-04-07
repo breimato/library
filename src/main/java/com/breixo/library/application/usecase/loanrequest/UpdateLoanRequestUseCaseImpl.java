@@ -6,10 +6,9 @@ import com.breixo.library.domain.command.loanrequest.UpdateLoanRequestCommand;
 import com.breixo.library.domain.event.loanrequest.LoanRequestApprovedDomainEvent;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.domain.model.loanrequest.enums.LoanRequestStatus;
-import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.loanrequest.LoanRequestMachineStatusService;
+import com.breixo.library.domain.port.input.loanrequest.LoanRequestPolicyValidationService;
 import com.breixo.library.domain.port.input.loanrequest.UpdateLoanRequestUseCase;
-import com.breixo.library.domain.port.input.user.AuthorizationService;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestUpdatePersistencePort;
 
@@ -26,32 +25,44 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UpdateLoanRequestUseCaseImpl implements UpdateLoanRequestUseCase {
 
-    /** The loan request retrieval persistence port. */
+    /**
+     * The loan request retrieval persistence port.
+     */
     private final LoanRequestRetrievalPersistencePort loanRequestRetrievalPersistencePort;
 
-    /** The loan request update persistence port. */
+    /**
+     * The loan request update persistence port.
+     */
     private final LoanRequestUpdatePersistencePort loanRequestUpdatePersistencePort;
 
-    /** The authorization service. */
-    private final AuthorizationService authorizationService;
+    /**
+     * The loan request policy validation service.
+     */
+    private final LoanRequestPolicyValidationService loanRequestPolicyValidationService;
 
-    /** The loan request machine status service. */
+    /**
+     * The loan request machine status service.
+     */
     private final LoanRequestMachineStatusService loanRequestMachineStatusService;
 
-    /** The application event publisher. */
+    /**
+     * The application event publisher.
+     */
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public LoanRequest execute(@Valid @NotNull final UpdateLoanRequestCommand updateLoanRequestCommand) {
 
         final var loanRequest = this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id());
 
-        this.authorizationService.requireOwnResourceOrRole(
+        this.loanRequestPolicyValidationService.validateTransitionAuthorization(
                 updateLoanRequestCommand.requesterId(),
                 loanRequest.userId(),
-                UserRole.MANAGER);
+                updateLoanRequestCommand.status());
 
         if (Objects.nonNull(updateLoanRequestCommand.status())) {
             this.loanRequestMachineStatusService.execute(
