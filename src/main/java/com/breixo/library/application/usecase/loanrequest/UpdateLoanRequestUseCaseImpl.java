@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import com.breixo.library.domain.command.loanrequest.UpdateLoanRequestCommand;
 import com.breixo.library.domain.event.loanrequest.LoanRequestApprovedDomainEvent;
+import com.breixo.library.domain.exception.LoanRequestException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.domain.model.loanrequest.enums.LoanRequestStatus;
 import com.breixo.library.domain.port.input.loanrequest.LoanRequestMachineStatusService;
@@ -25,39 +27,30 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UpdateLoanRequestUseCaseImpl implements UpdateLoanRequestUseCase {
 
-    /**
-     * The loan request retrieval persistence port.
-     */
+    /** The loan request retrieval persistence port. */
     private final LoanRequestRetrievalPersistencePort loanRequestRetrievalPersistencePort;
 
-    /**
-     * The loan request update persistence port.
-     */
+    /** The loan request update persistence port. */
     private final LoanRequestUpdatePersistencePort loanRequestUpdatePersistencePort;
 
-    /**
-     * The loan request policy validation service.
-     */
+    /** The loan request policy validation service. */
     private final LoanRequestPolicyValidationService loanRequestPolicyValidationService;
 
-    /**
-     * The loan request machine status service.
-     */
+    /** The loan request machine status service. */
     private final LoanRequestMachineStatusService loanRequestMachineStatusService;
 
-    /**
-     * The application event publisher.
-     */
+    /** The application event publisher. */
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     @Transactional
     public LoanRequest execute(@Valid @NotNull final UpdateLoanRequestCommand updateLoanRequestCommand) {
 
-        final var loanRequest = this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id());
+        final var loanRequest = this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id())
+                .orElseThrow(() -> new LoanRequestException(
+                        ExceptionMessageConstants.LOAN_REQUEST_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.LOAN_REQUEST_NOT_FOUND_MESSAGE_ERROR));
 
         this.loanRequestPolicyValidationService.validateTransitionAuthorization(
                 updateLoanRequestCommand.requesterId(),

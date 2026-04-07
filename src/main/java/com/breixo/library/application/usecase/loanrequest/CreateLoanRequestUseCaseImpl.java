@@ -1,6 +1,9 @@
 package com.breixo.library.application.usecase.loanrequest;
 
 import com.breixo.library.domain.command.loanrequest.CreateLoanRequestCommand;
+import com.breixo.library.domain.exception.BookException;
+import com.breixo.library.domain.exception.UserException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.loanrequest.CreateLoanRequestUseCase;
@@ -48,9 +51,15 @@ public class CreateLoanRequestUseCaseImpl implements CreateLoanRequestUseCase {
 
         this.loanRequestPolicyValidationService.validateCreation(createLoanRequestCommand);
 
-        this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId());
+        this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId())
+                .orElseThrow(() -> new UserException(
+                        ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR));
 
-        this.bookRetrievalPersistencePort.findById(createLoanRequestCommand.bookId());
+        this.bookRetrievalPersistencePort.findById(createLoanRequestCommand.bookId())
+                .orElseThrow(() -> new BookException(
+                        ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR));
 
         return this.loanRequestCreationPersistencePort.execute(createLoanRequestCommand);
     }

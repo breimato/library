@@ -3,6 +3,8 @@ package com.breixo.library.application.usecase.loan;
 import java.util.List;
 
 import com.breixo.library.domain.command.loan.GetUserLoansCommand;
+import com.breixo.library.domain.exception.UserException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.loan.GetUserLoansUseCase;
@@ -38,7 +40,10 @@ public class GetUserLoansUseCaseImpl implements GetUserLoansUseCase {
                 getUserLoansCommand.userId(),
                 UserRole.MANAGER);
 
-        this.userRetrievalPersistencePort.findById(getUserLoansCommand.userId());
+        this.userRetrievalPersistencePort.findById(getUserLoansCommand.userId())
+                .orElseThrow(() -> new UserException(
+                        ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR));
 
         return this.loanRetrievalPersistencePort.findByUserId(getUserLoansCommand.userId());
     }

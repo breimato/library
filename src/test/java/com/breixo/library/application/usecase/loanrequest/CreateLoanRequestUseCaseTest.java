@@ -1,5 +1,7 @@
 package com.breixo.library.application.usecase.loanrequest;
 
+import java.util.Optional;
+
 import com.breixo.library.domain.command.loanrequest.CreateLoanRequestCommand;
 import com.breixo.library.domain.exception.BookException;
 import com.breixo.library.domain.exception.UserException;
@@ -74,8 +76,8 @@ class CreateLoanRequestUseCaseTest {
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
         doNothing().when(this.loanRequestPolicyValidationService).validateCreation(createLoanRequestCommand);
-        when(this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId())).thenReturn(user);
-        when(this.bookRetrievalPersistencePort.findById(createLoanRequestCommand.bookId())).thenReturn(book);
+        when(this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId())).thenReturn(Optional.of(user));
+        when(this.bookRetrievalPersistencePort.findById(createLoanRequestCommand.bookId())).thenReturn(Optional.of(book));
         when(this.loanRequestCreationPersistencePort.execute(createLoanRequestCommand)).thenReturn(loanRequest);
         
         final var actualLoanRequest = this.createLoanRequestUseCase.execute(createLoanRequestCommand);
@@ -108,9 +110,7 @@ class CreateLoanRequestUseCaseTest {
                 UserRole.MANAGER);
         doNothing().when(this.loanRequestPolicyValidationService).validateCreation(createLoanRequestCommand);
         when(this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId()))
-                .thenThrow(new UserException(
-                        ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
-                        ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR));
+                .thenReturn(Optional.empty());
 
         // Then
         assertThrows(UserException.class, () -> this.createLoanRequestUseCase.execute(createLoanRequestCommand));
@@ -140,11 +140,9 @@ class CreateLoanRequestUseCaseTest {
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
         doNothing().when(this.loanRequestPolicyValidationService).validateCreation(createLoanRequestCommand);
-        when(this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId())).thenReturn(user);
+        when(this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId())).thenReturn(Optional.of(user));
         when(this.bookRetrievalPersistencePort.findById(createLoanRequestCommand.bookId()))
-                .thenThrow(new BookException(
-                        ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
-                        ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR));
+                .thenReturn(Optional.empty());
 
         // Then
         assertThrows(BookException.class, () -> this.createLoanRequestUseCase.execute(createLoanRequestCommand));

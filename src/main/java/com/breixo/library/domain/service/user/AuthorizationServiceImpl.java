@@ -1,6 +1,7 @@
 package com.breixo.library.domain.service.user;
 
 import com.breixo.library.domain.exception.ForbiddenActionException;
+import com.breixo.library.domain.exception.UserException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.user.AuthorizationService;
@@ -23,7 +24,10 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     public void requireMinimumRole(@NotNull final Integer requesterId, @NotNull final UserRole minimumRole) {
 
-        final var user = this.userRetrievalPersistencePort.findById(requesterId);
+        final var user = this.userRetrievalPersistencePort.findById(requesterId)
+                .orElseThrow(() -> new UserException(
+                        ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR));
 
         final var hasEnoughRole = user.role().getId() >= minimumRole.getId();
 
@@ -39,7 +43,10 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public void requireOwnResourceOrRole(@NotNull final Integer requesterId, @NotNull final Integer resourceOwnerId,
             @NotNull final UserRole minimumRole) {
 
-        final var user = this.userRetrievalPersistencePort.findById(requesterId);
+        final var user = this.userRetrievalPersistencePort.findById(requesterId)
+                .orElseThrow(() -> new UserException(
+                        ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR));
 
         final var isOwner = requesterId.equals(resourceOwnerId);
         final var hasEnoughRole = user.role().getId() >= minimumRole.getId();

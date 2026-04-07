@@ -58,4 +58,23 @@ class PatchLoanRenewRequestMapperTest {
         assertNull(updateLoanRenewCommand.id());
         assertEquals(patchLoanRenewV1Request.getDueDate(), updateLoanRenewCommand.dueDate());
     }
+
+    /**
+     * Test to update loan renew command when request is null then return command with null due date.
+     */
+    @Test
+    void testToUpdateLoanRenewCommand_whenRequestIsNull_thenReturnCommandWithNullDueDate() {
+
+        // Given
+        final var id = Instancio.create(Integer.class);
+
+        // When
+        final var updateLoanRenewCommand = this.patchLoanRenewRequestMapper
+                .toUpdateLoanRenewCommand(id, null);
+
+        // Then
+        assertNotNull(updateLoanRenewCommand);
+        assertEquals(id, updateLoanRenewCommand.id());
+        assertNull(updateLoanRenewCommand.dueDate());
+    }
 }

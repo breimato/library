@@ -3,6 +3,8 @@ package com.breixo.library.application.usecase.reservation;
 import java.util.List;
 
 import com.breixo.library.domain.command.reservation.GetUserReservationsCommand;
+import com.breixo.library.domain.exception.UserException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.reservation.Reservation;
 import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.reservation.GetUserReservationsUseCase;
@@ -38,7 +40,10 @@ public class GetUserReservationsUseCaseImpl implements GetUserReservationsUseCas
                 getUserReservationsCommand.userId(),
                 UserRole.MANAGER);
 
-        this.userRetrievalPersistencePort.findById(getUserReservationsCommand.userId());
+        this.userRetrievalPersistencePort.findById(getUserReservationsCommand.userId())
+                .orElseThrow(() -> new UserException(
+                        ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR));
 
         return this.reservationRetrievalPersistencePort.findByUserId(getUserReservationsCommand.userId());
     }

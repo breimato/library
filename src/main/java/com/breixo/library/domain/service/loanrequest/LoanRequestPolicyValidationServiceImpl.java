@@ -7,6 +7,7 @@ import java.util.Set;
 import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
 import com.breixo.library.domain.command.loanrequest.CreateLoanRequestCommand;
+import com.breixo.library.domain.exception.BookException;
 import com.breixo.library.domain.exception.LoanRequestException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.fine.enums.FineStatus;
@@ -121,7 +122,10 @@ public class LoanRequestPolicyValidationServiceImpl implements LoanRequestPolicy
      */
     private void validateBookAvailability(final Integer bookId) {
 
-        final var book = this.bookRetrievalPersistencePort.findById(bookId);
+        final var book = this.bookRetrievalPersistencePort.findById(bookId)
+                .orElseThrow(() -> new BookException(
+                        ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR));
 
         if (book.availableCopies() > 0) {
             throw new LoanRequestException(

@@ -17,7 +17,7 @@ public class ReservationDeletionRepository implements ReservationDeletionPersist
 
     /** {@inheritDoc} */
     @Override
-    public void execute(@NotNull final Integer id) {
+    public void execute(final Integer id) {
         this.reservationMyBatisMapper.delete(id);
     }
 }

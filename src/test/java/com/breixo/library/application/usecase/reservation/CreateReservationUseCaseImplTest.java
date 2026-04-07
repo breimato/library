@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
@@ -83,8 +84,8 @@ class CreateReservationUseCaseImplTest {
                 ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR);
 
         // When
-        when(this.userRetrievalPersistencePort.findById(createReservationCommand.userId())).thenReturn(user);
-        when(this.bookRetrievalPersistencePort.findById(createReservationCommand.bookId())).thenReturn(book);
+        when(this.userRetrievalPersistencePort.findById(createReservationCommand.userId())).thenReturn(Optional.of(user));
+        when(this.bookRetrievalPersistencePort.findById(createReservationCommand.bookId())).thenReturn(Optional.of(book));
         when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
         doThrow(userException).when(this.userPolicyValidationService).check(user, loanList);
         final var exception = assertThrows(UserException.class,
@@ -112,8 +113,8 @@ class CreateReservationUseCaseImplTest {
                 ExceptionMessageConstants.RESERVATION_COPIES_AVAILABLE_MESSAGE_ERROR);
 
         // When
-        when(this.userRetrievalPersistencePort.findById(createReservationCommand.userId())).thenReturn(user);
-        when(this.bookRetrievalPersistencePort.findById(createReservationCommand.bookId())).thenReturn(book);
+        when(this.userRetrievalPersistencePort.findById(createReservationCommand.userId())).thenReturn(Optional.of(user));
+        when(this.bookRetrievalPersistencePort.findById(createReservationCommand.bookId())).thenReturn(Optional.of(book));
         when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
         doThrow(bookException).when(this.bookPolicyValidationService).checkIsReservable(book);
         final var exception = assertThrows(BookException.class,
@@ -141,8 +142,8 @@ class CreateReservationUseCaseImplTest {
                 ExceptionMessageConstants.RESERVATION_ALREADY_EXISTS_MESSAGE_ERROR);
 
         // When
-        when(this.userRetrievalPersistencePort.findById(createReservationCommand.userId())).thenReturn(user);
-        when(this.bookRetrievalPersistencePort.findById(createReservationCommand.bookId())).thenReturn(book);
+        when(this.userRetrievalPersistencePort.findById(createReservationCommand.userId())).thenReturn(Optional.of(user));
+        when(this.bookRetrievalPersistencePort.findById(createReservationCommand.bookId())).thenReturn(Optional.of(book));
         when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
         doThrow(reservationException).when(this.reservationPolicyValidationService)
                 .checkNoActiveReservation(user.id(), book.id());
@@ -168,8 +169,8 @@ class CreateReservationUseCaseImplTest {
         final var reservation = Instancio.create(Reservation.class);
 
         // When
-        when(this.userRetrievalPersistencePort.findById(createReservationCommand.userId())).thenReturn(user);
-        when(this.bookRetrievalPersistencePort.findById(createReservationCommand.bookId())).thenReturn(book);
+        when(this.userRetrievalPersistencePort.findById(createReservationCommand.userId())).thenReturn(Optional.of(user));
+        when(this.bookRetrievalPersistencePort.findById(createReservationCommand.bookId())).thenReturn(Optional.of(book));
         when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
         when(this.reservationCreationPersistencePort.execute(createReservationCommand)).thenReturn(reservation);
         final var result = this.createReservationUseCaseImpl.execute(createReservationCommand);

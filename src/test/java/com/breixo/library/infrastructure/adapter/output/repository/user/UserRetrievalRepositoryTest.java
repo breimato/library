@@ -1,6 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.repository.user;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
 import com.breixo.library.domain.model.user.User;
@@ -102,5 +103,49 @@ class UserRetrievalRepositoryTest {
         verify(this.userMyBatisMapper, times(1)).find(userSearchCriteriaCommand);
         verify(this.userEntityMapper, times(1)).toUserList(List.of());
         assertTrue(result.isEmpty());
+    }
+
+    /**
+     * Test find by id when user exists then return optional user.
+     */
+    @Test
+    void testFindById_whenUserExists_thenReturnOptionalUser() {
+
+        // Given
+        final var id = Instancio.create(Integer.class);
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
+        final var userEntity = Instancio.create(UserEntity.class);
+        final var user = Instancio.create(User.class);
+
+        // When
+        when(this.userMyBatisMapper.find(userSearchCriteriaCommand)).thenReturn(List.of(userEntity));
+        when(this.userEntityMapper.toUserList(List.of(userEntity))).thenReturn(List.of(user));
+        final var result = this.userRetrievalRepository.findById(id);
+
+        // Then
+        verify(this.userMyBatisMapper, times(1)).find(userSearchCriteriaCommand);
+        verify(this.userEntityMapper, times(1)).toUserList(List.of(userEntity));
+        assertEquals(Optional.of(user), result);
+    }
+
+    /**
+     * Test find by id when user not found then return optional empty.
+     */
+    @Test
+    void testFindById_whenUserNotFound_thenReturnOptionalEmpty() {
+
+        // Given
+        final var id = Instancio.create(Integer.class);
+        final var userSearchCriteriaCommand = UserSearchCriteriaCommand.builder().id(id).build();
+
+        // When
+        when(this.userMyBatisMapper.find(userSearchCriteriaCommand)).thenReturn(List.of());
+        when(this.userEntityMapper.toUserList(List.of())).thenReturn(List.of());
+        final var result = this.userRetrievalRepository.findById(id);
+
+        // Then
+        verify(this.userMyBatisMapper, times(1)).find(userSearchCriteriaCommand);
+        verify(this.userEntityMapper, times(1)).toUserList(List.of());
+        assertEquals(Optional.empty(), result);
     }
 }

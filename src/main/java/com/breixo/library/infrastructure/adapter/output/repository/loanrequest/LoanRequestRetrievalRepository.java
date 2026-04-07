@@ -1,10 +1,9 @@
 package com.breixo.library.infrastructure.adapter.output.repository.loanrequest;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.breixo.library.domain.command.loanrequest.LoanRequestSearchCriteriaCommand;
-import com.breixo.library.domain.exception.LoanRequestException;
-import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.output.mapper.LoanRequestEntityMapper;
@@ -13,7 +12,6 @@ import com.breixo.library.infrastructure.adapter.output.mybatis.LoanRequestMyBat
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 /** The Class Loan Request Retrieval Repository. */
@@ -29,18 +27,12 @@ public class LoanRequestRetrievalRepository implements LoanRequestRetrievalPersi
 
     /** {@inheritDoc} */
     @Override
-    public LoanRequest findById(@NotNull final Integer id) {
+    public Optional<LoanRequest> findById(@NotNull final Integer id) {
 
         final var searchCriteria = LoanRequestSearchCriteriaCommand.builder().id(id).build();
         final var loanRequestList = this.find(searchCriteria);
 
-        if (CollectionUtils.isEmpty(loanRequestList)) {
-            throw new LoanRequestException(
-                    ExceptionMessageConstants.LOAN_REQUEST_NOT_FOUND_CODE_ERROR,
-                    ExceptionMessageConstants.LOAN_REQUEST_NOT_FOUND_MESSAGE_ERROR);
-        }
-
-        return loanRequestList.getFirst();
+        return loanRequestList.isEmpty() ? Optional.empty() : Optional.of(loanRequestList.getFirst());
     }
 
     /** {@inheritDoc} */

@@ -1,10 +1,9 @@
 package com.breixo.library.infrastructure.adapter.output.repository.loanrequest;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.breixo.library.domain.command.loanrequest.LoanRequestSearchCriteriaCommand;
-import com.breixo.library.domain.exception.LoanRequestException;
-import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.infrastructure.adapter.output.entities.LoanRequestEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.LoanRequestEntityMapper;
@@ -18,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -103,14 +101,14 @@ class LoanRequestRetrievalRepositoryTest {
         // Then
         verify(this.loanRequestMyBatisMapper, times(1)).find(searchCriteria);
         verify(this.loanRequestEntityMapper, times(1)).toLoanRequestList(List.of(loanRequestEntity));
-        assertEquals(loanRequest, result);
+        assertEquals(Optional.of(loanRequest), result);
     }
 
     /**
-     * Test find by id when loan request not found then throw loan request exception.
+     * Test find by id when loan request not found then return optional empty.
      */
     @Test
-    void testFindById_whenLoanRequestNotFound_thenThrowLoanRequestException() {
+    void testFindById_whenLoanRequestNotFound_thenReturnOptionalEmpty() {
 
         // Given
         final var id = Instancio.create(Integer.class);
@@ -119,12 +117,11 @@ class LoanRequestRetrievalRepositoryTest {
         // When
         when(this.loanRequestMyBatisMapper.find(searchCriteria)).thenReturn(List.of());
         when(this.loanRequestEntityMapper.toLoanRequestList(List.of())).thenReturn(List.of());
-        final var exception = assertThrows(LoanRequestException.class,
-                () -> this.loanRequestRetrievalRepository.findById(id));
+        final var result = this.loanRequestRetrievalRepository.findById(id);
 
         // Then
         verify(this.loanRequestMyBatisMapper, times(1)).find(searchCriteria);
         verify(this.loanRequestEntityMapper, times(1)).toLoanRequestList(List.of());
-        assertEquals(ExceptionMessageConstants.LOAN_REQUEST_NOT_FOUND_MESSAGE_ERROR, exception.getMessage());
+        assertEquals(Optional.empty(), result);
     }
 }

@@ -3,6 +3,8 @@ package com.breixo.library.application.usecase.fine;
 import java.util.List;
 
 import com.breixo.library.domain.command.fine.GetUserFinesCommand;
+import com.breixo.library.domain.exception.UserException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.fine.Fine;
 import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.fine.GetUserFinesUseCase;
@@ -38,7 +40,10 @@ public class GetUserFinesUseCaseImpl implements GetUserFinesUseCase {
                 getUserFinesCommand.userId(),
                 UserRole.MANAGER);
 
-        this.userRetrievalPersistencePort.findById(getUserFinesCommand.userId());
+        this.userRetrievalPersistencePort.findById(getUserFinesCommand.userId())
+                .orElseThrow(() -> new UserException(
+                        ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR));
 
         return this.fineRetrievalPersistencePort.findByUserId(getUserFinesCommand.userId());
     }

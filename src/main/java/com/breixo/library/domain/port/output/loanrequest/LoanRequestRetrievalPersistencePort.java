@@ -1,6 +1,7 @@
 package com.breixo.library.domain.port.output.loanrequest;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.breixo.library.domain.command.loanrequest.LoanRequestSearchCriteriaCommand;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
@@ -15,9 +16,9 @@ public interface LoanRequestRetrievalPersistencePort {
      * Find by id.
      *
      * @param id the loan request identifier.
-     * @return the loan request.
+     * @return the loan request, or empty if not found.
      */
-    LoanRequest findById(@NotNull Integer id);
+    Optional<LoanRequest> findById(@NotNull Integer id);
 
     /**
      * Find.

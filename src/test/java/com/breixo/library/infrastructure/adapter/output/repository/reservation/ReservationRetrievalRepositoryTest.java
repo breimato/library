@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.breixo.library.domain.command.reservation.ReservationSearchCriteriaCommand;
 import com.breixo.library.domain.model.reservation.Reservation;
+import com.breixo.library.domain.model.reservation.enums.ReservationStatus;
 import com.breixo.library.infrastructure.adapter.output.entities.ReservationEntity;
 import com.breixo.library.infrastructure.adapter.output.mapper.ReservationEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.ReservationMyBatisMapper;
@@ -78,5 +79,103 @@ class ReservationRetrievalRepositoryTest {
         verify(this.reservationMyBatisMapper, times(1)).find(reservationSearchCriteriaCommand);
         verify(this.reservationEntityMapper, times(1)).toReservationList(List.of());
         assertTrue(result.isEmpty());
+    }
+
+    /**
+     * Test find by user id when reservations exist then return reservations.
+     */
+    @Test
+    void testFindByUserId_whenReservationsExist_thenReturnReservations() {
+
+        // Given
+        final var userId = Instancio.create(Integer.class);
+        final var reservationSearchCriteriaCommand = ReservationSearchCriteriaCommand.builder().userId(userId).build();
+        final var reservationEntities = Instancio.createList(ReservationEntity.class);
+        final var reservations = Instancio.createList(Reservation.class);
+
+        // When
+        when(this.reservationMyBatisMapper.find(reservationSearchCriteriaCommand)).thenReturn(reservationEntities);
+        when(this.reservationEntityMapper.toReservationList(reservationEntities)).thenReturn(reservations);
+        final var result = this.reservationRetrievalRepository.findByUserId(userId);
+
+        // Then
+        verify(this.reservationMyBatisMapper, times(1)).find(reservationSearchCriteriaCommand);
+        verify(this.reservationEntityMapper, times(1)).toReservationList(reservationEntities);
+        assertEquals(reservations, result);
+    }
+
+    /**
+     * Test get pending by book id then return pending reservations.
+     */
+    @Test
+    void testGetPendingByBookId_thenReturnPendingReservations() {
+
+        // Given
+        final var bookId = Instancio.create(Integer.class);
+        final var reservationSearchCriteriaCommand = ReservationSearchCriteriaCommand.builder()
+                .bookId(bookId)
+                .statusId(ReservationStatus.PENDING.getId())
+                .build();
+        final var reservationEntities = Instancio.createList(ReservationEntity.class);
+        final var reservations = Instancio.createList(Reservation.class);
+
+        // When
+        when(this.reservationMyBatisMapper.find(reservationSearchCriteriaCommand)).thenReturn(reservationEntities);
+        when(this.reservationEntityMapper.toReservationList(reservationEntities)).thenReturn(reservations);
+        final var result = this.reservationRetrievalRepository.getPendingByBookId(bookId);
+
+        // Then
+        verify(this.reservationMyBatisMapper, times(1)).find(reservationSearchCriteriaCommand);
+        verify(this.reservationEntityMapper, times(1)).toReservationList(reservationEntities);
+        assertEquals(reservations, result);
+    }
+
+    /**
+     * Test get notified by book id then return notified reservations.
+     */
+    @Test
+    void testGetNotifiedByBookId_thenReturnNotifiedReservations() {
+
+        // Given
+        final var bookId = Instancio.create(Integer.class);
+        final var reservationSearchCriteriaCommand = ReservationSearchCriteriaCommand.builder()
+                .bookId(bookId)
+                .statusId(ReservationStatus.NOTIFIED.getId())
+                .build();
+        final var reservationEntities = Instancio.createList(ReservationEntity.class);
+        final var reservations = Instancio.createList(Reservation.class);
+
+        // When
+        when(this.reservationMyBatisMapper.find(reservationSearchCriteriaCommand)).thenReturn(reservationEntities);
+        when(this.reservationEntityMapper.toReservationList(reservationEntities)).thenReturn(reservations);
+        final var result = this.reservationRetrievalRepository.getNotifiedByBookId(bookId);
+
+        // Then
+        verify(this.reservationMyBatisMapper, times(1)).find(reservationSearchCriteriaCommand);
+        verify(this.reservationEntityMapper, times(1)).toReservationList(reservationEntities);
+        assertEquals(reservations, result);
+    }
+
+    /**
+     * Test get active by book id then return active reservations.
+     */
+    @Test
+    void testGetActiveByBookId_thenReturnActiveReservations() {
+
+        // Given
+        final var bookId = Instancio.create(Integer.class);
+        final var activeStatusIds = List.of(ReservationStatus.PENDING.getId(), ReservationStatus.NOTIFIED.getId());
+        final var reservationEntities = Instancio.createList(ReservationEntity.class);
+        final var reservations = Instancio.createList(Reservation.class);
+
+        // When
+        when(this.reservationMyBatisMapper.findActiveByBookId(bookId, activeStatusIds)).thenReturn(reservationEntities);
+        when(this.reservationEntityMapper.toReservationList(reservationEntities)).thenReturn(reservations);
+        final var result = this.reservationRetrievalRepository.getActiveByBookId(bookId);
+
+        // Then
+        verify(this.reservationMyBatisMapper, times(1)).findActiveByBookId(bookId, activeStatusIds);
+        verify(this.reservationEntityMapper, times(1)).toReservationList(reservationEntities);
+        assertEquals(reservations, result);
     }
 }

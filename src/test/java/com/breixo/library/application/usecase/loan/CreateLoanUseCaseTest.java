@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
@@ -86,12 +87,9 @@ class CreateLoanUseCaseTest {
 
         // Given
         final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
-        final var userException = new UserException(
-                ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
-                ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR);
 
         // When
-        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenThrow(userException);
+        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(Optional.empty());
         final var exception = assertThrows(UserException.class,
                 () -> this.createLoanUseCase.execute(createLoanCommand));
 
@@ -109,13 +107,10 @@ class CreateLoanUseCaseTest {
         // Given
         final var createLoanCommand = Instancio.create(CreateLoanCommand.class);
         final var user = Instancio.create(User.class);
-        final var bookException = new BookException(
-                ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
-                ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR);
 
         // When
-        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
-        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenThrow(bookException);
+        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(Optional.of(user));
+        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(Optional.empty());
         final var exception = assertThrows(BookException.class,
                 () -> this.createLoanUseCase.execute(createLoanCommand));
 
@@ -140,8 +135,8 @@ class CreateLoanUseCaseTest {
                 ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR);
 
         // When
-        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
-        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(book);
+        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(Optional.of(user));
+        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(Optional.of(book));
         when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
         doThrow(userException).when(this.userPolicyValidationService).check(user, loanList);
         final var exception = assertThrows(UserException.class,
@@ -169,8 +164,8 @@ class CreateLoanUseCaseTest {
                 ExceptionMessageConstants.BOOK_RETIRED_MESSAGE_ERROR);
 
         // When
-        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
-        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(book);
+        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(Optional.of(user));
+        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(Optional.of(book));
         when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
         doThrow(bookException).when(this.bookPolicyValidationService).checkIsBorrowable(book);
         final var exception = assertThrows(BookException.class,
@@ -198,8 +193,8 @@ class CreateLoanUseCaseTest {
                 ExceptionMessageConstants.LOAN_BOOK_RESERVED_BY_ANOTHER_USER_MESSAGE_ERROR);
 
         // When
-        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
-        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(book);
+        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(Optional.of(user));
+        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(Optional.of(book));
         when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
         doThrow(loanException).when(this.reservationPolicyValidationService)
                 .checkPrecedence(user.id(), book.id());
@@ -226,8 +221,8 @@ class CreateLoanUseCaseTest {
         final var loan = Instancio.create(Loan.class);
 
         // When
-        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(user);
-        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(book);
+        when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(Optional.of(user));
+        when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(Optional.of(book));
         when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
         when(this.loanCreationPersistencePort.execute(createLoanCommand)).thenReturn(loan);
         final var result = this.createLoanUseCase.execute(createLoanCommand);

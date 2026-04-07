@@ -1,6 +1,7 @@
 package com.breixo.library.domain.port.output.user;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.breixo.library.domain.command.user.UserSearchCriteriaCommand;
 import com.breixo.library.domain.model.user.User;
@@ -15,9 +16,9 @@ public interface UserRetrievalPersistencePort {
      * Find by id.
      *
      * @param id the id.
-     * @return the user.
+     * @return the user, or empty if not found.
      */
-    User findById(@NotNull Integer id);
+    Optional<User> findById(@NotNull Integer id);
 
     /**
      * Find.

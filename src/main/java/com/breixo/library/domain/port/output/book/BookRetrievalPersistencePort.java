@@ -1,6 +1,7 @@
 package com.breixo.library.domain.port.output.book;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
@@ -15,9 +16,9 @@ public interface BookRetrievalPersistencePort {
      * Find by id.
      *
      * @param id the id.
-     * @return the book.
+     * @return the book, or empty if not found.
      */
-    Book findById(@NotNull Integer id);
+    Optional<Book> findById(@NotNull Integer id);
 
     /**
      * Find.

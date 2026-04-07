@@ -1,6 +1,9 @@
 package com.breixo.library.application.usecase.reservation;
 
 import com.breixo.library.domain.command.reservation.CreateReservationCommand;
+import com.breixo.library.domain.exception.BookException;
+import com.breixo.library.domain.exception.UserException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.model.reservation.Reservation;
@@ -53,9 +56,15 @@ public class CreateReservationUseCaseImpl implements CreateReservationUseCase {
     @Transactional
     public Reservation execute(@Valid @NotNull final CreateReservationCommand createReservationCommand) {
 
-        final var user = this.userRetrievalPersistencePort.findById(createReservationCommand.userId());
+        final var user = this.userRetrievalPersistencePort.findById(createReservationCommand.userId())
+                .orElseThrow(() -> new UserException(
+                        ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR));
 
-        final var book = this.bookRetrievalPersistencePort.findById(createReservationCommand.bookId());
+        final var book = this.bookRetrievalPersistencePort.findById(createReservationCommand.bookId())
+                .orElseThrow(() -> new BookException(
+                        ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR,
+                        ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR));
 
         final var loanList = this.loanRetrievalPersistencePort.findByUserId(user.id());
 

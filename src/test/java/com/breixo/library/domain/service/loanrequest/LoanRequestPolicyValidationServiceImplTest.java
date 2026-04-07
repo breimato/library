@@ -1,6 +1,7 @@
 package com.breixo.library.domain.service.loanrequest;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
@@ -77,7 +78,7 @@ class LoanRequestPolicyValidationServiceImplTest {
         // When
         when(this.fineRetrievalPersistencePort.find(fineSearchCriteriaCommand)).thenReturn(Collections.emptyList());
         when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(Collections.emptyList());
-        when(this.bookRetrievalPersistencePort.findById(createLoanRequestCommand.bookId())).thenReturn(book);
+        when(this.bookRetrievalPersistencePort.findById(createLoanRequestCommand.bookId())).thenReturn(Optional.of(book));
 
         // Then
         assertDoesNotThrow(() -> this.loanRequestPolicyValidationService.validateCreation(createLoanRequestCommand));
@@ -178,7 +179,7 @@ class LoanRequestPolicyValidationServiceImplTest {
         // When
         when(this.fineRetrievalPersistencePort.find(fineSearchCriteriaCommand)).thenReturn(Collections.emptyList());
         when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(Collections.emptyList());
-        when(this.bookRetrievalPersistencePort.findById(createLoanRequestCommand.bookId())).thenReturn(book);
+        when(this.bookRetrievalPersistencePort.findById(createLoanRequestCommand.bookId())).thenReturn(Optional.of(book));
 
         final var ex = assertThrows(LoanRequestException.class, 
                 () -> this.loanRequestPolicyValidationService.validateCreation(createLoanRequestCommand));

@@ -78,4 +78,27 @@ class FineRetrievalRepositoryTest {
         verify(this.fineEntityMapper, times(1)).toFineList(List.of());
         assertTrue(result.isEmpty());
     }
+
+    /**
+     * Test find by user id when fines exist then return fines.
+     */
+    @Test
+    void testFindByUserId_whenFinesExist_thenReturnFines() {
+
+        // Given
+        final var userId = Instancio.create(Integer.class);
+        final var fineSearchCriteriaCommand = FineSearchCriteriaCommand.builder().userId(userId).build();
+        final var fineEntity = Instancio.create(FineEntity.class);
+        final var fine = Instancio.create(Fine.class);
+
+        // When
+        when(this.fineMyBatisMapper.find(fineSearchCriteriaCommand)).thenReturn(List.of(fineEntity));
+        when(this.fineEntityMapper.toFineList(List.of(fineEntity))).thenReturn(List.of(fine));
+        final var result = this.fineRetrievalRepository.findByUserId(userId);
+
+        // Then
+        verify(this.fineMyBatisMapper, times(1)).find(fineSearchCriteriaCommand);
+        verify(this.fineEntityMapper, times(1)).toFineList(List.of(fineEntity));
+        assertEquals(List.of(fine), result);
+    }
 }

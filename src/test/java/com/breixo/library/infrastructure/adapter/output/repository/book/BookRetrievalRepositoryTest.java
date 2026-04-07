@@ -1,6 +1,7 @@
 package com.breixo.library.infrastructure.adapter.output.repository.book;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
@@ -78,5 +79,49 @@ class BookRetrievalRepositoryTest {
         verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
         verify(this.bookEntityMapper, times(1)).toBookList(List.of());
         assertTrue(result.isEmpty());
+    }
+
+    /**
+     * Test find by id when book exists then return optional book.
+     */
+    @Test
+    void testFindById_whenBookExists_thenReturnOptionalBook() {
+
+        // Given
+        final var id = Instancio.create(Integer.class);
+        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
+        final var bookEntity = Instancio.create(BookEntity.class);
+        final var book = Instancio.create(Book.class);
+
+        // When
+        when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of(bookEntity));
+        when(this.bookEntityMapper.toBookList(List.of(bookEntity))).thenReturn(List.of(book));
+        final var result = this.bookRetrievalRepository.findById(id);
+
+        // Then
+        verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
+        verify(this.bookEntityMapper, times(1)).toBookList(List.of(bookEntity));
+        assertEquals(Optional.of(book), result);
+    }
+
+    /**
+     * Test find by id when book not found then return optional empty.
+     */
+    @Test
+    void testFindById_whenBookNotFound_thenReturnOptionalEmpty() {
+
+        // Given
+        final var id = Instancio.create(Integer.class);
+        final var bookSearchCriteriaCommand = BookSearchCriteriaCommand.builder().id(id).build();
+
+        // When
+        when(this.bookMyBatisMapper.find(bookSearchCriteriaCommand)).thenReturn(List.of());
+        when(this.bookEntityMapper.toBookList(List.of())).thenReturn(List.of());
+        final var result = this.bookRetrievalRepository.findById(id);
+
+        // Then
+        verify(this.bookMyBatisMapper, times(1)).find(bookSearchCriteriaCommand);
+        verify(this.bookEntityMapper, times(1)).toBookList(List.of());
+        assertEquals(Optional.empty(), result);
     }
 }

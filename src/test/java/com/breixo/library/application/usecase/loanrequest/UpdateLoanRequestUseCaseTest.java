@@ -1,5 +1,7 @@
 package com.breixo.library.application.usecase.loanrequest;
 
+import java.util.Optional;
+
 import com.breixo.library.domain.command.loanrequest.UpdateLoanRequestCommand;
 import com.breixo.library.domain.event.loanrequest.LoanRequestApprovedDomainEvent;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
@@ -69,7 +71,7 @@ class UpdateLoanRequestUseCaseTest {
                 .create();
 
         // When
-        when(this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id())).thenReturn(existingLoanRequest);
+        when(this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id())).thenReturn(Optional.of(existingLoanRequest));
         doNothing().when(this.loanRequestPolicyValidationService).validateTransitionAuthorization(
                 updateLoanRequestCommand.requesterId(),
                 existingLoanRequest.userId(),
@@ -113,7 +115,7 @@ class UpdateLoanRequestUseCaseTest {
                 .build();
 
         // When
-        when(this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id())).thenReturn(existingLoanRequest);
+        when(this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id())).thenReturn(Optional.of(existingLoanRequest));
         doNothing().when(this.loanRequestPolicyValidationService).validateTransitionAuthorization(
                 updateLoanRequestCommand.requesterId(),
                 existingLoanRequest.userId(),
@@ -135,6 +137,45 @@ class UpdateLoanRequestUseCaseTest {
                 LoanRequestStatus.PENDING, LoanRequestStatus.APPROVED);
         verify(this.loanRequestUpdatePersistencePort, times(1)).execute(updateLoanRequestCommand);
         verify(this.applicationEventPublisher, times(1)).publishEvent(loanRequestApprovedDomainEvent);
+        assertEquals(updatedLoanRequest, actualLoanRequest);
+    }
+
+    /**
+     * Test execute when loan request already approved then update without publishing event.
+     */
+    @Test
+    void testExecute_whenLoanRequestAlreadyApproved_thenUpdateWithoutPublishingEvent() {
+
+        // Given
+        final var updateLoanRequestCommand = Instancio.of(UpdateLoanRequestCommand.class)
+                .set(org.instancio.Select.field(UpdateLoanRequestCommand::status), null)
+                .create();
+        final var existingLoanRequest = Instancio.of(LoanRequest.class)
+                .set(org.instancio.Select.field(LoanRequest::status), LoanRequestStatus.APPROVED)
+                .create();
+        final var updatedLoanRequest = Instancio.of(LoanRequest.class)
+                .set(org.instancio.Select.field(LoanRequest::status), LoanRequestStatus.APPROVED)
+                .create();
+
+        // When
+        when(this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id())).thenReturn(Optional.of(existingLoanRequest));
+        doNothing().when(this.loanRequestPolicyValidationService).validateTransitionAuthorization(
+                updateLoanRequestCommand.requesterId(),
+                existingLoanRequest.userId(),
+                updateLoanRequestCommand.status());
+        when(this.loanRequestUpdatePersistencePort.execute(updateLoanRequestCommand)).thenReturn(updatedLoanRequest);
+
+        final var actualLoanRequest = this.updateLoanRequestUseCase.execute(updateLoanRequestCommand);
+
+        // Then
+        verify(this.loanRequestRetrievalPersistencePort, times(1)).findById(updateLoanRequestCommand.id());
+        verify(this.loanRequestPolicyValidationService, times(1)).validateTransitionAuthorization(
+                updateLoanRequestCommand.requesterId(),
+                existingLoanRequest.userId(),
+                updateLoanRequestCommand.status());
+        verify(this.loanRequestMachineStatusService, times(0)).execute(existingLoanRequest.status(), existingLoanRequest.status());
+        verify(this.loanRequestUpdatePersistencePort, times(1)).execute(updateLoanRequestCommand);
+        verify(this.applicationEventPublisher, times(0)).publishEvent(org.mockito.ArgumentMatchers.any());
         assertEquals(updatedLoanRequest, actualLoanRequest);
     }
 }

@@ -79,4 +79,27 @@ class LoanRetrievalRepositoryTest {
         verify(this.loanEntityMapper, times(1)).toLoanList(List.of());
         assertTrue(result.isEmpty());
     }
+
+    /**
+     * Test find by user id when loans exist then return loans.
+     */
+    @Test
+    void testFindByUserId_whenLoansExist_thenReturnLoans() {
+
+        // Given
+        final var userId = Instancio.create(Integer.class);
+        final var loanSearchCriteriaCommand = LoanSearchCriteriaCommand.builder().userId(userId).build();
+        final var loanEntities = Instancio.createList(LoanEntity.class);
+        final var loans = Instancio.createList(Loan.class);
+
+        // When
+        when(this.loanMyBatisMapper.find(loanSearchCriteriaCommand)).thenReturn(loanEntities);
+        when(this.loanEntityMapper.toLoanList(loanEntities)).thenReturn(loans);
+        final var result = this.loanRetrievalRepository.findByUserId(userId);
+
+        // Then
+        verify(this.loanMyBatisMapper, times(1)).find(loanSearchCriteriaCommand);
+        verify(this.loanEntityMapper, times(1)).toLoanList(loanEntities);
+        assertEquals(loans, result);
+    }
 }

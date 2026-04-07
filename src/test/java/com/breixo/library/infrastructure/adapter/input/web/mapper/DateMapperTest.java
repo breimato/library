@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** The Class Date Mapper Test. */
 @ExtendWith(MockitoExtension.class)
@@ -44,5 +45,25 @@ class DateMapperTest {
 
         // When / Then
         assertEquals(offsetDateTime.toLocalDateTime(), this.dateMapper.toLocalDateTime(offsetDateTime));
+    }
+
+    /**
+     * Test to offset date time when local date time is null then return null.
+     */
+    @Test
+    void testToOffsetDateTime_whenLocalDateTimeIsNull_thenReturnNull() {
+
+        // When / Then
+        assertNull(this.dateMapper.toOffsetDateTime(null));
+    }
+
+    /**
+     * Test to local date time when offset date time is null then return null.
+     */
+    @Test
+    void testToLocalDateTime_whenOffsetDateTimeIsNull_thenReturnNull() {
+
+        // When / Then
+        assertNull(this.dateMapper.toLocalDateTime(null));
     }
 }

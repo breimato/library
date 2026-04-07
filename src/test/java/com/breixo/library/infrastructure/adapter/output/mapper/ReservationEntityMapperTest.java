@@ -1,8 +1,11 @@
 package com.breixo.library.infrastructure.adapter.output.mapper;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
+import com.breixo.library.domain.command.reservation.CreateReservationCommand;
+import com.breixo.library.domain.command.reservation.UpdateReservationCommand;
 import com.breixo.library.domain.model.reservation.enums.ReservationStatus;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
 import com.breixo.library.infrastructure.adapter.output.entities.ReservationEntity;
@@ -118,5 +121,55 @@ class ReservationEntityMapperTest {
         // Then
         assertNotNull(reservations);
         assertEquals(0, reservations.size());
+    }
+
+    /**
+     * Test to reservation entity when create reservation command is valid then return mapped entity.
+     */
+    @Test
+    void testToReservationEntity_whenCreateReservationCommandIsValid_thenReturnMappedEntity() {
+
+        // Given
+        final var createReservationCommand = Instancio.create(CreateReservationCommand.class);
+        final var offsetDateTime = Instancio.create(OffsetDateTime.class);
+
+        // When
+        when(this.dateMapper.toOffsetDateTime(createReservationCommand.expiresAt())).thenReturn(offsetDateTime);
+        final var reservationEntity = this.reservationEntityMapper.toReservationEntity(createReservationCommand);
+
+        // Then
+        verify(this.dateMapper, times(1)).toOffsetDateTime(createReservationCommand.expiresAt());
+        assertNotNull(reservationEntity);
+        assertEquals(createReservationCommand.userId(), reservationEntity.getUserId());
+        assertEquals(createReservationCommand.bookId(), reservationEntity.getBookId());
+        assertEquals(createReservationCommand.loanId(), reservationEntity.getLoanId());
+        assertEquals(offsetDateTime, reservationEntity.getExpiresAt());
+        assertEquals(createReservationCommand.statusId(), reservationEntity.getStatusId());
+    }
+
+    /**
+     * Test to reservation entity when update reservation command is valid then return mapped entity.
+     */
+    @Test
+    void testToReservationEntity_whenUpdateReservationCommandIsValid_thenReturnMappedEntity() {
+
+        // Given
+        final var updateReservationCommand = Instancio.create(UpdateReservationCommand.class);
+        final var statusId = Instancio.create(Integer.class);
+        final var offsetDateTime = Instancio.create(OffsetDateTime.class);
+
+        // When
+        when(this.reservationStatusMapper.toStatusId(updateReservationCommand.status())).thenReturn(statusId);
+        when(this.dateMapper.toOffsetDateTime(updateReservationCommand.expiresAt())).thenReturn(offsetDateTime);
+        final var reservationEntity = this.reservationEntityMapper.toReservationEntity(updateReservationCommand);
+
+        // Then
+        verify(this.reservationStatusMapper, times(1)).toStatusId(updateReservationCommand.status());
+        verify(this.dateMapper, times(1)).toOffsetDateTime(updateReservationCommand.expiresAt());
+        assertNotNull(reservationEntity);
+        assertEquals(updateReservationCommand.id(), reservationEntity.getId());
+        assertEquals(updateReservationCommand.loanId(), reservationEntity.getLoanId());
+        assertEquals(offsetDateTime, reservationEntity.getExpiresAt());
+        assertEquals(statusId, reservationEntity.getStatusId());
     }
 }
