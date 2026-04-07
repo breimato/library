@@ -4,6 +4,7 @@ import com.breixo.library.domain.command.loanrequest.CreateLoanRequestCommand;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.loanrequest.CreateLoanRequestUseCase;
+import com.breixo.library.domain.port.input.loanrequest.LoanRequestPolicyValidationService;
 import com.breixo.library.domain.port.input.user.AuthorizationService;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestCreationPersistencePort;
@@ -32,6 +33,9 @@ public class CreateLoanRequestUseCaseImpl implements CreateLoanRequestUseCase {
     /** The authorization service. */
     private final AuthorizationService authorizationService;
 
+    /** The loan request policy validation service. */
+    private final LoanRequestPolicyValidationService loanRequestPolicyValidationService;
+
     /** {@inheritDoc} */
     @Override
     @Transactional
@@ -41,6 +45,8 @@ public class CreateLoanRequestUseCaseImpl implements CreateLoanRequestUseCase {
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
+
+        this.loanRequestPolicyValidationService.validateCreation(createLoanRequestCommand);
 
         this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId());
 

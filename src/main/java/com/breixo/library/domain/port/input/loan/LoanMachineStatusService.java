@@ -3,8 +3,8 @@ package com.breixo.library.domain.port.input.loan;
 import com.breixo.library.domain.model.loan.enums.LoanStatus;
 import jakarta.validation.constraints.NotNull;
 
-/** The Interface Loan Status Transition Validation Service. */
-public interface LoanStatusTransitionValidationService {
+/** The Interface Loan Machine Status Service. */
+public interface LoanMachineStatusService {
 
     /**
      * Execute.

@@ -8,6 +8,7 @@ import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.model.user.enums.UserRole;
+import com.breixo.library.domain.port.input.loanrequest.LoanRequestPolicyValidationService;
 import com.breixo.library.domain.port.input.user.AuthorizationService;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestCreationPersistencePort;
@@ -47,6 +48,10 @@ class CreateLoanRequestUseCaseTest {
     @Mock
     LoanRequestCreationPersistencePort loanRequestCreationPersistencePort;
 
+    /** The loan request policy validation service. */
+    @Mock
+    LoanRequestPolicyValidationService loanRequestPolicyValidationService;
+
     /** The authorization service. */
     @Mock
     AuthorizationService authorizationService;
@@ -68,9 +73,11 @@ class CreateLoanRequestUseCaseTest {
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
+        doNothing().when(this.loanRequestPolicyValidationService).validateCreation(createLoanRequestCommand);
         when(this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId())).thenReturn(user);
         when(this.bookRetrievalPersistencePort.findById(createLoanRequestCommand.bookId())).thenReturn(book);
         when(this.loanRequestCreationPersistencePort.execute(createLoanRequestCommand)).thenReturn(loanRequest);
+        
         final var actualLoanRequest = this.createLoanRequestUseCase.execute(createLoanRequestCommand);
 
         // Then
@@ -78,6 +85,7 @@ class CreateLoanRequestUseCaseTest {
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
+        verify(this.loanRequestPolicyValidationService, times(1)).validateCreation(createLoanRequestCommand);
         verify(this.userRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.userId());
         verify(this.bookRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.bookId());
         verify(this.loanRequestCreationPersistencePort, times(1)).execute(createLoanRequestCommand);
@@ -98,6 +106,7 @@ class CreateLoanRequestUseCaseTest {
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
+        doNothing().when(this.loanRequestPolicyValidationService).validateCreation(createLoanRequestCommand);
         when(this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId()))
                 .thenThrow(new UserException(
                         ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR,
@@ -109,6 +118,7 @@ class CreateLoanRequestUseCaseTest {
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
+        verify(this.loanRequestPolicyValidationService, times(1)).validateCreation(createLoanRequestCommand);
         verify(this.userRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.userId());
         verify(this.bookRetrievalPersistencePort, times(0)).findById(createLoanRequestCommand.bookId());
         verify(this.loanRequestCreationPersistencePort, times(0)).execute(createLoanRequestCommand);
@@ -129,6 +139,7 @@ class CreateLoanRequestUseCaseTest {
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
+        doNothing().when(this.loanRequestPolicyValidationService).validateCreation(createLoanRequestCommand);
         when(this.userRetrievalPersistencePort.findById(createLoanRequestCommand.userId())).thenReturn(user);
         when(this.bookRetrievalPersistencePort.findById(createLoanRequestCommand.bookId()))
                 .thenThrow(new BookException(
@@ -141,6 +152,7 @@ class CreateLoanRequestUseCaseTest {
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
+        verify(this.loanRequestPolicyValidationService, times(1)).validateCreation(createLoanRequestCommand);
         verify(this.userRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.userId());
         verify(this.bookRetrievalPersistencePort, times(1)).findById(createLoanRequestCommand.bookId());
         verify(this.loanRequestCreationPersistencePort, times(0)).execute(createLoanRequestCommand);

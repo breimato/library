@@ -13,7 +13,7 @@ import com.breixo.library.domain.port.input.loan.UpdateLoanReturnUseCase;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanUpdatePersistencePort;
 import com.breixo.library.domain.port.input.fine.FineManagementService;
-import com.breixo.library.domain.port.input.loan.LoanStatusTransitionValidationService;
+import com.breixo.library.domain.port.input.loan.LoanMachineStatusService;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -34,8 +34,8 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
     /** The loan update persistence port. */
     private final LoanUpdatePersistencePort loanUpdatePersistencePort;
 
-    /** The loan status transition validation service. */
-    private final LoanStatusTransitionValidationService loanStatusTransitionValidationService;
+    /** The loan machine status service. */
+    private final LoanMachineStatusService loanMachineStatusService;
 
     /** The fine management service. */
     private final FineManagementService fineManagementService;
@@ -56,7 +56,7 @@ public class UpdateLoanReturnUseCaseImpl implements UpdateLoanReturnUseCase {
                     ExceptionMessageConstants.LOAN_RETURN_DATE_INVALID_MESSAGE_ERROR);
         }
 
-        this.loanStatusTransitionValidationService.execute(loan.status(), LoanStatus.RETURNED);
+        this.loanMachineStatusService.execute(loan.status(), LoanStatus.RETURNED);
 
         final var updatedLoan = this.loanUpdatePersistencePort.execute(updateLoanReturnCommand);
 

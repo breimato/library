@@ -1,10 +1,11 @@
 package com.breixo.library.application.usecase.loanrequest;
 
 import com.breixo.library.domain.command.loanrequest.UpdateLoanRequestCommand;
-import com.breixo.library.domain.exception.LoanRequestException;
-import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
+import com.breixo.library.domain.event.loanrequest.LoanRequestApprovedDomainEvent;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
+import com.breixo.library.domain.model.loanrequest.enums.LoanRequestStatus;
 import com.breixo.library.domain.model.user.enums.UserRole;
+import com.breixo.library.domain.port.input.loanrequest.LoanRequestMachineStatusService;
 import com.breixo.library.domain.port.input.user.AuthorizationService;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestUpdatePersistencePort;
@@ -15,9 +16,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -43,25 +44,39 @@ class UpdateLoanRequestUseCaseTest {
     @Mock
     AuthorizationService authorizationService;
 
+    /** The loan request machine status service. */
+    @Mock
+    LoanRequestMachineStatusService loanRequestMachineStatusService;
+
+    /** The application event publisher. */
+    @Mock
+    ApplicationEventPublisher applicationEventPublisher;
+
     /**
-     * Test execute when loan request exists then update and return loan request.
+     * Test execute when valid and no status change then update and return loan request.
      */
     @Test
-    void testExecute_whenLoanRequestExists_thenUpdateAndReturnLoanRequest() {
+    void testExecute_whenValidAndNoStatusChange_thenUpdateAndReturnLoanRequest() {
 
         // Given
-        final var updateLoanRequestCommand = Instancio.create(UpdateLoanRequestCommand.class);
-        final var existingLoanRequest = Instancio.create(LoanRequest.class);
-        final var updatedLoanRequest = Instancio.create(LoanRequest.class);
+        final var updateLoanRequestCommand = Instancio.of(UpdateLoanRequestCommand.class)
+                .set(org.instancio.Select.field(UpdateLoanRequestCommand::status), null)
+                .create();
+        final var existingLoanRequest = Instancio.of(LoanRequest.class)
+                .set(org.instancio.Select.field(LoanRequest::status), LoanRequestStatus.PENDING)
+                .create();
+        final var updatedLoanRequest = Instancio.of(LoanRequest.class)
+                .set(org.instancio.Select.field(LoanRequest::status), LoanRequestStatus.PENDING)
+                .create();
 
         // When
-        when(this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id()))
-                .thenReturn(existingLoanRequest);
+        when(this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id())).thenReturn(existingLoanRequest);
         doNothing().when(this.authorizationService).requireOwnResourceOrRole(
                 updateLoanRequestCommand.requesterId(),
                 existingLoanRequest.userId(),
                 UserRole.MANAGER);
         when(this.loanRequestUpdatePersistencePort.execute(updateLoanRequestCommand)).thenReturn(updatedLoanRequest);
+        
         final var actualLoanRequest = this.updateLoanRequestUseCase.execute(updateLoanRequestCommand);
 
         // Then
@@ -70,30 +85,57 @@ class UpdateLoanRequestUseCaseTest {
                 updateLoanRequestCommand.requesterId(),
                 existingLoanRequest.userId(),
                 UserRole.MANAGER);
+        verify(this.loanRequestMachineStatusService, times(0)).execute(existingLoanRequest.status(), existingLoanRequest.status());
         verify(this.loanRequestUpdatePersistencePort, times(1)).execute(updateLoanRequestCommand);
+        verify(this.applicationEventPublisher, times(0)).publishEvent(LoanRequestApprovedDomainEvent.builder().build());
         assertEquals(updatedLoanRequest, actualLoanRequest);
     }
 
     /**
-     * Test execute when loan request not found then throw loan request exception.
+     * Test execute when valid and status changed to approved then update publish event and return loan request.
      */
     @Test
-    void testExecute_whenLoanRequestNotFound_thenThrowLoanRequestException() {
+    void testExecute_whenValidAndStatusChangedToApproved_thenUpdatePublishEventAndReturnLoanRequest() {
 
         // Given
-        final var updateLoanRequestCommand = Instancio.create(UpdateLoanRequestCommand.class);
+        final var updateLoanRequestCommand = Instancio.of(UpdateLoanRequestCommand.class)
+                .set(org.instancio.Select.field(UpdateLoanRequestCommand::status), LoanRequestStatus.APPROVED)
+                .create();
+        final var existingLoanRequest = Instancio.of(LoanRequest.class)
+                .set(org.instancio.Select.field(LoanRequest::status), LoanRequestStatus.PENDING)
+                .create();
+        final var updatedLoanRequest = Instancio.of(LoanRequest.class)
+                .set(org.instancio.Select.field(LoanRequest::status), LoanRequestStatus.APPROVED)
+                .create();
+
+        final var loanRequestApprovedDomainEvent = LoanRequestApprovedDomainEvent.builder()
+                .bookId(updatedLoanRequest.bookId())
+                .userId(updatedLoanRequest.userId())
+                .build();
 
         // When
-        when(this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id()))
-                .thenThrow(new LoanRequestException(
-                        ExceptionMessageConstants.LOAN_REQUEST_NOT_FOUND_CODE_ERROR,
-                        ExceptionMessageConstants.LOAN_REQUEST_NOT_FOUND_MESSAGE_ERROR));
-        final var exception = assertThrows(LoanRequestException.class,
-                () -> this.updateLoanRequestUseCase.execute(updateLoanRequestCommand));
+        when(this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id())).thenReturn(existingLoanRequest);
+        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+                updateLoanRequestCommand.requesterId(),
+                existingLoanRequest.userId(),
+                UserRole.MANAGER);
+        doNothing().when(this.loanRequestMachineStatusService).execute(
+                LoanRequestStatus.PENDING, LoanRequestStatus.APPROVED);
+        when(this.loanRequestUpdatePersistencePort.execute(updateLoanRequestCommand)).thenReturn(updatedLoanRequest);
+        doNothing().when(this.applicationEventPublisher).publishEvent(loanRequestApprovedDomainEvent);
+        
+        final var actualLoanRequest = this.updateLoanRequestUseCase.execute(updateLoanRequestCommand);
 
         // Then
         verify(this.loanRequestRetrievalPersistencePort, times(1)).findById(updateLoanRequestCommand.id());
-        verify(this.loanRequestUpdatePersistencePort, times(0)).execute(updateLoanRequestCommand);
-        assertEquals(ExceptionMessageConstants.LOAN_REQUEST_NOT_FOUND_MESSAGE_ERROR, exception.getMessage());
+        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+                updateLoanRequestCommand.requesterId(),
+                existingLoanRequest.userId(),
+                UserRole.MANAGER);
+        verify(this.loanRequestMachineStatusService, times(1)).execute(
+                LoanRequestStatus.PENDING, LoanRequestStatus.APPROVED);
+        verify(this.loanRequestUpdatePersistencePort, times(1)).execute(updateLoanRequestCommand);
+        verify(this.applicationEventPublisher, times(1)).publishEvent(loanRequestApprovedDomainEvent);
+        assertEquals(updatedLoanRequest, actualLoanRequest);
     }
 }

@@ -5,13 +5,14 @@ import java.util.EnumSet;
 import com.breixo.library.domain.exception.LoanException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.enums.LoanStatus;
-import com.breixo.library.domain.port.input.loan.LoanStatusTransitionValidationService;
+import com.breixo.library.domain.port.input.loan.LoanMachineStatusService;
+
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Service;
 
-/** The Class Loan Status Transition Validation Service Impl. */
+/** The Class Loan Machine Status Service Impl. */
 @Service
-public class LoanStatusTransitionValidationServiceImpl implements LoanStatusTransitionValidationService {
+public class LoanMachineStatusServiceImpl implements LoanMachineStatusService {
 
     /** {@inheritDoc} */
     @Override

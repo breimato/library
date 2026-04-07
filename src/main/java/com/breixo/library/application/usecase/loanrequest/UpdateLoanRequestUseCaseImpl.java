@@ -1,8 +1,13 @@
 package com.breixo.library.application.usecase.loanrequest;
 
+import java.util.Objects;
+
 import com.breixo.library.domain.command.loanrequest.UpdateLoanRequestCommand;
+import com.breixo.library.domain.event.loanrequest.LoanRequestApprovedDomainEvent;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
+import com.breixo.library.domain.model.loanrequest.enums.LoanRequestStatus;
 import com.breixo.library.domain.model.user.enums.UserRole;
+import com.breixo.library.domain.port.input.loanrequest.LoanRequestMachineStatusService;
 import com.breixo.library.domain.port.input.loanrequest.UpdateLoanRequestUseCase;
 import com.breixo.library.domain.port.input.user.AuthorizationService;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestRetrievalPersistencePort;
@@ -11,6 +16,8 @@ import com.breixo.library.domain.port.output.loanrequest.LoanRequestUpdatePersis
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +35,12 @@ public class UpdateLoanRequestUseCaseImpl implements UpdateLoanRequestUseCase {
     /** The authorization service. */
     private final AuthorizationService authorizationService;
 
+    /** The loan request machine status service. */
+    private final LoanRequestMachineStatusService loanRequestMachineStatusService;
+
+    /** The application event publisher. */
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     /** {@inheritDoc} */
     @Override
     @Transactional
@@ -40,6 +53,24 @@ public class UpdateLoanRequestUseCaseImpl implements UpdateLoanRequestUseCase {
                 loanRequest.userId(),
                 UserRole.MANAGER);
 
-        return this.loanRequestUpdatePersistencePort.execute(updateLoanRequestCommand);
+        if (Objects.nonNull(updateLoanRequestCommand.status())) {
+            this.loanRequestMachineStatusService.execute(
+                    loanRequest.status(),
+                    updateLoanRequestCommand.status());
+        }
+
+        final var updatedLoanRequest = this.loanRequestUpdatePersistencePort.execute(updateLoanRequestCommand);
+
+        if (BooleanUtils.isFalse(loanRequest.status().equals(LoanRequestStatus.APPROVED)) &&
+                updatedLoanRequest.status().equals(LoanRequestStatus.APPROVED)) {
+
+            this.applicationEventPublisher.publishEvent(
+                    LoanRequestApprovedDomainEvent.builder()
+                            .bookId(updatedLoanRequest.bookId())
+                            .userId(updatedLoanRequest.userId())
+                            .build());
+        }
+
+        return updatedLoanRequest;
     }
 }

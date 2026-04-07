@@ -18,4 +18,7 @@ public class FineSearchCriteriaCommand {
 
     /** The status id. */
     private final Integer statusId;
+
+    /** The user id. */
+    private final Integer userId;
 }

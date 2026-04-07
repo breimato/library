@@ -11,7 +11,7 @@ import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.model.loan.enums.LoanStatus;
 import com.breixo.library.domain.port.output.loan.LoanRenewPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
-import com.breixo.library.domain.port.input.loan.LoanStatusTransitionValidationService;
+import com.breixo.library.domain.port.input.loan.LoanMachineStatusService;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
@@ -43,9 +43,9 @@ class UpdateLoanRenewUseCaseTest {
     @Mock
     LoanRenewPersistencePort loanRenewPersistencePort;
 
-    /** The loan status transition validation service. */
+    /** The loan machine status service. */
     @Mock
-    LoanStatusTransitionValidationService loanStatusTransitionValidationService;
+    LoanMachineStatusService loanMachineStatusService;
 
     /**
      * Test execute when loan not found then throw loan exception.
@@ -61,6 +61,7 @@ class UpdateLoanRenewUseCaseTest {
 
         // When
         when(this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand)).thenReturn(List.of());
+        
         final var loanException = assertThrows(LoanException.class,
                 () -> this.updateLoanRenewUseCase.execute(updateLoanRenewCommand));
 
@@ -98,7 +99,7 @@ class UpdateLoanRenewUseCaseTest {
                 .thenReturn(List.of(returnedLoan));
         doThrow(new LoanException(ExceptionMessageConstants.LOAN_ALREADY_RETURNED_CODE_ERROR,
                 ExceptionMessageConstants.LOAN_ALREADY_RETURNED_MESSAGE_ERROR))
-                .when(this.loanStatusTransitionValidationService)
+                .when(this.loanMachineStatusService)
                 .execute(returnedLoan.status(), LoanStatus.ACTIVE);
 
         final var loanException = assertThrows(LoanException.class,
@@ -106,7 +107,7 @@ class UpdateLoanRenewUseCaseTest {
 
         // Then
         verify(this.loanRetrievalPersistencePort, times(1)).find(loanSearchCriteriaCommand);
-        verify(this.loanStatusTransitionValidationService, times(1)).execute(returnedLoan.status(), LoanStatus.ACTIVE);
+        verify(this.loanMachineStatusService, times(1)).execute(returnedLoan.status(), LoanStatus.ACTIVE);
         verify(this.loanRenewPersistencePort, times(0)).execute(updateLoanRenewCommand);
         assertEquals(ExceptionMessageConstants.LOAN_ALREADY_RETURNED_MESSAGE_ERROR, loanException.getMessage());
     }
@@ -143,7 +144,7 @@ class UpdateLoanRenewUseCaseTest {
 
         // Then
         verify(this.loanRetrievalPersistencePort, times(1)).find(loanSearchCriteriaCommand);
-        verify(this.loanStatusTransitionValidationService, times(1)).execute(activeLoan.status(), LoanStatus.ACTIVE);
+        verify(this.loanMachineStatusService, times(1)).execute(activeLoan.status(), LoanStatus.ACTIVE);
         verify(this.loanRenewPersistencePort, times(0)).execute(updateLoanRenewCommand);
         assertEquals(ExceptionMessageConstants.LOAN_DUE_DATE_INVALID_MESSAGE_ERROR, loanException.getMessage());
     }
@@ -181,7 +182,7 @@ class UpdateLoanRenewUseCaseTest {
 
         // Then
         verify(this.loanRetrievalPersistencePort, times(1)).find(loanSearchCriteriaCommand);
-        verify(this.loanStatusTransitionValidationService, times(1)).execute(activeLoan.status(), LoanStatus.ACTIVE);
+        verify(this.loanMachineStatusService, times(1)).execute(activeLoan.status(), LoanStatus.ACTIVE);
         verify(this.loanRenewPersistencePort, times(1)).execute(updateLoanRenewCommand);
         assertEquals(renewedLoan, resultLoan);
     }

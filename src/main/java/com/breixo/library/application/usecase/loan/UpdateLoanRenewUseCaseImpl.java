@@ -9,7 +9,7 @@ import com.breixo.library.domain.model.loan.enums.LoanStatus;
 import com.breixo.library.domain.port.input.loan.UpdateLoanRenewUseCase;
 import com.breixo.library.domain.port.output.loan.LoanRenewPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
-import com.breixo.library.domain.port.input.loan.LoanStatusTransitionValidationService;
+import com.breixo.library.domain.port.input.loan.LoanMachineStatusService;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -29,8 +29,8 @@ public class UpdateLoanRenewUseCaseImpl implements UpdateLoanRenewUseCase {
     /** The loan renew persistence port. */
     private final LoanRenewPersistencePort loanRenewPersistencePort;
 
-    /** The loan status transition validation service. */
-    private final LoanStatusTransitionValidationService loanStatusTransitionValidationService;
+    /** The loan machine status service. */
+    private final LoanMachineStatusService loanMachineStatusService;
 
     /** {@inheritDoc} */
     @Override
@@ -39,7 +39,7 @@ public class UpdateLoanRenewUseCaseImpl implements UpdateLoanRenewUseCase {
 
         final var loan = this.getLoan(updateLoanRenewCommand);
 
-        this.loanStatusTransitionValidationService.execute(loan.status(), LoanStatus.ACTIVE);
+        this.loanMachineStatusService.execute(loan.status(), LoanStatus.ACTIVE);
 
         if (updateLoanRenewCommand.dueDate().isBefore(loan.dueDate())) {
             throw new LoanException(
@@ -49,7 +49,6 @@ public class UpdateLoanRenewUseCaseImpl implements UpdateLoanRenewUseCase {
 
         return this.loanRenewPersistencePort.execute(updateLoanRenewCommand);
     }
-
 
     /**
      * Validate loan.
