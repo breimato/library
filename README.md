@@ -1,6 +1,6 @@
 # Library Service
 
-REST API for managing a library system — books, users, loans, reservations and fines — built with **Spring Boot 3**, **Java 21** and **hexagonal architecture**.
+REST API for managing a library system — books, users, loan requests, loans, reservations and fines — built with **Spring Boot 3**, **Java 21** and **hexagonal architecture**.
 
 ---
 
@@ -24,49 +24,57 @@ REST API for managing a library system — books, users, loans, reservations and
 
 ## Architecture
 
-The project follows **hexagonal architecture** with a strict separation between domain, application and infrastructure layers.
+The project follows **hexagonal architecture** with strict separation between domain, application and infrastructure layers. The domain has zero dependencies on Spring or any infrastructure framework.
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Infrastructure                        │
-│                                                         │
-│   REST Controllers ──► Use Case Ports (Input)           │
-│        │                      │                         │
-│   MapStruct DTOs        Application Layer               │
-│                               │                         │
-│                         Domain Layer                    │
-│                         (Book, User, Isbn VO)           │
-│                               │                         │
-│                   Persistence Ports (Output)            │
-│                               │                         │
-│              MyBatis Repositories ──► PostgreSQL        │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                        Infrastructure                         │
+│                                                              │
+│   REST Controllers ──► Input Ports (Use Cases)               │
+│   Schedulers        ──► Input Ports (Use Cases)              │
+│         │                       │                            │
+│   MapStruct DTOs          Application Layer                  │
+│                          (Use Case Impls,                    │
+│                           Event Listeners)                   │
+│                                 │                            │
+│                           Domain Layer                       │
+│                    (Models, Services, Ports)                 │
+│                                 │                            │
+│                    Output Ports (Persistence)                │
+│                                 │                            │
+│              MyBatis Repositories ──► PostgreSQL             │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ```
 domain/
-├── model/          → Book, User, UserStatus
+├── model/          → Book, User, Loan, Reservation, Fine, LoanRequest (+ enums)
 ├── vo/             → Isbn (validated value object)
-├── command/        → CreateBookCommand, UpdateUserCommand…
+├── command/        → One command per use case (book/, user/, loan/, reservation/, fine/, loanrequest/)
+├── event/          → LoanCreatedDomainEvent, LoanReturnedDomainEvent, LoanRequestApprovedDomainEvent
 ├── port/
-│   ├── input/      → Use case interfaces
+│   ├── input/      → Use case interfaces + domain service interfaces
 │   └── output/     → Persistence port interfaces
-└── exception/      → LibraryException, BookException, UserException, IsbnException
+├── service/        → AuthorizationServiceImpl, LoanRequestPolicyValidationServiceImpl…
+└── exception/      → LibraryException hierarchy
 
 application/
-└── usecase/        → CreateUserUseCaseImpl, UpdateBookUseCaseImpl…
+├── usecase/        → One impl per use case (book/, user/, loan/, reservation/, fine/, loanrequest/)
+└── event/          → Domain event listeners
 
 infrastructure/
-├── adapter/input/web/
-│   ├── controller/ → One controller per operation
-│   ├── dto/        → Generated from OpenAPI spec
-│   ├── mapper/     → MapStruct mappers (request/response)
-│   └── handler/    → GlobalExceptionHandler
+├── adapter/input/
+│   ├── web/
+│   │   ├── controller/ → One controller per operation
+│   │   ├── dto/        → Generated from OpenAPI spec
+│   │   ├── mapper/     → MapStruct mappers (request/response)
+│   │   └── handler/    → GlobalExceptionHandler
+│   └── scheduler/      → OverdueLoanScheduler, ExpiredReservationScheduler
 └── adapter/output/
     ├── mybatis/    → MyBatis mappers with SQL
-    ├── entities/   → BookEntity, UserEntity
-    ├── mapper/     → Entity ↔ Domain mappers
-    └── repository/ → Port implementations
+    ├── entities/   → JPA-free entity classes
+    ├── mapper/     → Entity ↔ Domain MapStruct mappers
+    └── repository/ → Persistence port implementations
 ```
 
 ---
@@ -75,12 +83,22 @@ infrastructure/
 
 ```mermaid
 erDiagram
+    user_role {
+        smallint id PK
+        varchar name
+    }
+
     user_status {
         smallint id PK
         varchar name
     }
 
     loan_status {
+        smallint id PK
+        varchar name
+    }
+
+    loan_request_status {
         smallint id PK
         varchar name
     }
@@ -101,6 +119,7 @@ erDiagram
         varchar email
         varchar phone
         smallint status_id FK
+        smallint role_id FK
         timestamptz created_at
         timestamptz updated_at
     }
@@ -113,6 +132,18 @@ erDiagram
         varchar genre
         smallint total_copies
         smallint available_copies
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    loan_requests {
+        int id PK
+        int user_id FK
+        int book_id FK
+        date request_date
+        date approval_date
+        smallint status_id FK
+        varchar rejection_reason
         timestamptz created_at
         timestamptz updated_at
     }
@@ -149,10 +180,14 @@ erDiagram
         timestamptz updated_at
     }
 
+    users }o--|| user_role : "has"
     users }o--|| user_status : "has"
     loans }o--|| loan_status : "has"
+    loan_requests }o--|| loan_request_status : "has"
     reservations }o--|| reservation_status : "has"
     fines }o--|| fine_status : "has"
+    users ||--o{ loan_requests : "requests"
+    books ||--o{ loan_requests : "requested in"
     users ||--o{ loans : "borrows"
     books ||--o{ loans : "is borrowed in"
     users ||--o{ reservations : "reserves"
@@ -165,10 +200,67 @@ erDiagram
 
 | Table | Values |
 |---|---|
+| `user_role` | `0` normal · `1` manager · `2` admin |
 | `user_status` | `0` active · `1` suspended · `2` blocked |
+| `loan_request_status` | `0` pending · `1` approved · `2` rejected · `3` cancelled |
 | `loan_status` | `0` active · `1` returned · `2` overdue |
 | `reservation_status` | `0` pending · `1` notified · `2` fulfilled · `3` expired · `4` cancelled |
 | `fine_status` | `0` pending · `1` paid · `2` waived |
+
+---
+
+## Authorization
+
+All mutating and sensitive endpoints require an `X-Requester-Id` header identifying the user performing the action. JWT authentication is not yet implemented — this header acts as a lightweight identity mechanism.
+
+There are three roles with hierarchical permissions (`normal < manager < admin`):
+
+| Role | Capabilities |
+|---|---|
+| `normal` | Read and manage own resources (loans, reservations, fines, loan requests) |
+| `manager` | All normal actions + approve/reject loan requests + access any user's resources |
+| `admin` | All manager actions + full system access |
+
+The `AuthorizationService` exposes two checks used across use cases:
+
+- `requireMinimumRole(requesterId, minimumRole)` — role must be ≥ the required level
+- `requireOwnResourceOrRole(requesterId, resourceOwnerId, minimumRole)` — requester must own the resource or have sufficient role
+
+---
+
+## Domain Flows
+
+### Loan Request → Loan (event-driven)
+
+```
+POST /loan-requests          → creates LoanRequest (PENDING)
+                               validates: no pending fines, active loan limit < 3, book not available for direct loan
+PATCH /loan-requests/{id}    → manager approves → status: APPROVED
+                               publishes LoanRequestApprovedDomainEvent
+                             → LoanCreationOnRequestApprovedEventListener
+                               creates Loan (ACTIVE, due in 2 weeks)
+                               publishes LoanCreatedDomainEvent
+                             → ReservationFulfillmentEventListener
+                               marks user's reservation as FULFILLED (if any)
+```
+
+### Loan Return → Reservation Notification (event-driven)
+
+```
+PATCH /loans/{id}/return     → updates Loan (RETURNED)
+                               calculates overdue fine via FineCalculationService
+                               creates or updates fine via FineManagementService (if overdue)
+                               publishes LoanReturnedDomainEvent
+                             → ReservationNotificationEventListener
+                               marks next pending reservation for the book as NOTIFIED
+```
+
+### Scheduled Jobs (daily at midnight)
+
+| Job | Action |
+|---|---|
+| `OverdueLoanScheduler` | Marks all active loans past their due date as `OVERDUE` |
+| `ExpiredReservationScheduler` | Marks all notified reservations past their expiry as `EXPIRED` |
 
 ---
 
@@ -176,14 +268,16 @@ erDiagram
 
 Base path: `/v1/library`
 
+All write endpoints accept `X-Requester-Id: {userId}` header.
+
 ### Books
 
-| Method | Endpoint | Description | Response |
+| Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| `GET` | `/books` | List all books | `200 GetBooksV1Response` |
-| `POST` | `/books` | Create a book | `201 BookV1Response` |
-| `PATCH` | `/books/{id}` | Update book | `200 BookV1Response` |
-| `DELETE` | `/books/{id}` | Delete book | `204` |
+| `GET` | `/books` | List all books | — |
+| `POST` | `/books` | Create a book | manager+ |
+| `PATCH` | `/books/{id}` | Update book | manager+ |
+| `DELETE` | `/books/{id}` | Delete book | admin |
 
 **POST /books — request body**
 ```json
@@ -199,12 +293,12 @@ Base path: `/v1/library`
 
 ### Users
 
-| Method | Endpoint | Description | Response |
+| Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| `GET` | `/users` | List all users | `200 GetUsersV1Response` |
-| `POST` | `/users` | Create a user | `201 UserV1Response` |
-| `PATCH` | `/users/{id}` | Update user | `200 UserV1Response` |
-| `DELETE` | `/users/{id}` | Delete user | `204` |
+| `GET` | `/users` | List all users | manager+ |
+| `POST` | `/users` | Create a user | — |
+| `PATCH` | `/users/{id}` | Update user | own resource or manager+ |
+| `DELETE` | `/users/{id}` | Delete user | admin |
 
 **POST /users — request body**
 ```json
@@ -215,52 +309,102 @@ Base path: `/v1/library`
 }
 ```
 
-### Loans
+### Loan Requests
 
-| Method | Endpoint | Description | Response |
+| Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| `GET` | `/loans` | List all loans | `200 GetLoansV1Response` |
-| `POST` | `/loans` | Create a loan | `201 LoanV1Response` |
-| `PATCH` | `/loans/{id}/return` | Return a loan | `200 LoanV1Response` |
-| `DELETE` | `/loans/{id}` | Delete a loan | `204` |
+| `GET` | `/loan-requests` | List all loan requests | manager+ |
+| `POST` | `/loan-requests` | Submit a loan request | normal+ |
+| `GET` | `/loan-requests/{id}` | Get loan request by id | own resource or manager+ |
+| `PATCH` | `/loan-requests/{id}` | Update loan request status | own (cancel) or manager+ (approve/reject) |
 
-**Current return flow (`PATCH /loans/{id}/return`)**
-- Updates the loan return information.
-- Calculates overdue fine amount through `FineCalculationService`.
-- Creates or updates a pending fine through `FineManagementService` when applicable.
-
-### Reservations
-
-| Method | Endpoint | Description | Response |
-|---|---|---|---|
-| `GET` | `/reservations` | List all reservations | `200 GetReservationsV1Response` |
-| `POST` | `/reservations` | Create a reservation | `201 ReservationV1Response` |
-| `PATCH` | `/reservations/{id}` | Update reservation | `200 ReservationV1Response` |
-| `DELETE` | `/reservations/{id}` | Delete reservation | `204` |
-
-### Fines
-
-| Method | Endpoint | Description | Response |
-|---|---|---|---|
-| `GET` | `/fines` | List all fines | `200 GetFinesV1Response` |
-| `POST` | `/fines` | Create a fine | `201 FineV1Response` |
-| `PATCH` | `/fines/{id}` | Update fine | `200 FineV1Response` |
-| `DELETE` | `/fines/{id}` | Delete fine | `204` |
-
-### Error Response
-
-All errors return a consistent body:
+**POST /loan-requests — request body**
 ```json
 {
-  "code": "LIB-BOOK-001",
-  "message": "Book not found"
+  "userId": 1,
+  "bookId": 42,
+  "requestDate": "2025-01-15"
 }
 ```
 
-| Exception | HTTP Status |
-|---|---|
-| `IsbnException` | `400 Bad Request` |
-| `BookException` / `UserException` | `404 Not Found` |
+**PATCH /loan-requests/{id} — request body**
+```json
+{
+  "status": "APPROVED",
+  "approvalDate": "2025-01-16",
+  "rejectionReason": null
+}
+```
+
+Approval/rejection requires `manager+`. Cancellation requires owning the request or `manager+`.
+
+### Loans
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| `GET` | `/loans` | List all loans | manager+ |
+| `POST` | `/loans` | Create a loan directly | manager+ |
+| `GET` | `/loans/{id}` | Get loan by id | own resource or manager+ |
+| `PATCH` | `/loans/{id}/return` | Return a loan | own resource or manager+ |
+| `PATCH` | `/loans/{id}/renew` | Renew a loan | own resource or manager+ |
+| `GET` | `/users/{id}/loans` | Get all loans for a user | own resource or manager+ |
+
+**PATCH /loans/{id}/return — request body**
+```json
+{
+  "returnDate": "2025-01-20"
+}
+```
+
+The return flow calculates fine amount (days overdue × rate) and creates or updates a pending fine automatically when applicable.
+
+### Reservations
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| `GET` | `/reservations` | List all reservations | manager+ |
+| `POST` | `/reservations` | Create a reservation | normal+ |
+| `GET` | `/reservations/{id}` | Get reservation by id | own resource or manager+ |
+| `PATCH` | `/reservations/{id}` | Update reservation | own resource or manager+ |
+| `GET` | `/users/{id}/reservations` | Get all reservations for a user | own resource or manager+ |
+
+### Fines
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| `GET` | `/fines` | List all fines | manager+ |
+| `POST` | `/fines` | Create a fine manually | manager+ |
+| `GET` | `/fines/{id}` | Get fine by id | own resource or manager+ |
+| `PATCH` | `/fines/{id}` | Update fine (pay, waive) | own (pay) or manager+ (waive) |
+| `GET` | `/users/{id}/fines` | Get all fines for a user | own resource or manager+ |
+
+---
+
+## Error Handling
+
+All errors return a consistent body:
+
+```json
+{
+  "code": "LIB-AUTH-001",
+  "message": "Error: You do not have permission to perform this action"
+}
+```
+
+| Exception | HTTP Status | When |
+|---|---|---|
+| `ForbiddenActionException` | `403 Forbidden` | Insufficient role or accessing another user's resource |
+| `IsbnException` | `400 Bad Request` | Invalid ISBN-13 format |
+| `LoanException` (policy) | `400 Bad Request` | User blocked, book unavailable, book retired |
+| `LoanRequestException` (policy) | `400 Bad Request` | Pending fines, loan limit reached, book available for direct loan, invalid status transition |
+| `BookException` | `404 Not Found` | Book not found |
+| `UserException` | `404 Not Found` | User not found |
+| `LoanException` | `404 Not Found` | Loan not found |
+| `LoanRequestException` | `404 Not Found` | Loan request not found |
+| `ReservationException` | `404 Not Found` | Reservation not found |
+| `FineException` | `404 Not Found` | Fine not found |
+
+Error codes follow the pattern `LIB-{DOMAIN}-{NUMBER}` (e.g. `LIB-BOOK-001`, `LIB-AUTH-002`).
 
 ---
 
@@ -278,7 +422,7 @@ All errors return a consistent body:
 docker-compose up -d
 ```
 
-This starts a PostgreSQL 16 instance on port `5433`. Flyway runs migrations automatically on startup.
+This starts a PostgreSQL 16 instance on port `5433`. Flyway runs migrations automatically on application startup.
 
 ### 2. Run the application
 
@@ -332,4 +476,4 @@ The `Isbn` value object validates ISBN-13 format on creation:
 - Must start with `978` or `979`
 - Accepts dashes and spaces (normalized internally)
 - Check digit validated using the EAN-13 algorithm
-- Throws `IsbnException` (400) on invalid input
+- Throws `IsbnException` (`400 Bad Request`) on invalid input
