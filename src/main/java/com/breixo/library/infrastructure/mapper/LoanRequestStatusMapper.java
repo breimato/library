@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.mapper;
 
+import java.util.Objects;
+
 import com.breixo.library.domain.model.loanrequest.enums.LoanRequestStatus;
 
 import org.mapstruct.Mapper;
@@ -15,6 +17,9 @@ public interface LoanRequestStatusMapper {
      * @return the integer value.
      */
     default Integer toStatusId(final LoanRequestStatus loanRequestStatus) {
+        if (Objects.isNull(loanRequestStatus)) {
+            return null;
+        }
         return loanRequestStatus.getId();
     }
 
@@ -25,6 +30,9 @@ public interface LoanRequestStatusMapper {
      * @return the loan request status.
      */
     default LoanRequestStatus toLoanRequestStatus(final Integer id) {
+        if (Objects.isNull(id)) {
+            return null;
+        }
         return LoanRequestStatus.values()[id];
     }
 }

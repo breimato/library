@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.mapper;
 
+import java.util.Objects;
+
 import com.breixo.library.domain.model.user.enums.UserStatus;
 
 import org.mapstruct.Mapper;
@@ -15,6 +17,9 @@ public interface UserStatusMapper {
      * @return the integer value.
      */
     default Integer toStatusId(final UserStatus userStatus) {
+        if (Objects.isNull(userStatus)) {
+            return null;
+        }
         return userStatus.getId();
     }
 
@@ -25,6 +30,9 @@ public interface UserStatusMapper {
      * @return the user status.
      */
     default UserStatus toUserStatus(final Integer id) {
+        if (Objects.isNull(id)) {
+            return null;
+        }
         return UserStatus.values()[id];
     }
 }

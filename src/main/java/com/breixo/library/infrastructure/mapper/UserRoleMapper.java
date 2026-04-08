@@ -17,7 +17,10 @@ public interface UserRoleMapper {
      * @return the integer value.
      */
     default Integer toRoleId(final UserRole userRole) {
-        return Objects.nonNull(userRole) ? userRole.getId() : UserRole.NORMAL.getId();
+        if (Objects.isNull(userRole)) {
+            return UserRole.NORMAL.getId();
+        }
+        return userRole.getId();
     }
 
     /**
@@ -27,6 +30,9 @@ public interface UserRoleMapper {
      * @return the user role.
      */
     default UserRole toUserRole(final Integer id) {
+        if (Objects.isNull(id)) {
+            return null;
+        }
         return UserRole.values()[id];
     }
 }

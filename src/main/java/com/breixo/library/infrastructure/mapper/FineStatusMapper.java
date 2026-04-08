@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.mapper;
 
+import java.util.Objects;
+
 import com.breixo.library.domain.model.fine.enums.FineStatus;
 
 import org.mapstruct.Mapper;
@@ -15,6 +17,9 @@ public interface FineStatusMapper {
      * @return the integer.
      */
     default Integer toStatusId(final FineStatus fineStatus) {
+        if (Objects.isNull(fineStatus)) {
+            return null;
+        }
         return fineStatus.getId();
     }
 
@@ -25,6 +30,9 @@ public interface FineStatusMapper {
      * @return the fine status.
      */
     default FineStatus toFineStatus(final Integer id) {
+        if (Objects.isNull(id)) {
+            return null;
+        }
         return FineStatus.values()[id];
     }
 }

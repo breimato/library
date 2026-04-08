@@ -1,5 +1,7 @@
 package com.breixo.library.infrastructure.mapper;
 
+import java.util.Objects;
+
 import com.breixo.library.domain.model.reservation.enums.ReservationStatus;
 
 import org.mapstruct.Mapper;
@@ -15,6 +17,9 @@ public interface ReservationStatusMapper {
      * @return the integer.
      */
     default Integer toStatusId(final ReservationStatus reservationStatus) {
+        if (Objects.isNull(reservationStatus)) {
+            return null;
+        }
         return reservationStatus.getId();
     }
 
@@ -25,6 +30,9 @@ public interface ReservationStatusMapper {
      * @return the reservation status.
      */
     default ReservationStatus toReservationStatus(final Integer id) {
+        if (Objects.isNull(id)) {
+            return null;
+        }
         return ReservationStatus.values()[id];
     }
 }
