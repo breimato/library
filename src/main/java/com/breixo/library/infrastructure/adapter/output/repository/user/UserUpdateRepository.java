@@ -6,7 +6,7 @@ import com.breixo.library.domain.exception.UserException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.port.output.user.UserUpdatePersistencePort;
-import com.breixo.library.infrastructure.adapter.output.mapper.UserEntityMapper;
+import com.breixo.library.infrastructure.adapter.output.mapper.user.UserEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.UserMyBatisMapper;
 
 import jakarta.validation.Valid;

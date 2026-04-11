@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 import com.breixo.library.infrastructure.adapter.input.web.dto.PostReservationV1Request;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.common.DateMapper;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.breixo.library.infrastructure.adapter.input.web.mapper;
+package com.breixo.library.infrastructure.adapter.input.web.mapper.common;
 
 import org.mapstruct.Mapper;
 

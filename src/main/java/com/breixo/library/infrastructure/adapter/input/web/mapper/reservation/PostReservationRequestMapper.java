@@ -2,7 +2,7 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper.reservation;
 
 import com.breixo.library.domain.command.reservation.CreateReservationCommand;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PostReservationV1Request;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.common.DateMapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

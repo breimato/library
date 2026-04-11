@@ -5,7 +5,7 @@ import java.util.List;
 import com.breixo.library.domain.command.loan.LoanSearchCriteriaCommand;
 import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.infrastructure.adapter.output.entities.LoanEntity;
-import com.breixo.library.infrastructure.adapter.output.mapper.LoanEntityMapper;
+import com.breixo.library.infrastructure.adapter.output.mapper.loan.LoanEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.LoanMyBatisMapper;
 
 import org.instancio.Instancio;

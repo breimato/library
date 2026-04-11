@@ -1,4 +1,4 @@
-package com.breixo.library.infrastructure.adapter.output.mapper;
+package com.breixo.library.infrastructure.adapter.output.mapper.loan;
 
 import java.util.List;
 

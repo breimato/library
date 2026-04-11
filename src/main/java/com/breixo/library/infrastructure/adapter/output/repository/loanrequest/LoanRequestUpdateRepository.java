@@ -6,7 +6,7 @@ import com.breixo.library.domain.exception.LoanRequestException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestUpdatePersistencePort;
-import com.breixo.library.infrastructure.adapter.output.mapper.LoanRequestEntityMapper;
+import com.breixo.library.infrastructure.adapter.output.mapper.loanrequest.LoanRequestEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.LoanRequestMyBatisMapper;
 
 import jakarta.validation.Valid;

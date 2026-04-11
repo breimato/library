@@ -6,7 +6,7 @@ import com.breixo.library.domain.model.book.Book;
 import com.breixo.library.domain.command.book.BookSearchCriteriaCommand;
 import com.breixo.library.domain.command.book.UpdateBookCommand;
 import com.breixo.library.domain.port.output.book.BookUpdatePersistencePort;
-import com.breixo.library.infrastructure.adapter.output.mapper.BookEntityMapper;
+import com.breixo.library.infrastructure.adapter.output.mapper.book.BookEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.BookMyBatisMapper;
 
 import jakarta.validation.Valid;

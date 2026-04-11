@@ -1,4 +1,4 @@
-package com.breixo.library.infrastructure.adapter.output.mapper;
+package com.breixo.library.infrastructure.adapter.output.mapper.reservation;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import com.breixo.library.domain.command.reservation.CreateReservationCommand;
 import com.breixo.library.domain.command.reservation.UpdateReservationCommand;
 import com.breixo.library.domain.model.reservation.Reservation;
 import com.breixo.library.infrastructure.adapter.output.entities.ReservationEntity;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.common.DateMapper;
 import com.breixo.library.infrastructure.mapper.ReservationStatusMapper;
 
 import org.mapstruct.Mapper;

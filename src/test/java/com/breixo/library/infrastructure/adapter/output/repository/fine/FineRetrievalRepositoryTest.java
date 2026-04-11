@@ -5,7 +5,7 @@ import java.util.List;
 import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
 import com.breixo.library.domain.model.fine.Fine;
 import com.breixo.library.infrastructure.adapter.output.entities.FineEntity;
-import com.breixo.library.infrastructure.adapter.output.mapper.FineEntityMapper;
+import com.breixo.library.infrastructure.adapter.output.mapper.fine.FineEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.FineMyBatisMapper;
 
 import org.instancio.Instancio;

@@ -1,4 +1,4 @@
-package com.breixo.library.infrastructure.adapter.output.mapper;
+package com.breixo.library.infrastructure.adapter.output.mapper.fine;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import com.breixo.library.domain.command.fine.CreateFineCommand;
 import com.breixo.library.domain.command.fine.UpdateFineCommand;
 import com.breixo.library.domain.model.fine.Fine;
 import com.breixo.library.infrastructure.adapter.output.entities.FineEntity;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.common.DateMapper;
 import com.breixo.library.infrastructure.mapper.FineStatusMapper;
 
 import org.mapstruct.Mapper;

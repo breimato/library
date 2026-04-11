@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.breixo.library.domain.model.reservation.Reservation;
 import com.breixo.library.infrastructure.adapter.input.web.dto.ReservationV1;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.common.DateMapper;
 import com.breixo.library.infrastructure.mapper.ReservationStatusMapper;
 
 import org.mapstruct.Mapper;

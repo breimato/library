@@ -8,7 +8,7 @@ import com.breixo.library.domain.exception.ReservationException;
 import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.reservation.Reservation;
 import com.breixo.library.infrastructure.adapter.output.entities.ReservationEntity;
-import com.breixo.library.infrastructure.adapter.output.mapper.ReservationEntityMapper;
+import com.breixo.library.infrastructure.adapter.output.mapper.reservation.ReservationEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.ReservationMyBatisMapper;
 
 import org.instancio.Instancio;

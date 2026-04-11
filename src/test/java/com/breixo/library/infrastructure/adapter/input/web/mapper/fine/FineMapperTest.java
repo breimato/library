@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.breixo.library.domain.model.fine.Fine;
 import com.breixo.library.domain.model.fine.enums.FineStatus;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.common.DateMapper;
 import com.breixo.library.infrastructure.mapper.FineStatusMapper;
 
 import org.instancio.Instancio;

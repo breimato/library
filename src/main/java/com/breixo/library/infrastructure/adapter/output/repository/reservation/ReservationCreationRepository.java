@@ -5,7 +5,7 @@ import com.breixo.library.domain.command.reservation.ReservationSearchCriteriaCo
 import com.breixo.library.domain.model.reservation.Reservation;
 import com.breixo.library.domain.port.output.reservation.ReservationCreationPersistencePort;
 import com.breixo.library.infrastructure.adapter.output.entities.ReservationEntity;
-import com.breixo.library.infrastructure.adapter.output.mapper.ReservationEntityMapper;
+import com.breixo.library.infrastructure.adapter.output.mapper.reservation.ReservationEntityMapper;
 import com.breixo.library.infrastructure.adapter.output.mybatis.ReservationMyBatisMapper;
 
 import jakarta.validation.Valid;

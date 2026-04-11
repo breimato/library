@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import com.breixo.library.domain.model.reservation.enums.ReservationStatus;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchReservationV1Request;
-import com.breixo.library.infrastructure.adapter.input.web.mapper.DateMapper;
+import com.breixo.library.infrastructure.adapter.input.web.mapper.common.DateMapper;
 import com.breixo.library.infrastructure.mapper.ReservationStatusMapper;
 
 import org.instancio.Instancio;

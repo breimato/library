@@ -1,4 +1,4 @@
-package com.breixo.library.infrastructure.adapter.input.web.mapper;
+package com.breixo.library.infrastructure.adapter.input.web.mapper.common;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -26,7 +26,7 @@ class DateMapperTest {
      */
     @Test
     void testToOffsetDateTime_whenLocalDateTimeIsValid_thenReturnOffsetDateTime() {
-        
+
         // Given
         final var localDateTime = Instancio.create(LocalDateTime.class);
 
