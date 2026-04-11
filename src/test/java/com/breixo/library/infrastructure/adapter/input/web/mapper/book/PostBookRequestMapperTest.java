@@ -84,4 +84,24 @@ class PostBookRequestMapperTest {
         // When / Then
         assertNull(this.postBookRequestMapper.toCreateBookCommand(null, null));
     }
+
+    /**
+     * Test to create book command when requester id is null and request is not null then return command.
+     */
+    @Test
+    void testToCreateBookCommand_whenRequesterIdIsNullAndRequestIsNotNull_thenReturnCommand() {
+
+        // Given
+        final var postBookV1Request = Instancio.create(PostBookV1Request.class);
+        postBookV1Request.setIsbn(VALID_ISBN);
+
+        // When
+        final var createBookCommand = this.postBookRequestMapper.toCreateBookCommand(null, postBookV1Request);
+
+        // Then
+        assertNotNull(createBookCommand);
+        assertNull(createBookCommand.requesterId());
+        assertEquals(postBookV1Request.getIsbn(), createBookCommand.isbn().getValue());
+        assertEquals(postBookV1Request.getTitle(), createBookCommand.title());
+    }
 }

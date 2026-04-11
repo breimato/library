@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import com.breixo.library.domain.command.loanrequest.UpdateLoanRequestCommand;
 import com.breixo.library.domain.event.loanrequest.LoanRequestApprovedDomainEvent;
+import com.breixo.library.domain.exception.LoanRequestException;
+import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.domain.model.loanrequest.enums.LoanRequestStatus;
 import com.breixo.library.domain.port.input.loanrequest.LoanRequestMachineStatusService;
@@ -20,9 +22,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 /** The Class Update Loan Request Use Case Test. */
@@ -88,8 +92,32 @@ class UpdateLoanRequestUseCaseTest {
                 updateLoanRequestCommand.status());
         verify(this.loanRequestMachineStatusService, times(0)).execute(existingLoanRequest.status(), existingLoanRequest.status());
         verify(this.loanRequestUpdatePersistencePort, times(1)).execute(updateLoanRequestCommand);
-        verify(this.applicationEventPublisher, times(0)).publishEvent(LoanRequestApprovedDomainEvent.builder().build());
+        verifyNoInteractions(this.applicationEventPublisher);
         assertEquals(updatedLoanRequest, actualLoanRequest);
+    }
+
+    /**
+     * Test execute when loan request not found then throw loan request exception.
+     */
+    @Test
+    void testExecute_whenLoanRequestNotFound_thenThrowLoanRequestException() {
+
+        // Given
+        final var updateLoanRequestCommand = Instancio.create(UpdateLoanRequestCommand.class);
+
+        // When
+        when(this.loanRequestRetrievalPersistencePort.findById(updateLoanRequestCommand.id())).thenReturn(Optional.empty());
+        final var loanRequestException = assertThrows(LoanRequestException.class,
+                () -> this.updateLoanRequestUseCase.execute(updateLoanRequestCommand));
+
+        // Then
+        verify(this.loanRequestRetrievalPersistencePort, times(1)).findById(updateLoanRequestCommand.id());
+        verifyNoInteractions(this.loanRequestPolicyValidationService);
+        verifyNoInteractions(this.loanRequestMachineStatusService);
+        verifyNoInteractions(this.loanRequestUpdatePersistencePort);
+        verifyNoInteractions(this.applicationEventPublisher);
+        assertEquals(ExceptionMessageConstants.LOAN_REQUEST_NOT_FOUND_CODE_ERROR, loanRequestException.getCode());
+        assertEquals(ExceptionMessageConstants.LOAN_REQUEST_NOT_FOUND_MESSAGE_ERROR, loanRequestException.getMessage());
     }
 
     /**
@@ -175,7 +203,7 @@ class UpdateLoanRequestUseCaseTest {
                 updateLoanRequestCommand.status());
         verify(this.loanRequestMachineStatusService, times(0)).execute(existingLoanRequest.status(), existingLoanRequest.status());
         verify(this.loanRequestUpdatePersistencePort, times(1)).execute(updateLoanRequestCommand);
-        verify(this.applicationEventPublisher, times(0)).publishEvent(org.mockito.ArgumentMatchers.any());
+        verifyNoInteractions(this.applicationEventPublisher);
         assertEquals(updatedLoanRequest, actualLoanRequest);
     }
 }

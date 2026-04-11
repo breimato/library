@@ -49,4 +49,13 @@ class ReservationResponseMapperTest {
         assertNotNull(reservationV1Response);
         assertEquals(reservationV1, reservationV1Response.getReservation());
     }
+
+    /**
+     * Test to reservation V1 response when reservation is null then return null.
+     */
+    @Test
+    void testToReservationV1Response_whenReservationIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.reservationResponseMapper.toReservationV1Response(null));
+    }
 }

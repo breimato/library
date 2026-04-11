@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** The Class User Status Mapper Test. */
 @ExtendWith(MockitoExtension.class)
@@ -69,5 +70,23 @@ class UserStatusMapperTest {
     void testToUserStatus_whenIntegerIdIsBlocked_thenReturnBlocked() {
         // When / Then
         assertEquals(UserStatus.BLOCKED, this.userStatusMapper.toUserStatus(UserStatus.BLOCKED.getId()));
+    }
+
+    /**
+     * Test to status value when user status is null then return null.
+     */
+    @Test
+    void testToStatusId_whenUserStatusIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.userStatusMapper.toStatusId(null));
+    }
+
+    /**
+     * Test to user status when integer id is null then return null.
+     */
+    @Test
+    void testToUserStatus_whenIntegerIdIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.userStatusMapper.toUserStatus(null));
     }
 }

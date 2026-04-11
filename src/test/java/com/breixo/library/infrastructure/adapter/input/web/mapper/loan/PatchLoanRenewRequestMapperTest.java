@@ -77,4 +77,13 @@ class PatchLoanRenewRequestMapperTest {
         assertEquals(id, updateLoanRenewCommand.id());
         assertNull(updateLoanRenewCommand.dueDate());
     }
+
+    /**
+     * Test to update loan renew command when id and request are null then return null.
+     */
+    @Test
+    void testToUpdateLoanRenewCommand_whenIdAndRequestAreNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.patchLoanRenewRequestMapper.toUpdateLoanRenewCommand(null, null));
+    }
 }

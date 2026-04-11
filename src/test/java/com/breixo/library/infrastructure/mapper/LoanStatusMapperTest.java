@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** The Class Loan Status Mapper Test. */
 @ExtendWith(MockitoExtension.class)
@@ -69,5 +70,23 @@ class LoanStatusMapperTest {
     void testToLoanStatus_whenIntegerIdIsOverdue_thenReturnOverdue() {
         // When / Then
         assertEquals(LoanStatus.OVERDUE, this.loanStatusMapper.toLoanStatus(LoanStatus.OVERDUE.getId()));
+    }
+
+    /**
+     * Test to status id when loan status is null then return null.
+     */
+    @Test
+    void testToStatusId_whenLoanStatusIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.loanStatusMapper.toStatusId(null));
+    }
+
+    /**
+     * Test to loan status when integer id is null then return null.
+     */
+    @Test
+    void testToLoanStatus_whenIntegerIdIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.loanStatusMapper.toLoanStatus(null));
     }
 }

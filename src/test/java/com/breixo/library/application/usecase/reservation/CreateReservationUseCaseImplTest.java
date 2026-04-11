@@ -70,6 +70,54 @@ class CreateReservationUseCaseImplTest {
     @Mock
     ReservationCreationPersistencePort reservationCreationPersistencePort;
 
+    /**
+     * Test execute when user not found then throw user exception.
+     */
+    @Test
+    void testExecute_whenUserNotFound_thenThrowUserException() {
+
+        // Given
+        final var createReservationCommand = Instancio.create(CreateReservationCommand.class);
+
+        // When
+        when(this.userRetrievalPersistencePort.findById(createReservationCommand.userId())).thenReturn(Optional.empty());
+        final var userException = assertThrows(UserException.class,
+                () -> this.createReservationUseCaseImpl.execute(createReservationCommand));
+
+        // Then
+        verify(this.userRetrievalPersistencePort, times(1)).findById(createReservationCommand.userId());
+        verify(this.bookRetrievalPersistencePort, times(0)).findById(createReservationCommand.bookId());
+        verify(this.loanRetrievalPersistencePort, times(0)).findByUserId(createReservationCommand.userId());
+        verify(this.reservationCreationPersistencePort, times(0)).execute(createReservationCommand);
+        assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR, userException.getCode());
+        assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR, userException.getMessage());
+    }
+
+    /**
+     * Test execute when book not found then throw book exception.
+     */
+    @Test
+    void testExecute_whenBookNotFound_thenThrowBookException() {
+
+        // Given
+        final var createReservationCommand = Instancio.create(CreateReservationCommand.class);
+        final var user = Instancio.create(User.class);
+
+        // When
+        when(this.userRetrievalPersistencePort.findById(createReservationCommand.userId())).thenReturn(Optional.of(user));
+        when(this.bookRetrievalPersistencePort.findById(createReservationCommand.bookId())).thenReturn(Optional.empty());
+        final var bookException = assertThrows(BookException.class,
+                () -> this.createReservationUseCaseImpl.execute(createReservationCommand));
+
+        // Then
+        verify(this.userRetrievalPersistencePort, times(1)).findById(createReservationCommand.userId());
+        verify(this.bookRetrievalPersistencePort, times(1)).findById(createReservationCommand.bookId());
+        verify(this.loanRetrievalPersistencePort, times(0)).findByUserId(user.id());
+        verify(this.reservationCreationPersistencePort, times(0)).execute(createReservationCommand);
+        assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR, bookException.getCode());
+        assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, bookException.getMessage());
+    }
+
     /** Test execute when user policy rejected then throw user exception. */
     @Test
     void testExecute_whenUserPolicyRejected_thenThrowUserException() {

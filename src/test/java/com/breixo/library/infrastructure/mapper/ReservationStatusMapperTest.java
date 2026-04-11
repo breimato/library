@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** The Class Reservation Status Mapper Test. */
 @ExtendWith(MockitoExtension.class)
@@ -105,5 +106,23 @@ class ReservationStatusMapperTest {
     void testToReservationStatus_whenIntegerIdIsCancelled_thenReturnCancelled() {
         // When / Then
         assertEquals(ReservationStatus.CANCELLED, this.reservationStatusMapper.toReservationStatus(ReservationStatus.CANCELLED.getId()));
+    }
+
+    /**
+     * Test to status id when reservation status is null then return null.
+     */
+    @Test
+    void testToStatusId_whenReservationStatusIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.reservationStatusMapper.toStatusId(null));
+    }
+
+    /**
+     * Test to reservation status when integer id is null then return null.
+     */
+    @Test
+    void testToReservationStatus_whenIntegerIdIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.reservationStatusMapper.toReservationStatus(null));
     }
 }

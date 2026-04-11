@@ -113,7 +113,10 @@ class CreateLoanRequestUseCaseTest {
                 .thenReturn(Optional.empty());
 
         // Then
-        assertThrows(UserException.class, () -> this.createLoanRequestUseCase.execute(createLoanRequestCommand));
+        final var userException = assertThrows(UserException.class,
+                () -> this.createLoanRequestUseCase.execute(createLoanRequestCommand));
+        assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR, userException.getCode());
+        assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR, userException.getMessage());
         verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
@@ -145,7 +148,10 @@ class CreateLoanRequestUseCaseTest {
                 .thenReturn(Optional.empty());
 
         // Then
-        assertThrows(BookException.class, () -> this.createLoanRequestUseCase.execute(createLoanRequestCommand));
+        final var bookException = assertThrows(BookException.class,
+                () -> this.createLoanRequestUseCase.execute(createLoanRequestCommand));
+        assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR, bookException.getCode());
+        assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, bookException.getMessage());
         verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),

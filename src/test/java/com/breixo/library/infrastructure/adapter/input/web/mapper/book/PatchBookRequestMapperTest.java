@@ -101,4 +101,25 @@ class PatchBookRequestMapperTest {
         assertNull(updateBookCommand.totalCopies());
         assertNull(updateBookCommand.availableCopies());
     }
+
+    /**
+     * Test to update book command when id and requester id are null and request is not null then return command.
+     */
+    @Test
+    void testToUpdateBookCommand_whenIdAndRequesterIdAreNullAndRequestIsNotNull_thenReturnCommand() {
+
+        // Given
+        final var patchBookV1Request = Instancio.create(PatchBookV1Request.class);
+
+        // When
+        final var updateBookCommand = this.patchBookRequestMapper
+                .toUpdateBookCommand(null, null, patchBookV1Request);
+
+        // Then
+        assertNotNull(updateBookCommand);
+        assertNull(updateBookCommand.id());
+        assertNull(updateBookCommand.requesterId());
+        assertEquals(patchBookV1Request.getTitle(), updateBookCommand.title());
+        assertEquals(patchBookV1Request.getAuthor(), updateBookCommand.author());
+    }
 }

@@ -49,4 +49,13 @@ class LoanRequestResponseMapperTest {
         assertNotNull(loanRequestV1Response);
         assertEquals(loanRequestV1, loanRequestV1Response.getLoanRequest());
     }
+
+    /**
+     * Test to loan request V1 response when loan request is null then return null.
+     */
+    @Test
+    void testToLoanRequestV1Response_whenLoanRequestIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.loanRequestResponseMapper.toLoanRequestV1Response(null));
+    }
 }

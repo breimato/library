@@ -96,6 +96,8 @@ class ReservationEntityMapperTest {
         final var reservations = this.reservationEntityMapper.toReservationList(reservationEntities);
 
         // Then
+        verify(this.reservationStatusMapper, times(1)).toReservationStatus(reservationEntity.getStatusId());
+        verify(this.dateMapper, times(1)).toLocalDateTime(reservationEntity.getExpiresAt());
         assertNotNull(reservations);
         assertEquals(1, reservations.size());
         assertEquals(reservationEntity.getId(), reservations.getFirst().id());
@@ -171,5 +173,23 @@ class ReservationEntityMapperTest {
         assertEquals(updateReservationCommand.loanId(), reservationEntity.getLoanId());
         assertEquals(offsetDateTime, reservationEntity.getExpiresAt());
         assertEquals(statusId, reservationEntity.getStatusId());
+    }
+
+    /**
+     * Test to reservation entity when create reservation command is null then return null.
+     */
+    @Test
+    void testToReservationEntity_whenCreateReservationCommandIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.reservationEntityMapper.toReservationEntity((CreateReservationCommand) null));
+    }
+
+    /**
+     * Test to reservation entity when update reservation command is null then return null.
+     */
+    @Test
+    void testToReservationEntity_whenUpdateReservationCommandIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.reservationEntityMapper.toReservationEntity((UpdateReservationCommand) null));
     }
 }

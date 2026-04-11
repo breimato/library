@@ -15,7 +15,7 @@ public interface PatchReservationRequestMapper {
     /**
      * To update reservation command.
      *
-     * @param id                        the reservation identifier.
+     * @param id                          the reservation identifier.
      * @param patchReservationV1Request the patch reservation V1 request.
      * @return the update reservation command.
      */

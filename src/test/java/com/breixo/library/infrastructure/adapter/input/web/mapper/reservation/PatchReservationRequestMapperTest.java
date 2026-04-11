@@ -1,7 +1,6 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.reservation;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 
 import com.breixo.library.domain.model.reservation.enums.ReservationStatus;
 import com.breixo.library.infrastructure.adapter.input.web.dto.PatchReservationV1Request;
@@ -75,7 +74,7 @@ class PatchReservationRequestMapperTest {
 
         // Given
         final var id = Instancio.create(Integer.class);
-        final var patchReservationV1Request = new PatchReservationV1Request();
+        final var patchReservationV1Request = PatchReservationV1Request.builder().build();
 
         // When
         final var updateReservationCommand = this.patchReservationRequestMapper
@@ -96,5 +95,54 @@ class PatchReservationRequestMapperTest {
     void testToUpdateReservationCommand_whenIdAndRequestAreNull_thenReturnNull() {
         // When / Then
         assertNull(this.patchReservationRequestMapper.toUpdateReservationCommand(null, null));
+    }
+
+    /**
+     * Test to update reservation command when request is null then return command without patch fields.
+     */
+    @Test
+    void testToUpdateReservationCommand_whenRequestIsNull_thenReturnCommandWithoutPatchFields() {
+
+        // Given
+        final var id = Instancio.create(Integer.class);
+
+        // When
+        final var updateReservationCommand = this.patchReservationRequestMapper
+                .toUpdateReservationCommand(id, null);
+
+        // Then
+        assertNotNull(updateReservationCommand);
+        assertEquals(id, updateReservationCommand.id());
+        assertNull(updateReservationCommand.loanId());
+        assertNull(updateReservationCommand.status());
+        assertNull(updateReservationCommand.expiresAt());
+    }
+
+    /**
+     * Test to update reservation command when id is null and request is not null then return command with null id.
+     */
+    @Test
+    void testToUpdateReservationCommand_whenIdIsNullAndRequestIsNotNull_thenReturnCommandWithNullId() {
+
+        // Given
+        final var patchReservationV1Request = Instancio.create(PatchReservationV1Request.class);
+        final var reservationStatus = Instancio.create(ReservationStatus.class);
+        final var expiresAt = Instancio.create(LocalDateTime.class);
+
+        // When
+        when(this.reservationStatusMapper.toReservationStatus(patchReservationV1Request.getStatus()))
+                .thenReturn(reservationStatus);
+        when(this.dateMapper.toLocalDateTime(patchReservationV1Request.getExpiresAt())).thenReturn(expiresAt);
+        final var updateReservationCommand = this.patchReservationRequestMapper
+                .toUpdateReservationCommand(null, patchReservationV1Request);
+
+        // Then
+        verify(this.reservationStatusMapper, times(1)).toReservationStatus(patchReservationV1Request.getStatus());
+        verify(this.dateMapper, times(1)).toLocalDateTime(patchReservationV1Request.getExpiresAt());
+        assertNotNull(updateReservationCommand);
+        assertNull(updateReservationCommand.id());
+        assertEquals(patchReservationV1Request.getLoanId(), updateReservationCommand.loanId());
+        assertEquals(reservationStatus, updateReservationCommand.status());
+        assertEquals(expiresAt, updateReservationCommand.expiresAt());
     }
 }

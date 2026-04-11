@@ -88,4 +88,50 @@ class PatchLoanRequestRequestMapperTest {
         assertNull(updateLoanRequestCommand.status());
         assertNull(updateLoanRequestCommand.rejectionReason());
     }
+
+    /**
+     * Test to update loan request command when id is null and requester id is not null and request is null then return command.
+     */
+    @Test
+    void testToUpdateLoanRequestCommand_whenIdIsNullAndRequesterIdNotNullAndRequestIsNull_thenReturnCommand() {
+
+        // Given
+        final var requesterId = Instancio.create(Integer.class);
+
+        // When
+        final var updateLoanRequestCommand =
+                this.patchLoanRequestRequestMapper.toUpdateLoanRequestCommand(null, requesterId, null);
+
+        // Then
+        assertNotNull(updateLoanRequestCommand);
+        assertNull(updateLoanRequestCommand.id());
+        assertEquals(requesterId, updateLoanRequestCommand.requesterId());
+        assertNull(updateLoanRequestCommand.status());
+        assertNull(updateLoanRequestCommand.rejectionReason());
+    }
+
+    /**
+     * Test to update loan request command when id and requester id are null and request is not null then return command.
+     */
+    @Test
+    void testToUpdateLoanRequestCommand_whenIdAndRequesterIdAreNullAndRequestIsNotNull_thenReturnCommand() {
+
+        // Given
+        final var patchLoanRequestV1Request = Instancio.create(PatchLoanRequestV1Request.class);
+        final var loanRequestStatus = Instancio.create(LoanRequestStatus.class);
+
+        // When
+        when(this.loanRequestStatusMapper.toLoanRequestStatus(patchLoanRequestV1Request.getStatus()))
+                .thenReturn(loanRequestStatus);
+        final var updateLoanRequestCommand = this.patchLoanRequestRequestMapper
+                .toUpdateLoanRequestCommand(null, null, patchLoanRequestV1Request);
+
+        // Then
+        verify(this.loanRequestStatusMapper, times(1)).toLoanRequestStatus(patchLoanRequestV1Request.getStatus());
+        assertNotNull(updateLoanRequestCommand);
+        assertNull(updateLoanRequestCommand.id());
+        assertNull(updateLoanRequestCommand.requesterId());
+        assertEquals(loanRequestStatus, updateLoanRequestCommand.status());
+        assertEquals(patchLoanRequestV1Request.getRejectionReason(), updateLoanRequestCommand.rejectionReason());
+    }
 }

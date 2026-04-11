@@ -68,4 +68,24 @@ class PostLoanRequestRequestMapperTest {
         // When / Then
         assertNull(this.postLoanRequestRequestMapper.toCreateLoanRequestCommand(null, null));
     }
+
+    /**
+     * Test to create loan request command when requester id is null and request is not null then return command.
+     */
+    @Test
+    void testToCreateLoanRequestCommand_whenRequesterIdIsNullAndRequestIsNotNull_thenReturnCommand() {
+
+        // Given
+        final var postLoanRequestV1Request = Instancio.create(PostLoanRequestV1Request.class);
+
+        // When
+        final var createLoanRequestCommand =
+                this.postLoanRequestRequestMapper.toCreateLoanRequestCommand(null, postLoanRequestV1Request);
+
+        // Then
+        assertNotNull(createLoanRequestCommand);
+        assertNull(createLoanRequestCommand.requesterId());
+        assertEquals(postLoanRequestV1Request.getUserId(), createLoanRequestCommand.userId());
+        assertEquals(postLoanRequestV1Request.getBookId(), createLoanRequestCommand.bookId());
+    }
 }

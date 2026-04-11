@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** The Class Fine Status Mapper Test. */
 @ExtendWith(MockitoExtension.class)
@@ -69,5 +70,23 @@ class FineStatusMapperTest {
     void testToFineStatus_whenIntegerIdIsWaived_thenReturnWaived() {
         // When / Then
         assertEquals(FineStatus.WAIVED, this.fineStatusMapper.toFineStatus(FineStatus.WAIVED.getId()));
+    }
+
+    /**
+     * Test to status id when fine status is null then return null.
+     */
+    @Test
+    void testToStatusId_whenFineStatusIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.fineStatusMapper.toStatusId(null));
+    }
+
+    /**
+     * Test to fine status when integer id is null then return null.
+     */
+    @Test
+    void testToFineStatus_whenIntegerIdIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.fineStatusMapper.toFineStatus(null));
     }
 }

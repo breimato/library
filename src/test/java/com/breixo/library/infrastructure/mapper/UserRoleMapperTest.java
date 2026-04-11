@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** The Class User Role Mapper Test. */
 @ExtendWith(MockitoExtension.class)
@@ -78,5 +79,14 @@ class UserRoleMapperTest {
     void testToUserRole_whenIntegerIdIsAdmin_thenReturnAdmin() {
         // When / Then
         assertEquals(UserRole.ADMIN, this.userRoleMapper.toUserRole(UserRole.ADMIN.getId()));
+    }
+
+    /**
+     * Test to user role when integer id is null then return null.
+     */
+    @Test
+    void testToUserRole_whenIntegerIdIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.userRoleMapper.toUserRole(null));
     }
 }

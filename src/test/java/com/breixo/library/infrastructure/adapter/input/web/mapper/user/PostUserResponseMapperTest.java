@@ -2,7 +2,6 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper.user;
 
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.infrastructure.adapter.input.web.dto.UserV1Dto;
-
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /** The Class Post User Response Mapper Test. */
@@ -38,10 +39,11 @@ class PostUserResponseMapperTest {
 
         // When
         when(this.userMapper.toUserV1(user)).thenReturn(userV1Dto);
-        final var response = this.userResponseMapper.toUserV1Response(user);
+        final var userV1ResponseDto = this.userResponseMapper.toUserV1Response(user);
 
         // Then
-        assertNotNull(response);
+        verify(this.userMapper, times(1)).toUserV1(user);
+        assertNotNull(userV1ResponseDto);
     }
 
     /**

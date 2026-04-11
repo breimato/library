@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** The Class Loan Request Status Mapper Test. */
 @ExtendWith(MockitoExtension.class)
@@ -87,5 +88,23 @@ class LoanRequestStatusMapperTest {
     void testToLoanRequestStatus_whenIntegerIdIsCancelled_thenReturnCancelled() {
         // When / Then
         assertEquals(LoanRequestStatus.CANCELLED, this.loanRequestStatusMapper.toLoanRequestStatus(LoanRequestStatus.CANCELLED.getId()));
+    }
+
+    /**
+     * Test to status id when loan request status is null then return null.
+     */
+    @Test
+    void testToStatusId_whenLoanRequestStatusIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.loanRequestStatusMapper.toStatusId(null));
+    }
+
+    /**
+     * Test to loan request status when integer id is null then return null.
+     */
+    @Test
+    void testToLoanRequestStatus_whenIntegerIdIsNull_thenReturnNull() {
+        // When / Then
+        assertNull(this.loanRequestStatusMapper.toLoanRequestStatus(null));
     }
 }
