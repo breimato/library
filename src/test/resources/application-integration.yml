@@ -1,0 +1,6 @@
+spring:
+  flyway:
+    enabled: true
+  task:
+    scheduling:
+      enabled: false
