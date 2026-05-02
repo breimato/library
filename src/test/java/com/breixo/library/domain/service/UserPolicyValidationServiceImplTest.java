@@ -39,9 +39,9 @@ class UserPolicyValidationServiceImplTest {
     @InjectMocks
     UserPolicyValidationServiceImpl userPolicyValidationServiceImpl;
 
-    /** Test check when user blocked then throw user exception. */
+    /** Test execute when user blocked then throw user exception. */
     @Test
-    void testCheck_whenUserBlocked_thenThrowUserException() {
+    void testExecute_whenUserBlocked_thenThrowUserException() {
 
         // Given
         final var user = Instancio.of(User.class)
@@ -56,9 +56,9 @@ class UserPolicyValidationServiceImplTest {
         assertEquals(ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR, exception.getMessage());
     }
 
-    /** Test check when user suspended then throw user exception. */
+    /** Test execute when user suspended then throw user exception. */
     @Test
-    void testCheck_whenUserSuspended_thenThrowUserException() {
+    void testExecute_whenUserSuspended_thenThrowUserException() {
 
         // Given
         final var user = Instancio.of(User.class)
@@ -73,9 +73,9 @@ class UserPolicyValidationServiceImplTest {
         assertEquals(ExceptionMessageConstants.USER_SUSPENDED_MESSAGE_ERROR, exception.getMessage());
     }
 
-    /** Test check when pending fines exist then throw user exception. */
+    /** Test execute when pending fines exist then throw user exception. */
     @Test
-    void testCheck_whenPendingFinesExist_thenThrowUserException() {
+    void testExecute_whenPendingFinesExist_thenThrowUserException() {
 
         // Given
         final var user = Instancio.of(User.class)
@@ -99,9 +99,9 @@ class UserPolicyValidationServiceImplTest {
         assertEquals(ExceptionMessageConstants.USER_HAS_PENDING_FINES_MESSAGE_ERROR, exception.getMessage());
     }
 
-    /** Test check when active user and no pending fines then does not throw. */
+    /** Test execute when active user and no pending fines then does not throw. */
     @Test
-    void testCheck_whenActiveUserAndNoPendingFines_thenDoesNotThrow() {
+    void testExecute_whenActiveUserAndNoPendingFines_thenDoesNotThrow() {
 
         // Given
         final var user = Instancio.of(User.class)
