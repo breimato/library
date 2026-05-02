@@ -51,7 +51,7 @@ class UserPolicyValidationServiceImplTest {
 
         // When/Then
         final var exception = assertThrows(UserException.class,
-                () -> this.userPolicyValidationServiceImpl.check(user, loanList));
+                () -> this.userPolicyValidationServiceImpl.execute(user, loanList));
         assertEquals(ExceptionMessageConstants.USER_BLOCKED_CODE_ERROR, exception.getCode());
         assertEquals(ExceptionMessageConstants.USER_BLOCKED_MESSAGE_ERROR, exception.getMessage());
     }
@@ -68,7 +68,7 @@ class UserPolicyValidationServiceImplTest {
 
         // When/Then
         final var exception = assertThrows(UserException.class,
-                () -> this.userPolicyValidationServiceImpl.check(user, loanList));
+                () -> this.userPolicyValidationServiceImpl.execute(user, loanList));
         assertEquals(ExceptionMessageConstants.USER_SUSPENDED_CODE_ERROR, exception.getCode());
         assertEquals(ExceptionMessageConstants.USER_SUSPENDED_MESSAGE_ERROR, exception.getMessage());
     }
@@ -91,7 +91,7 @@ class UserPolicyValidationServiceImplTest {
         // When
         when(this.fineRetrievalPersistencePort.find(fineSearchCriteriaCommand)).thenReturn(List.of(fine));
         final var exception = assertThrows(UserException.class,
-                () -> this.userPolicyValidationServiceImpl.check(user, List.of(loan)));
+                () -> this.userPolicyValidationServiceImpl.execute(user, List.of(loan)));
 
         // Then
         verify(this.fineRetrievalPersistencePort, times(1)).find(fineSearchCriteriaCommand);
@@ -115,7 +115,7 @@ class UserPolicyValidationServiceImplTest {
 
         // When
         when(this.fineRetrievalPersistencePort.find(fineSearchCriteriaCommand)).thenReturn(List.of());
-        assertDoesNotThrow(() -> this.userPolicyValidationServiceImpl.check(user, List.of(loan)));
+        assertDoesNotThrow(() -> this.userPolicyValidationServiceImpl.execute(user, List.of(loan)));
 
         // Then
         verify(this.fineRetrievalPersistencePort, times(1)).find(fineSearchCriteriaCommand);

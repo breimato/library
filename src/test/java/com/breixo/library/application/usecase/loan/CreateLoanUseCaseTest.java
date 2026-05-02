@@ -138,12 +138,12 @@ class CreateLoanUseCaseTest {
         when(this.userRetrievalPersistencePort.findById(createLoanCommand.userId())).thenReturn(Optional.of(user));
         when(this.bookRetrievalPersistencePort.findById(createLoanCommand.bookId())).thenReturn(Optional.of(book));
         when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
-        doThrow(userException).when(this.userPolicyValidationService).check(user, loanList);
+        doThrow(userException).when(this.userPolicyValidationService).execute(user, loanList);
         final var exception = assertThrows(UserException.class,
                 () -> this.createLoanUseCase.execute(createLoanCommand));
 
         // Then
-        verify(this.userPolicyValidationService, times(1)).check(user, loanList);
+        verify(this.userPolicyValidationService, times(1)).execute(user, loanList);
         verify(this.bookPolicyValidationService, times(0)).checkIsBorrowable(book);
         verify(this.loanCreationPersistencePort, times(0)).execute(createLoanCommand);
         assertEquals(ExceptionMessageConstants.USER_BLOCKED_CODE_ERROR, exception.getCode());
@@ -228,7 +228,7 @@ class CreateLoanUseCaseTest {
         final var result = this.createLoanUseCase.execute(createLoanCommand);
 
         // Then
-        verify(this.userPolicyValidationService, times(1)).check(user, loanList);
+        verify(this.userPolicyValidationService, times(1)).execute(user, loanList);
         verify(this.bookPolicyValidationService, times(1)).checkIsBorrowable(book);
         verify(this.loanPolicyValidationService, times(1)).checkCanBorrow(book, loanList);
         verify(this.reservationPolicyValidationService, times(1)).checkPrecedence(user.id(), book.id());

@@ -28,7 +28,7 @@ public class UserPolicyValidationServiceImpl implements UserPolicyValidationServ
 
     /** {@inheritDoc} */
     @Override
-    public void check(@NotNull final User user, @NotNull final List<Loan> loanList) {
+    public void execute(@NotNull final User user, @NotNull final List<Loan> loanList) {
         this.validateIsActive(user);
         this.validateHasNoPendingFines(loanList);
     }

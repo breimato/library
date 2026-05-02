@@ -82,7 +82,7 @@ public class CreateReservationUseCaseImpl implements CreateReservationUseCase {
      */
     private void validate(final User user, final Book book, final List<Loan> loanList) {
 
-        this.userPolicyValidationService.check(user, loanList);
+        this.userPolicyValidationService.execute(user, loanList);
 
         this.bookPolicyValidationService.checkIsReservable(book);
 

@@ -100,7 +100,7 @@ public class CreateLoanUseCaseImpl implements CreateLoanUseCase {
      */
     private void validate(final User user, final Book book, final List<Loan> loanList) {
 
-        this.userPolicyValidationService.check(user, loanList);
+        this.userPolicyValidationService.execute(user, loanList);
 
         this.bookPolicyValidationService.checkIsBorrowable(book);
 

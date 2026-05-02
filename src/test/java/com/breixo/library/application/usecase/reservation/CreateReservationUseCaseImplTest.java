@@ -135,12 +135,12 @@ class CreateReservationUseCaseImplTest {
         when(this.userRetrievalPersistencePort.findById(createReservationCommand.userId())).thenReturn(Optional.of(user));
         when(this.bookRetrievalPersistencePort.findById(createReservationCommand.bookId())).thenReturn(Optional.of(book));
         when(this.loanRetrievalPersistencePort.findByUserId(user.id())).thenReturn(loanList);
-        doThrow(userException).when(this.userPolicyValidationService).check(user, loanList);
+        doThrow(userException).when(this.userPolicyValidationService).execute(user, loanList);
         final var exception = assertThrows(UserException.class,
                 () -> this.createReservationUseCaseImpl.execute(createReservationCommand));
 
         // Then
-        verify(this.userPolicyValidationService, times(1)).check(user, loanList);
+        verify(this.userPolicyValidationService, times(1)).execute(user, loanList);
         verify(this.bookPolicyValidationService, times(0)).checkIsReservable(book);
         verify(this.reservationCreationPersistencePort, times(0)).execute(createReservationCommand);
         assertEquals(ExceptionMessageConstants.USER_BLOCKED_CODE_ERROR, exception.getCode());
@@ -224,7 +224,7 @@ class CreateReservationUseCaseImplTest {
         final var result = this.createReservationUseCaseImpl.execute(createReservationCommand);
 
         // Then
-        verify(this.userPolicyValidationService, times(1)).check(user, loanList);
+        verify(this.userPolicyValidationService, times(1)).execute(user, loanList);
         verify(this.bookPolicyValidationService, times(1)).checkIsReservable(book);
         verify(this.reservationPolicyValidationService, times(1)).checkNoActiveReservation(user.id(), book.id());
         verify(this.reservationCreationPersistencePort, times(1)).execute(createReservationCommand);
