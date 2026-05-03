@@ -8,7 +8,7 @@ import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.loanrequest.CreateLoanRequestUseCase;
 import com.breixo.library.domain.port.input.loanrequest.LoanRequestPolicyValidationService;
-import com.breixo.library.domain.port.input.user.AuthorizationService;
+import com.breixo.library.domain.port.input.user.UserAuthorizationService;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestCreationPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
@@ -33,8 +33,8 @@ public class CreateLoanRequestUseCaseImpl implements CreateLoanRequestUseCase {
     /** The loan request creation persistence port. */
     private final LoanRequestCreationPersistencePort loanRequestCreationPersistencePort;
 
-    /** The authorization service. */
-    private final AuthorizationService authorizationService;
+    /** The user authorization service. */
+    private final UserAuthorizationService userAuthorizationService;
 
     /** The loan request policy validation service. */
     private final LoanRequestPolicyValidationService loanRequestPolicyValidationService;
@@ -44,7 +44,7 @@ public class CreateLoanRequestUseCaseImpl implements CreateLoanRequestUseCase {
     @Transactional
     public LoanRequest execute(@Valid @NotNull final CreateLoanRequestCommand createLoanRequestCommand) {
 
-        this.authorizationService.requireOwnResourceOrRole(
+        this.userAuthorizationService.requireAccess(
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);

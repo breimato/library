@@ -1,6 +1,5 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.fine;
 
-import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetFinesV1Request;
 
 import org.instancio.Instancio;

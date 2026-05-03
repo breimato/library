@@ -3,7 +3,6 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.loan;
 import com.breixo.library.domain.command.loan.GetUserLoansCommand;
 import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.port.input.loan.GetUserLoansUseCase;
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetLoansV1ResponseDto;
 import com.breixo.library.infrastructure.adapter.input.web.dto.LoanV1Dto;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loan.GetUserLoansRequestMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loan.LoanMapper;

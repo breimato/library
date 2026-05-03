@@ -2,7 +2,6 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper.loanrequest;
 
 import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.infrastructure.adapter.input.web.dto.LoanRequestV1;
-import com.breixo.library.infrastructure.adapter.input.web.dto.LoanRequestV1Response;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;

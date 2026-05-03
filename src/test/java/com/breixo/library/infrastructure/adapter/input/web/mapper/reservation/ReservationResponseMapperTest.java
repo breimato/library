@@ -2,7 +2,6 @@ package com.breixo.library.infrastructure.adapter.input.web.mapper.reservation;
 
 import com.breixo.library.domain.model.reservation.Reservation;
 import com.breixo.library.infrastructure.adapter.input.web.dto.ReservationV1;
-import com.breixo.library.infrastructure.adapter.input.web.dto.ReservationV1Response;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;

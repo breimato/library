@@ -9,7 +9,7 @@ import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.reservation.Reservation;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.model.user.enums.UserRole;
-import com.breixo.library.domain.port.input.user.AuthorizationService;
+import com.breixo.library.domain.port.input.user.UserAuthorizationService;
 import com.breixo.library.domain.port.output.reservation.ReservationRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 
@@ -35,9 +35,9 @@ class GetUserReservationsUseCaseTest {
     @InjectMocks
     GetUserReservationsUseCaseImpl getUserReservationsUseCase;
 
-    /** The authorization service. */
+    /** The user authorization service. */
     @Mock
-    AuthorizationService authorizationService;
+    UserAuthorizationService userAuthorizationService;
 
     /** The user retrieval persistence port. */
     @Mock
@@ -59,7 +59,7 @@ class GetUserReservationsUseCaseTest {
         final var reservations = Instancio.createList(Reservation.class);
 
         // When
-        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+        doNothing().when(this.userAuthorizationService).requireAccess(
                 getUserReservationsCommand.requesterId(),
                 getUserReservationsCommand.userId(),
                 UserRole.MANAGER);
@@ -69,7 +69,7 @@ class GetUserReservationsUseCaseTest {
         final var result = this.getUserReservationsUseCase.execute(getUserReservationsCommand);
 
         // Then
-        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+        verify(this.userAuthorizationService, times(1)).requireAccess(
                 getUserReservationsCommand.requesterId(),
                 getUserReservationsCommand.userId(),
                 UserRole.MANAGER);
@@ -88,7 +88,7 @@ class GetUserReservationsUseCaseTest {
         final var getUserReservationsCommand = Instancio.create(GetUserReservationsCommand.class);
 
         // When
-        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+        doNothing().when(this.userAuthorizationService).requireAccess(
                 getUserReservationsCommand.requesterId(),
                 getUserReservationsCommand.userId(),
                 UserRole.MANAGER);
@@ -98,7 +98,7 @@ class GetUserReservationsUseCaseTest {
                 () -> this.getUserReservationsUseCase.execute(getUserReservationsCommand));
 
         // Then
-        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+        verify(this.userAuthorizationService, times(1)).requireAccess(
                 getUserReservationsCommand.requesterId(),
                 getUserReservationsCommand.userId(),
                 UserRole.MANAGER);
@@ -119,7 +119,7 @@ class GetUserReservationsUseCaseTest {
         final var user = Instancio.create(User.class);
 
         // When
-        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+        doNothing().when(this.userAuthorizationService).requireAccess(
                 getUserReservationsCommand.requesterId(),
                 getUserReservationsCommand.userId(),
                 UserRole.MANAGER);

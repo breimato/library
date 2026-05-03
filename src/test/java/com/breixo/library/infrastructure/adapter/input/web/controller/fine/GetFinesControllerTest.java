@@ -1,6 +1,5 @@
 package com.breixo.library.infrastructure.adapter.input.web.controller.fine;
 
-import java.util.List;
 
 import com.breixo.library.domain.command.fine.FineSearchCriteriaCommand;
 import com.breixo.library.domain.model.fine.Fine;

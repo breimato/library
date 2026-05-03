@@ -8,7 +8,7 @@ import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.reservation.Reservation;
 import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.reservation.GetUserReservationsUseCase;
-import com.breixo.library.domain.port.input.user.AuthorizationService;
+import com.breixo.library.domain.port.input.user.UserAuthorizationService;
 import com.breixo.library.domain.port.output.reservation.ReservationRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 
@@ -22,8 +22,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class GetUserReservationsUseCaseImpl implements GetUserReservationsUseCase {
 
-    /** The authorization service. */
-    private final AuthorizationService authorizationService;
+    /** The user authorization service. */
+    private final UserAuthorizationService userAuthorizationService;
 
     /** The user retrieval persistence port. */
     private final UserRetrievalPersistencePort userRetrievalPersistencePort;
@@ -35,7 +35,7 @@ public class GetUserReservationsUseCaseImpl implements GetUserReservationsUseCas
     @Override
     public List<Reservation> execute(@Valid @NotNull final GetUserReservationsCommand getUserReservationsCommand) {
 
-        this.authorizationService.requireOwnResourceOrRole(
+        this.userAuthorizationService.requireAccess(
                 getUserReservationsCommand.requesterId(),
                 getUserReservationsCommand.userId(),
                 UserRole.MANAGER);

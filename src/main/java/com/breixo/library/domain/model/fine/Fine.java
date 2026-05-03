@@ -2,7 +2,6 @@ package com.breixo.library.domain.model.fine;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 
 import com.breixo.library.domain.model.fine.enums.FineStatus;
 import jakarta.validation.constraints.NotNull;

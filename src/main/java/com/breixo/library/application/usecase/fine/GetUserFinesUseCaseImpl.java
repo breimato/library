@@ -8,7 +8,7 @@ import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.fine.Fine;
 import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.fine.GetUserFinesUseCase;
-import com.breixo.library.domain.port.input.user.AuthorizationService;
+import com.breixo.library.domain.port.input.user.UserAuthorizationService;
 import com.breixo.library.domain.port.output.fine.FineRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 
@@ -22,8 +22,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class GetUserFinesUseCaseImpl implements GetUserFinesUseCase {
 
-    /** The authorization service. */
-    private final AuthorizationService authorizationService;
+    /** The user authorization service. */
+    private final UserAuthorizationService userAuthorizationService;
 
     /** The user retrieval persistence port. */
     private final UserRetrievalPersistencePort userRetrievalPersistencePort;
@@ -35,7 +35,7 @@ public class GetUserFinesUseCaseImpl implements GetUserFinesUseCase {
     @Override
     public List<Fine> execute(@Valid @NotNull final GetUserFinesCommand getUserFinesCommand) {
 
-        this.authorizationService.requireOwnResourceOrRole(
+        this.userAuthorizationService.requireAccess(
                 getUserFinesCommand.requesterId(),
                 getUserFinesCommand.userId(),
                 UserRole.MANAGER);

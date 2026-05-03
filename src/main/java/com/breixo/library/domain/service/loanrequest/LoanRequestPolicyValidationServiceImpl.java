@@ -15,7 +15,7 @@ import com.breixo.library.domain.model.loan.enums.LoanStatus;
 import com.breixo.library.domain.model.loanrequest.enums.LoanRequestStatus;
 import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.loanrequest.LoanRequestPolicyValidationService;
-import com.breixo.library.domain.port.input.user.AuthorizationService;
+import com.breixo.library.domain.port.input.user.UserAuthorizationService;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.fine.FineRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
@@ -37,8 +37,8 @@ public class LoanRequestPolicyValidationServiceImpl implements LoanRequestPolicy
     private static final Set<LoanRequestStatus> MANAGER_ONLY_STATUSES = Set.of(
             LoanRequestStatus.APPROVED, LoanRequestStatus.REJECTED);
 
-    /** The authorization service. */
-    private final AuthorizationService authorizationService;
+    /** The user authorization service. */
+    private final UserAuthorizationService userAuthorizationService;
 
     /** The fine retrieval persistence port. */
     private final FineRetrievalPersistencePort fineRetrievalPersistencePort;
@@ -66,8 +66,8 @@ public class LoanRequestPolicyValidationServiceImpl implements LoanRequestPolicy
             @NotNull final Integer resourceOwnerId, @NotNull final LoanRequestStatus newStatus) {
 
         Map.of(
-                true,  (Runnable) () -> this.authorizationService.requireMinimumRole(requesterId, UserRole.MANAGER),
-                false, (Runnable) () -> this.authorizationService.requireOwnResourceOrRole(requesterId, resourceOwnerId, UserRole.MANAGER)
+                true,  (Runnable) () -> this.userAuthorizationService.requireAccess(requesterId, UserRole.MANAGER),
+                false, (Runnable) () -> this.userAuthorizationService.requireAccess(requesterId, resourceOwnerId, UserRole.MANAGER)
         ).get(MANAGER_ONLY_STATUSES.contains(newStatus)).run();
     }
 

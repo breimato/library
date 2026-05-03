@@ -11,7 +11,7 @@ import com.breixo.library.domain.model.loanrequest.LoanRequest;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.loanrequest.LoanRequestPolicyValidationService;
-import com.breixo.library.domain.port.input.user.AuthorizationService;
+import com.breixo.library.domain.port.input.user.UserAuthorizationService;
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestCreationPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
@@ -56,7 +56,7 @@ class CreateLoanRequestUseCaseTest {
 
     /** The authorization service. */
     @Mock
-    AuthorizationService authorizationService;
+    UserAuthorizationService userAuthorizationService;
 
     /**
      * Test execute when user and book exist then create and return loan request.
@@ -71,7 +71,7 @@ class CreateLoanRequestUseCaseTest {
         final var loanRequest = Instancio.create(LoanRequest.class);
 
         // When
-        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+        doNothing().when(this.userAuthorizationService).requireAccess(
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
@@ -83,7 +83,7 @@ class CreateLoanRequestUseCaseTest {
         final var actualLoanRequest = this.createLoanRequestUseCase.execute(createLoanRequestCommand);
 
         // Then
-        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+        verify(this.userAuthorizationService, times(1)).requireAccess(
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
@@ -104,7 +104,7 @@ class CreateLoanRequestUseCaseTest {
         final var createLoanRequestCommand = Instancio.create(CreateLoanRequestCommand.class);
 
         // When
-        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+        doNothing().when(this.userAuthorizationService).requireAccess(
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
@@ -117,7 +117,7 @@ class CreateLoanRequestUseCaseTest {
                 () -> this.createLoanRequestUseCase.execute(createLoanRequestCommand));
         assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_CODE_ERROR, userException.getCode());
         assertEquals(ExceptionMessageConstants.USER_NOT_FOUND_MESSAGE_ERROR, userException.getMessage());
-        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+        verify(this.userAuthorizationService, times(1)).requireAccess(
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
@@ -138,7 +138,7 @@ class CreateLoanRequestUseCaseTest {
         final var user = Instancio.create(User.class);
 
         // When
-        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+        doNothing().when(this.userAuthorizationService).requireAccess(
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);
@@ -152,7 +152,7 @@ class CreateLoanRequestUseCaseTest {
                 () -> this.createLoanRequestUseCase.execute(createLoanRequestCommand));
         assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_CODE_ERROR, bookException.getCode());
         assertEquals(ExceptionMessageConstants.BOOK_NOT_FOUND_MESSAGE_ERROR, bookException.getMessage());
-        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+        verify(this.userAuthorizationService, times(1)).requireAccess(
                 createLoanRequestCommand.requesterId(),
                 createLoanRequestCommand.userId(),
                 UserRole.MANAGER);

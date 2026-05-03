@@ -8,7 +8,7 @@ import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.loan.Loan;
 import com.breixo.library.domain.model.user.enums.UserRole;
 import com.breixo.library.domain.port.input.loan.GetUserLoansUseCase;
-import com.breixo.library.domain.port.input.user.AuthorizationService;
+import com.breixo.library.domain.port.input.user.UserAuthorizationService;
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 
@@ -22,8 +22,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class GetUserLoansUseCaseImpl implements GetUserLoansUseCase {
 
-    /** The authorization service. */
-    private final AuthorizationService authorizationService;
+    /** The user authorization service. */
+    private final UserAuthorizationService userAuthorizationService;
 
     /** The user retrieval persistence port. */
     private final UserRetrievalPersistencePort userRetrievalPersistencePort;
@@ -35,7 +35,7 @@ public class GetUserLoansUseCaseImpl implements GetUserLoansUseCase {
     @Override
     public List<Loan> execute(@Valid @NotNull final GetUserLoansCommand getUserLoansCommand) {
 
-        this.authorizationService.requireOwnResourceOrRole(
+        this.userAuthorizationService.requireAccess(
                 getUserLoansCommand.requesterId(),
                 getUserLoansCommand.userId(),
                 UserRole.MANAGER);

@@ -9,7 +9,7 @@ import com.breixo.library.domain.exception.constants.ExceptionMessageConstants;
 import com.breixo.library.domain.model.fine.Fine;
 import com.breixo.library.domain.model.user.User;
 import com.breixo.library.domain.model.user.enums.UserRole;
-import com.breixo.library.domain.port.input.user.AuthorizationService;
+import com.breixo.library.domain.port.input.user.UserAuthorizationService;
 import com.breixo.library.domain.port.output.fine.FineRetrievalPersistencePort;
 import com.breixo.library.domain.port.output.user.UserRetrievalPersistencePort;
 
@@ -35,9 +35,9 @@ class GetUserFinesUseCaseTest {
     @InjectMocks
     GetUserFinesUseCaseImpl getUserFinesUseCase;
 
-    /** The authorization service. */
+    /** The user authorization service. */
     @Mock
-    AuthorizationService authorizationService;
+    UserAuthorizationService userAuthorizationService;
 
     /** The user retrieval persistence port. */
     @Mock
@@ -59,7 +59,7 @@ class GetUserFinesUseCaseTest {
         final var fines = Instancio.createList(Fine.class);
 
         // When
-        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+        doNothing().when(this.userAuthorizationService).requireAccess(
                 getUserFinesCommand.requesterId(),
                 getUserFinesCommand.userId(),
                 UserRole.MANAGER);
@@ -69,7 +69,7 @@ class GetUserFinesUseCaseTest {
         final var result = this.getUserFinesUseCase.execute(getUserFinesCommand);
 
         // Then
-        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+        verify(this.userAuthorizationService, times(1)).requireAccess(
                 getUserFinesCommand.requesterId(),
                 getUserFinesCommand.userId(),
                 UserRole.MANAGER);
@@ -88,7 +88,7 @@ class GetUserFinesUseCaseTest {
         final var getUserFinesCommand = Instancio.create(GetUserFinesCommand.class);
 
         // When
-        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+        doNothing().when(this.userAuthorizationService).requireAccess(
                 getUserFinesCommand.requesterId(),
                 getUserFinesCommand.userId(),
                 UserRole.MANAGER);
@@ -98,7 +98,7 @@ class GetUserFinesUseCaseTest {
                 () -> this.getUserFinesUseCase.execute(getUserFinesCommand));
 
         // Then
-        verify(this.authorizationService, times(1)).requireOwnResourceOrRole(
+        verify(this.userAuthorizationService, times(1)).requireAccess(
                 getUserFinesCommand.requesterId(),
                 getUserFinesCommand.userId(),
                 UserRole.MANAGER);
@@ -119,7 +119,7 @@ class GetUserFinesUseCaseTest {
         final var user = Instancio.create(User.class);
 
         // When
-        doNothing().when(this.authorizationService).requireOwnResourceOrRole(
+        doNothing().when(this.userAuthorizationService).requireAccess(
                 getUserFinesCommand.requesterId(),
                 getUserFinesCommand.userId(),
                 UserRole.MANAGER);
