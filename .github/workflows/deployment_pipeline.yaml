@@ -7,6 +7,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Download code
         uses: actions/checkout@v4
@@ -18,3 +23,12 @@ jobs:
           cache: maven
       - name: Compile and run tests
         run: mvn --batch-mode verify
+      - name: Login GHCR
+        if: github.event_name == 'push'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Dockerfile
+        run: docker build -t library:ci .
