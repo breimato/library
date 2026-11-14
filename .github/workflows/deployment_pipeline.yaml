@@ -31,4 +31,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Dockerfile
-        run: docker build -t library:ci .
+        run: |
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
+          docker build -t "$IMAGE:$GITHUB_SHA"
+      - name: Publish Dockerfile
+        if: github.event_name == 'push'
+        run: |
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
+          docker push "$IMAGE:$GITHUB_SHA"
