@@ -33,7 +33,7 @@ jobs:
       - name: Build Dockerfile
         run: |
           IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
-          docker build -t "$IMAGE:$GITHUB_SHA"
+          docker build -t "$IMAGE:$GITHUB_SHA" .
       - name: Publish Dockerfile
         if: github.event_name == 'push'
         run: |
