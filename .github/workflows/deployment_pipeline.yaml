@@ -40,7 +40,7 @@ jobs:
           IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
           docker push "$IMAGE:$GITHUB_SHA"
       - name: Download deployment repository
-        if: github.event_name == 'push' && github.ref == 'ref/heads/master'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: actions/checkout@v4
         with:
           repository: breimato/library-deploy
