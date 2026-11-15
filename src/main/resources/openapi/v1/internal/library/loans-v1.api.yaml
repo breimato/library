@@ -4,12 +4,35 @@ get:
   operationId: "GetLoansV1"
   tags:
     - get-loans-v1
-  requestBody:
-    required: false
-    content:
-      application/json:
-        schema:
-          $ref: '../requests/GetLoansV1Request.yaml'
+  parameters:
+    - name: id
+      in: query
+      required: false
+      description: "Filter by identifier"
+      schema:
+        type: integer
+        format: int32
+    - name: userId
+      in: query
+      required: false
+      description: "Filter by user identifier"
+      schema:
+        type: integer
+        format: int32
+    - name: bookId
+      in: query
+      required: false
+      description: "Filter by book identifier"
+      schema:
+        type: integer
+        format: int32
+    - name: status
+      in: query
+      required: false
+      description: "Filter by status"
+      schema:
+        type: integer
+        format: int32
   responses:
     '200':
       description: "200 OK"

@@ -1,30 +1,21 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.book;
 
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetBooksV1Request;
-
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** The Class Get Books V1 Request Mapper Test. */
-@ExtendWith(MockitoExtension.class)
 class GetBooksV1RequestMapperTest {
 
-    /** The get books V1 request mapper. */
-    @InjectMocks
-    GetBooksV1RequestMapperImpl getBooksV1RequestMapper;
+    /** The get Books V1 request mapper. */
+    final GetBooksV1RequestMapper getBooksV1RequestMapper = new GetBooksV1RequestMapperImpl();
 
-    /**
-     * Test to book search criteria command when request is valid then return mapped command.
-     */
+    /** Test mapping when AllFilters then return matching criteria. */
     @Test
-    void testToBookSearchCriteriaCommand_whenRequestIsValid_thenReturnMappedCommand() {
+    void testToBookSearchCriteriaCommand_whenAllFilters_thenReturnMatchingCriteria() {
 
         // Given
         final var id = Instancio.create(Integer.class);
@@ -32,15 +23,9 @@ class GetBooksV1RequestMapperTest {
         final var title = Instancio.create(String.class);
         final var author = Instancio.create(String.class);
         final var genre = Instancio.create(String.class);
-        final var getBooksV1Request = Instancio.create(GetBooksV1Request.class);
-        getBooksV1Request.setId(id);
-        getBooksV1Request.setIsbn(isbn);
-        getBooksV1Request.setTitle(title);
-        getBooksV1Request.setAuthor(author);
-        getBooksV1Request.setGenre(genre);
 
         // When
-        final var bookSearchCriteriaCommand = this.getBooksV1RequestMapper.toBookSearchCriteriaCommand(getBooksV1Request);
+        final var bookSearchCriteriaCommand = this.getBooksV1RequestMapper.toBookSearchCriteriaCommand(id, isbn, title, author, genre);
 
         // Then
         assertNotNull(bookSearchCriteriaCommand);
@@ -51,14 +36,14 @@ class GetBooksV1RequestMapperTest {
         assertEquals(genre, bookSearchCriteriaCommand.getGenre());
     }
 
-    /**
-     * Test to book search criteria command when request is null then return default command.
-     */
+    /** Test mapping when NoFilters then return matching criteria. */
     @Test
-    void testToBookSearchCriteriaCommand_whenRequestIsNull_thenReturnDefaultCommand() {
+    void testToBookSearchCriteriaCommand_whenNoFilters_thenReturnMatchingCriteria() {
+
+        // Given
 
         // When
-        final var bookSearchCriteriaCommand = this.getBooksV1RequestMapper.toBookSearchCriteriaCommand(null);
+        final var bookSearchCriteriaCommand = this.getBooksV1RequestMapper.toBookSearchCriteriaCommand(null, null, null, null, null);
 
         // Then
         assertNotNull(bookSearchCriteriaCommand);
@@ -67,5 +52,100 @@ class GetBooksV1RequestMapperTest {
         assertNull(bookSearchCriteriaCommand.getTitle());
         assertNull(bookSearchCriteriaCommand.getAuthor());
         assertNull(bookSearchCriteriaCommand.getGenre());
+    }
+
+    /** Test mapping when Id then return matching criteria. */
+    @Test
+    void testToBookSearchCriteriaCommand_whenId_thenReturnMatchingCriteria() {
+
+        // Given
+        final var id = Instancio.create(Integer.class);
+
+        // When
+        final var bookSearchCriteriaCommand = this.getBooksV1RequestMapper.toBookSearchCriteriaCommand(id, null, null, null, null);
+
+        // Then
+        assertNotNull(bookSearchCriteriaCommand);
+        assertEquals(id, bookSearchCriteriaCommand.getId());
+        assertNull(bookSearchCriteriaCommand.getIsbn());
+        assertNull(bookSearchCriteriaCommand.getTitle());
+        assertNull(bookSearchCriteriaCommand.getAuthor());
+        assertNull(bookSearchCriteriaCommand.getGenre());
+    }
+
+    /** Test mapping when Isbn then return matching criteria. */
+    @Test
+    void testToBookSearchCriteriaCommand_whenIsbn_thenReturnMatchingCriteria() {
+
+        // Given
+        final var isbn = Instancio.create(String.class);
+
+        // When
+        final var bookSearchCriteriaCommand = this.getBooksV1RequestMapper.toBookSearchCriteriaCommand(null, isbn, null, null, null);
+
+        // Then
+        assertNotNull(bookSearchCriteriaCommand);
+        assertNull(bookSearchCriteriaCommand.getId());
+        assertEquals(isbn, bookSearchCriteriaCommand.getIsbn());
+        assertNull(bookSearchCriteriaCommand.getTitle());
+        assertNull(bookSearchCriteriaCommand.getAuthor());
+        assertNull(bookSearchCriteriaCommand.getGenre());
+    }
+
+    /** Test mapping when Title then return matching criteria. */
+    @Test
+    void testToBookSearchCriteriaCommand_whenTitle_thenReturnMatchingCriteria() {
+
+        // Given
+        final var title = Instancio.create(String.class);
+
+        // When
+        final var bookSearchCriteriaCommand = this.getBooksV1RequestMapper.toBookSearchCriteriaCommand(null, null, title, null, null);
+
+        // Then
+        assertNotNull(bookSearchCriteriaCommand);
+        assertNull(bookSearchCriteriaCommand.getId());
+        assertNull(bookSearchCriteriaCommand.getIsbn());
+        assertEquals(title, bookSearchCriteriaCommand.getTitle());
+        assertNull(bookSearchCriteriaCommand.getAuthor());
+        assertNull(bookSearchCriteriaCommand.getGenre());
+    }
+
+    /** Test mapping when Author then return matching criteria. */
+    @Test
+    void testToBookSearchCriteriaCommand_whenAuthor_thenReturnMatchingCriteria() {
+
+        // Given
+        final var author = Instancio.create(String.class);
+
+        // When
+        final var bookSearchCriteriaCommand = this.getBooksV1RequestMapper.toBookSearchCriteriaCommand(null, null, null, author, null);
+
+        // Then
+        assertNotNull(bookSearchCriteriaCommand);
+        assertNull(bookSearchCriteriaCommand.getId());
+        assertNull(bookSearchCriteriaCommand.getIsbn());
+        assertNull(bookSearchCriteriaCommand.getTitle());
+        assertEquals(author, bookSearchCriteriaCommand.getAuthor());
+        assertNull(bookSearchCriteriaCommand.getGenre());
+    }
+
+    /** Test mapping when Genre then return matching criteria. */
+    @Test
+    void testToBookSearchCriteriaCommand_whenGenre_thenReturnMatchingCriteria() {
+
+        // Given
+        final var genre = Instancio.create(String.class);
+
+        // When
+        final var bookSearchCriteriaCommand = this.getBooksV1RequestMapper.toBookSearchCriteriaCommand(null, null, null, null, genre);
+
+        // Then
+        assertNotNull(bookSearchCriteriaCommand);
+        assertNull(bookSearchCriteriaCommand.getId());
+        assertNull(bookSearchCriteriaCommand.getIsbn());
+        assertNull(bookSearchCriteriaCommand.getTitle());
+        assertNull(bookSearchCriteriaCommand.getAuthor());
+        assertEquals(genre, bookSearchCriteriaCommand.getGenre());
     }
 }

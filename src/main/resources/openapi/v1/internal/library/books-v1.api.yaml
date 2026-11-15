@@ -4,12 +4,38 @@ get:
   operationId: "GetBooksV1"
   tags:
     - get-books-v1
-  requestBody:
-    required: false
-    content:
-      application/json:
-        schema:
-          $ref: '../requests/GetBooksV1Request.yaml'
+  parameters:
+    - name: id
+      in: query
+      required: false
+      description: "Filter by identifier"
+      schema:
+        type: integer
+        format: int32
+    - name: isbn
+      in: query
+      required: false
+      description: "Filter by ISBN"
+      schema:
+        type: string
+    - name: title
+      in: query
+      required: false
+      description: "Filter by title"
+      schema:
+        type: string
+    - name: author
+      in: query
+      required: false
+      description: "Filter by author"
+      schema:
+        type: string
+    - name: genre
+      in: query
+      required: false
+      description: "Filter by genre"
+      schema:
+        type: string
   responses:
     '200':
       description: "200 OK"

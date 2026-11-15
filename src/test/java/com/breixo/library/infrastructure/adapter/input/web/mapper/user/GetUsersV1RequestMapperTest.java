@@ -1,44 +1,30 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.user;
 
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetUsersV1Request;
-
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** The Class Get Users V1 Request Mapper Test. */
-@ExtendWith(MockitoExtension.class)
 class GetUsersV1RequestMapperTest {
 
-    /** The get users V1 request mapper. */
-    @InjectMocks
-    GetUsersV1RequestMapperImpl getUsersV1RequestMapper;
+    /** The get Users V1 request mapper. */
+    final GetUsersV1RequestMapper getUsersV1RequestMapper = new GetUsersV1RequestMapperImpl();
 
-    /**
-     * Test to user search criteria command when request is valid then return mapped command.
-     */
+    /** Test mapping when AllFilters then return matching criteria. */
     @Test
-    void testToUserSearchCriteriaCommand_whenRequestIsValid_thenReturnMappedCommand() {
+    void testToUserSearchCriteriaCommand_whenAllFilters_thenReturnMatchingCriteria() {
 
         // Given
         final var id = Instancio.create(Integer.class);
         final var name = Instancio.create(String.class);
         final var email = Instancio.create(String.class);
         final var status = Instancio.create(Integer.class);
-        final var getUsersV1Request = Instancio.create(GetUsersV1Request.class);
-        getUsersV1Request.setId(id);
-        getUsersV1Request.setName(name);
-        getUsersV1Request.setEmail(email);
-        getUsersV1Request.setStatus(status);
 
         // When
-        final var userSearchCriteriaCommand = this.getUsersV1RequestMapper.toUserSearchCriteriaCommand(getUsersV1Request);
+        final var userSearchCriteriaCommand = this.getUsersV1RequestMapper.toUserSearchCriteriaCommand(id, name, email, status);
 
         // Then
         assertNotNull(userSearchCriteriaCommand);
@@ -48,14 +34,14 @@ class GetUsersV1RequestMapperTest {
         assertEquals(status, userSearchCriteriaCommand.getStatusId());
     }
 
-    /**
-     * Test to user search criteria command when request is null then return default command.
-     */
+    /** Test mapping when NoFilters then return matching criteria. */
     @Test
-    void testToUserSearchCriteriaCommand_whenRequestIsNull_thenReturnDefaultCommand() {
+    void testToUserSearchCriteriaCommand_whenNoFilters_thenReturnMatchingCriteria() {
+
+        // Given
 
         // When
-        final var userSearchCriteriaCommand = this.getUsersV1RequestMapper.toUserSearchCriteriaCommand(null);
+        final var userSearchCriteriaCommand = this.getUsersV1RequestMapper.toUserSearchCriteriaCommand(null, null, null, null);
 
         // Then
         assertNotNull(userSearchCriteriaCommand);
@@ -63,5 +49,77 @@ class GetUsersV1RequestMapperTest {
         assertNull(userSearchCriteriaCommand.getName());
         assertNull(userSearchCriteriaCommand.getEmail());
         assertNull(userSearchCriteriaCommand.getStatusId());
+    }
+
+    /** Test mapping when Id then return matching criteria. */
+    @Test
+    void testToUserSearchCriteriaCommand_whenId_thenReturnMatchingCriteria() {
+
+        // Given
+        final var id = Instancio.create(Integer.class);
+
+        // When
+        final var userSearchCriteriaCommand = this.getUsersV1RequestMapper.toUserSearchCriteriaCommand(id, null, null, null);
+
+        // Then
+        assertNotNull(userSearchCriteriaCommand);
+        assertEquals(id, userSearchCriteriaCommand.getId());
+        assertNull(userSearchCriteriaCommand.getName());
+        assertNull(userSearchCriteriaCommand.getEmail());
+        assertNull(userSearchCriteriaCommand.getStatusId());
+    }
+
+    /** Test mapping when Name then return matching criteria. */
+    @Test
+    void testToUserSearchCriteriaCommand_whenName_thenReturnMatchingCriteria() {
+
+        // Given
+        final var name = Instancio.create(String.class);
+
+        // When
+        final var userSearchCriteriaCommand = this.getUsersV1RequestMapper.toUserSearchCriteriaCommand(null, name, null, null);
+
+        // Then
+        assertNotNull(userSearchCriteriaCommand);
+        assertNull(userSearchCriteriaCommand.getId());
+        assertEquals(name, userSearchCriteriaCommand.getName());
+        assertNull(userSearchCriteriaCommand.getEmail());
+        assertNull(userSearchCriteriaCommand.getStatusId());
+    }
+
+    /** Test mapping when Email then return matching criteria. */
+    @Test
+    void testToUserSearchCriteriaCommand_whenEmail_thenReturnMatchingCriteria() {
+
+        // Given
+        final var email = Instancio.create(String.class);
+
+        // When
+        final var userSearchCriteriaCommand = this.getUsersV1RequestMapper.toUserSearchCriteriaCommand(null, null, email, null);
+
+        // Then
+        assertNotNull(userSearchCriteriaCommand);
+        assertNull(userSearchCriteriaCommand.getId());
+        assertNull(userSearchCriteriaCommand.getName());
+        assertEquals(email, userSearchCriteriaCommand.getEmail());
+        assertNull(userSearchCriteriaCommand.getStatusId());
+    }
+
+    /** Test mapping when Status then return matching criteria. */
+    @Test
+    void testToUserSearchCriteriaCommand_whenStatus_thenReturnMatchingCriteria() {
+
+        // Given
+        final var status = Instancio.create(Integer.class);
+
+        // When
+        final var userSearchCriteriaCommand = this.getUsersV1RequestMapper.toUserSearchCriteriaCommand(null, null, null, status);
+
+        // Then
+        assertNotNull(userSearchCriteriaCommand);
+        assertNull(userSearchCriteriaCommand.getId());
+        assertNull(userSearchCriteriaCommand.getName());
+        assertNull(userSearchCriteriaCommand.getEmail());
+        assertEquals(status, userSearchCriteriaCommand.getStatusId());
     }
 }

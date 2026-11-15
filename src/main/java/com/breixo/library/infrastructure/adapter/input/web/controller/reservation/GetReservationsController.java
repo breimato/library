@@ -2,7 +2,6 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.reservati
 
 import com.breixo.library.domain.port.output.reservation.ReservationRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.api.GetReservationsV1Api;
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetReservationsV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetReservationsV1Response;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.reservation.GetReservationsV1RequestMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.reservation.ReservationMapper;
@@ -27,18 +26,14 @@ public class GetReservationsController implements GetReservationsV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<GetReservationsV1Response> getReservationsV1(final GetReservationsV1Request getReservationsV1Request) {
+    public ResponseEntity<GetReservationsV1Response> getReservationsV1(final Integer id, final Integer userId, final Integer bookId, final Integer loanId, final Integer status) {
 
         final var reservationSearchCriteriaCommand =
-                this.getReservationsV1RequestMapper.toReservationSearchCriteriaCommand(getReservationsV1Request);
-
+                this.getReservationsV1RequestMapper.toReservationSearchCriteriaCommand(id, userId, bookId, loanId, status);
         final var reservations = this.reservationRetrievalPersistencePort.find(reservationSearchCriteriaCommand);
-
         final var reservationV1DtoList = this.reservationMapper.toReservationV1List(reservations);
-
         final var getReservationsV1Response =
                 GetReservationsV1Response.builder().reservations(reservationV1DtoList).build();
-
         return ResponseEntity.ok(getReservationsV1Response);
     }
 }

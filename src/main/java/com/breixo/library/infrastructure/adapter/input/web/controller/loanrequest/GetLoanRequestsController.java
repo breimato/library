@@ -2,7 +2,6 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.loanreque
 
 import com.breixo.library.domain.port.output.loanrequest.LoanRequestRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.api.GetLoanRequestsV1Api;
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetLoanRequestsV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetLoanRequestsV1Response;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loanrequest.GetLoanRequestsV1RequestMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loanrequest.LoanRequestMapper;
@@ -27,17 +26,13 @@ public class GetLoanRequestsController implements GetLoanRequestsV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<GetLoanRequestsV1Response> getLoanRequestsV1(final GetLoanRequestsV1Request getLoanRequestsV1Request) {
+    public ResponseEntity<GetLoanRequestsV1Response> getLoanRequestsV1(final Integer id, final Integer userId, final Integer bookId, final Integer status) {
 
         final var loanRequestSearchCriteriaCommand =
-                this.getLoanRequestsV1RequestMapper.toLoanRequestSearchCriteriaCommand(getLoanRequestsV1Request);
-
+                this.getLoanRequestsV1RequestMapper.toLoanRequestSearchCriteriaCommand(id, userId, bookId, status);
         final var loanRequests = this.loanRequestRetrievalPersistencePort.find(loanRequestSearchCriteriaCommand);
-
         final var loanRequestV1List = this.loanRequestMapper.toLoanRequestV1List(loanRequests);
-
         final var getLoanRequestsV1Response = GetLoanRequestsV1Response.builder().loanRequests(loanRequestV1List).build();
-
         return ResponseEntity.ok(getLoanRequestsV1Response);
     }
 }

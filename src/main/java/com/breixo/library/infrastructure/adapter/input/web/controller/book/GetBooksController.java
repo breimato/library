@@ -2,7 +2,6 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.book;
 
 import com.breixo.library.domain.port.output.book.BookRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.api.GetBooksV1Api;
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetBooksV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetBooksV1ResponseDto;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.book.BookMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.book.GetBooksV1RequestMapper;
@@ -27,16 +26,12 @@ public class GetBooksController implements GetBooksV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<GetBooksV1ResponseDto> getBooksV1(final GetBooksV1Request getBooksV1Request) {
+    public ResponseEntity<GetBooksV1ResponseDto> getBooksV1(final Integer id, final String isbn, final String title, final String author, final String genre) {
 
-        final var bookSearchCriteriaCommand = this.getBooksV1RequestMapper.toBookSearchCriteriaCommand(getBooksV1Request);
-
+        final var bookSearchCriteriaCommand = this.getBooksV1RequestMapper.toBookSearchCriteriaCommand(id, isbn, title, author, genre);
         final var books = this.bookRetrievalPersistencePort.find(bookSearchCriteriaCommand);
-
         final var bookV1DtoList = this.bookMapper.toBookV1List(books);
-
         final var getBooksV1ResponseDto = GetBooksV1ResponseDto.builder().books(bookV1DtoList).build();
-
         return ResponseEntity.ok(getBooksV1ResponseDto);
     }
 }

@@ -74,8 +74,6 @@ components:
       $ref: './requests/PostLoanRequestV1Request.yaml'
     PatchLoanRequestV1Request:
       $ref: './requests/PatchLoanRequestV1Request.yaml'
-    GetLoanRequestsV1Request:
-      $ref: './requests/GetLoanRequestsV1Request.yaml'
     PostLoanV1Request:
       $ref: './requests/PostLoanV1Request.yaml'
     PatchLoanReturnV1Request:
