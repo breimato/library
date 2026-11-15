@@ -2,7 +2,6 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.fine;
 
 import com.breixo.library.domain.port.output.fine.FineRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.api.GetFinesV1Api;
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetFinesV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetFinesV1ResponseDto;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.fine.FineMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.fine.GetFinesV1RequestMapper;
@@ -27,16 +26,12 @@ public class GetFinesController implements GetFinesV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<GetFinesV1ResponseDto> getFinesV1(final GetFinesV1Request getFinesV1Request) {
+    public ResponseEntity<GetFinesV1ResponseDto> getFinesV1(final Integer id, final Integer loanId, final Integer status) {
 
-        final var fineSearchCriteriaCommand = this.getFinesV1RequestMapper.toFineSearchCriteriaCommand(getFinesV1Request);
-
+        final var fineSearchCriteriaCommand = this.getFinesV1RequestMapper.toFineSearchCriteriaCommand(id, loanId, status);
         final var fines = this.fineRetrievalPersistencePort.find(fineSearchCriteriaCommand);
-
         final var fineV1List = this.fineMapper.toFineV1List(fines);
-
         final var getFinesV1ResponseDto = GetFinesV1ResponseDto.builder().fines(fineV1List).build();
-
         return ResponseEntity.ok(getFinesV1ResponseDto);
     }
 }

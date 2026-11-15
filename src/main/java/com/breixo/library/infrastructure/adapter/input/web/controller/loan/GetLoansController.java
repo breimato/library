@@ -2,7 +2,6 @@ package com.breixo.library.infrastructure.adapter.input.web.controller.loan;
 
 import com.breixo.library.domain.port.output.loan.LoanRetrievalPersistencePort;
 import com.breixo.library.infrastructure.adapter.input.web.api.GetLoansV1Api;
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetLoansV1Request;
 import com.breixo.library.infrastructure.adapter.input.web.dto.GetLoansV1ResponseDto;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loan.GetLoansV1RequestMapper;
 import com.breixo.library.infrastructure.adapter.input.web.mapper.loan.LoanMapper;
@@ -27,16 +26,12 @@ public class GetLoansController implements GetLoansV1Api {
 
     /** {@inheritDoc} */
     @Override
-    public ResponseEntity<GetLoansV1ResponseDto> getLoansV1(final GetLoansV1Request getLoansV1Request) {
+    public ResponseEntity<GetLoansV1ResponseDto> getLoansV1(final Integer id, final Integer userId, final Integer bookId, final Integer status) {
 
-        final var loanSearchCriteriaCommand = this.getLoansV1RequestMapper.toLoanSearchCriteriaCommand(getLoansV1Request);
-
+        final var loanSearchCriteriaCommand = this.getLoansV1RequestMapper.toLoanSearchCriteriaCommand(id, userId, bookId, status);
         final var loans = this.loanRetrievalPersistencePort.find(loanSearchCriteriaCommand);
-
         final var loanV1DtoList = this.loanMapper.toLoanV1List(loans);
-
         final var getLoansV1ResponseDto = GetLoansV1ResponseDto.builder().loans(loanV1DtoList).build();
-
         return ResponseEntity.ok(getLoansV1ResponseDto);
     }
 }

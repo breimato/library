@@ -1,45 +1,30 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.loanrequest;
 
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetLoanRequestsV1Request;
-
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-/** The Class Get Loan Requests V1 Request Mapper Test. */
-@ExtendWith(MockitoExtension.class)
+/** The Class Get LoanRequests V1 Request Mapper Test. */
 class GetLoanRequestsV1RequestMapperTest {
 
-    /** The get loan requests V1 request mapper. */
-    @InjectMocks
-    GetLoanRequestsV1RequestMapperImpl getLoanRequestsV1RequestMapper;
+    /** The get LoanRequests V1 request mapper. */
+    final GetLoanRequestsV1RequestMapper getLoanRequestsV1RequestMapper = new GetLoanRequestsV1RequestMapperImpl();
 
-    /**
-     * Test to loan request search criteria command when request is valid then return mapped command.
-     */
+    /** Test mapping when AllFilters then return matching criteria. */
     @Test
-    void testToLoanRequestSearchCriteriaCommand_whenRequestIsValid_thenReturnMappedCommand() {
+    void testToLoanRequestSearchCriteriaCommand_whenAllFilters_thenReturnMatchingCriteria() {
 
         // Given
         final var id = Instancio.create(Integer.class);
         final var userId = Instancio.create(Integer.class);
         final var bookId = Instancio.create(Integer.class);
         final var status = Instancio.create(Integer.class);
-        final var getLoanRequestsV1Request = Instancio.create(GetLoanRequestsV1Request.class);
-        getLoanRequestsV1Request.setId(id);
-        getLoanRequestsV1Request.setUserId(userId);
-        getLoanRequestsV1Request.setBookId(bookId);
-        getLoanRequestsV1Request.setStatus(status);
 
         // When
-        final var loanRequestSearchCriteriaCommand =
-                this.getLoanRequestsV1RequestMapper.toLoanRequestSearchCriteriaCommand(getLoanRequestsV1Request);
+        final var loanRequestSearchCriteriaCommand = this.getLoanRequestsV1RequestMapper.toLoanRequestSearchCriteriaCommand(id, userId, bookId, status);
 
         // Then
         assertNotNull(loanRequestSearchCriteriaCommand);
@@ -49,15 +34,14 @@ class GetLoanRequestsV1RequestMapperTest {
         assertEquals(status, loanRequestSearchCriteriaCommand.getStatusId());
     }
 
-    /**
-     * Test to loan request search criteria command when request is null then return default command.
-     */
+    /** Test mapping when NoFilters then return matching criteria. */
     @Test
-    void testToLoanRequestSearchCriteriaCommand_whenRequestIsNull_thenReturnDefaultCommand() {
+    void testToLoanRequestSearchCriteriaCommand_whenNoFilters_thenReturnMatchingCriteria() {
+
+        // Given
 
         // When
-        final var loanRequestSearchCriteriaCommand =
-                this.getLoanRequestsV1RequestMapper.toLoanRequestSearchCriteriaCommand(null);
+        final var loanRequestSearchCriteriaCommand = this.getLoanRequestsV1RequestMapper.toLoanRequestSearchCriteriaCommand(null, null, null, null);
 
         // Then
         assertNotNull(loanRequestSearchCriteriaCommand);
@@ -65,5 +49,77 @@ class GetLoanRequestsV1RequestMapperTest {
         assertNull(loanRequestSearchCriteriaCommand.getUserId());
         assertNull(loanRequestSearchCriteriaCommand.getBookId());
         assertNull(loanRequestSearchCriteriaCommand.getStatusId());
+    }
+
+    /** Test mapping when Id then return matching criteria. */
+    @Test
+    void testToLoanRequestSearchCriteriaCommand_whenId_thenReturnMatchingCriteria() {
+
+        // Given
+        final var id = Instancio.create(Integer.class);
+
+        // When
+        final var loanRequestSearchCriteriaCommand = this.getLoanRequestsV1RequestMapper.toLoanRequestSearchCriteriaCommand(id, null, null, null);
+
+        // Then
+        assertNotNull(loanRequestSearchCriteriaCommand);
+        assertEquals(id, loanRequestSearchCriteriaCommand.getId());
+        assertNull(loanRequestSearchCriteriaCommand.getUserId());
+        assertNull(loanRequestSearchCriteriaCommand.getBookId());
+        assertNull(loanRequestSearchCriteriaCommand.getStatusId());
+    }
+
+    /** Test mapping when UserId then return matching criteria. */
+    @Test
+    void testToLoanRequestSearchCriteriaCommand_whenUserId_thenReturnMatchingCriteria() {
+
+        // Given
+        final var userId = Instancio.create(Integer.class);
+
+        // When
+        final var loanRequestSearchCriteriaCommand = this.getLoanRequestsV1RequestMapper.toLoanRequestSearchCriteriaCommand(null, userId, null, null);
+
+        // Then
+        assertNotNull(loanRequestSearchCriteriaCommand);
+        assertNull(loanRequestSearchCriteriaCommand.getId());
+        assertEquals(userId, loanRequestSearchCriteriaCommand.getUserId());
+        assertNull(loanRequestSearchCriteriaCommand.getBookId());
+        assertNull(loanRequestSearchCriteriaCommand.getStatusId());
+    }
+
+    /** Test mapping when BookId then return matching criteria. */
+    @Test
+    void testToLoanRequestSearchCriteriaCommand_whenBookId_thenReturnMatchingCriteria() {
+
+        // Given
+        final var bookId = Instancio.create(Integer.class);
+
+        // When
+        final var loanRequestSearchCriteriaCommand = this.getLoanRequestsV1RequestMapper.toLoanRequestSearchCriteriaCommand(null, null, bookId, null);
+
+        // Then
+        assertNotNull(loanRequestSearchCriteriaCommand);
+        assertNull(loanRequestSearchCriteriaCommand.getId());
+        assertNull(loanRequestSearchCriteriaCommand.getUserId());
+        assertEquals(bookId, loanRequestSearchCriteriaCommand.getBookId());
+        assertNull(loanRequestSearchCriteriaCommand.getStatusId());
+    }
+
+    /** Test mapping when Status then return matching criteria. */
+    @Test
+    void testToLoanRequestSearchCriteriaCommand_whenStatus_thenReturnMatchingCriteria() {
+
+        // Given
+        final var status = Instancio.create(Integer.class);
+
+        // When
+        final var loanRequestSearchCriteriaCommand = this.getLoanRequestsV1RequestMapper.toLoanRequestSearchCriteriaCommand(null, null, null, status);
+
+        // Then
+        assertNotNull(loanRequestSearchCriteriaCommand);
+        assertNull(loanRequestSearchCriteriaCommand.getId());
+        assertNull(loanRequestSearchCriteriaCommand.getUserId());
+        assertNull(loanRequestSearchCriteriaCommand.getBookId());
+        assertEquals(status, loanRequestSearchCriteriaCommand.getStatusId());
     }
 }

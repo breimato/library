@@ -1,59 +1,101 @@
 package com.breixo.library.infrastructure.adapter.input.web.mapper.fine;
 
-import com.breixo.library.infrastructure.adapter.input.web.dto.GetFinesV1Request;
-
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** The Class Get Fines V1 Request Mapper Test. */
-@ExtendWith(MockitoExtension.class)
 class GetFinesV1RequestMapperTest {
 
-    /** The get fines V1 request mapper. */
-    @InjectMocks
-    GetFinesV1RequestMapperImpl getFinesV1RequestMapper;
+    /** The get Fines V1 request mapper. */
+    final GetFinesV1RequestMapper getFinesV1RequestMapper = new GetFinesV1RequestMapperImpl();
 
-    /**
-     * Test to fine search criteria command when request is valid then return command.
-     */
+    /** Test mapping when AllFilters then return matching criteria. */
     @Test
-    void testToFineSearchCriteriaCommand_whenRequestIsValid_thenReturnCommand() {
+    void testToFineSearchCriteriaCommand_whenAllFilters_thenReturnMatchingCriteria() {
 
         // Given
-        final var getFinesV1Request = Instancio.create(GetFinesV1Request.class);
-        final var statusId = Instancio.create(Integer.class);
-        getFinesV1Request.setStatus(statusId);
+        final var id = Instancio.create(Integer.class);
+        final var loanId = Instancio.create(Integer.class);
+        final var status = Instancio.create(Integer.class);
 
         // When
-        final var fineSearchCriteriaCommand = this.getFinesV1RequestMapper.toFineSearchCriteriaCommand(getFinesV1Request);
+        final var fineSearchCriteriaCommand = this.getFinesV1RequestMapper.toFineSearchCriteriaCommand(id, loanId, status);
 
         // Then
         assertNotNull(fineSearchCriteriaCommand);
-        assertEquals(getFinesV1Request.getId(), fineSearchCriteriaCommand.getId());
-        assertEquals(getFinesV1Request.getLoanId(), fineSearchCriteriaCommand.getLoanId());
-        assertEquals(statusId, fineSearchCriteriaCommand.getStatusId());
+        assertEquals(id, fineSearchCriteriaCommand.getId());
+        assertEquals(loanId, fineSearchCriteriaCommand.getLoanId());
+        assertEquals(status, fineSearchCriteriaCommand.getStatusId());
     }
 
-    /**
-     * Test to fine search criteria command when request is null then return default command.
-     */
+    /** Test mapping when NoFilters then return matching criteria. */
     @Test
-    void testToFineSearchCriteriaCommand_whenRequestIsNull_thenReturnDefaultCommand() {
+    void testToFineSearchCriteriaCommand_whenNoFilters_thenReturnMatchingCriteria() {
+
+        // Given
 
         // When
-        final var fineSearchCriteriaCommand = this.getFinesV1RequestMapper.toFineSearchCriteriaCommand(null);
+        final var fineSearchCriteriaCommand = this.getFinesV1RequestMapper.toFineSearchCriteriaCommand(null, null, null);
 
         // Then
         assertNotNull(fineSearchCriteriaCommand);
         assertNull(fineSearchCriteriaCommand.getId());
         assertNull(fineSearchCriteriaCommand.getLoanId());
         assertNull(fineSearchCriteriaCommand.getStatusId());
+    }
+
+    /** Test mapping when Id then return matching criteria. */
+    @Test
+    void testToFineSearchCriteriaCommand_whenId_thenReturnMatchingCriteria() {
+
+        // Given
+        final var id = Instancio.create(Integer.class);
+
+        // When
+        final var fineSearchCriteriaCommand = this.getFinesV1RequestMapper.toFineSearchCriteriaCommand(id, null, null);
+
+        // Then
+        assertNotNull(fineSearchCriteriaCommand);
+        assertEquals(id, fineSearchCriteriaCommand.getId());
+        assertNull(fineSearchCriteriaCommand.getLoanId());
+        assertNull(fineSearchCriteriaCommand.getStatusId());
+    }
+
+    /** Test mapping when LoanId then return matching criteria. */
+    @Test
+    void testToFineSearchCriteriaCommand_whenLoanId_thenReturnMatchingCriteria() {
+
+        // Given
+        final var loanId = Instancio.create(Integer.class);
+
+        // When
+        final var fineSearchCriteriaCommand = this.getFinesV1RequestMapper.toFineSearchCriteriaCommand(null, loanId, null);
+
+        // Then
+        assertNotNull(fineSearchCriteriaCommand);
+        assertNull(fineSearchCriteriaCommand.getId());
+        assertEquals(loanId, fineSearchCriteriaCommand.getLoanId());
+        assertNull(fineSearchCriteriaCommand.getStatusId());
+    }
+
+    /** Test mapping when Status then return matching criteria. */
+    @Test
+    void testToFineSearchCriteriaCommand_whenStatus_thenReturnMatchingCriteria() {
+
+        // Given
+        final var status = Instancio.create(Integer.class);
+
+        // When
+        final var fineSearchCriteriaCommand = this.getFinesV1RequestMapper.toFineSearchCriteriaCommand(null, null, status);
+
+        // Then
+        assertNotNull(fineSearchCriteriaCommand);
+        assertNull(fineSearchCriteriaCommand.getId());
+        assertNull(fineSearchCriteriaCommand.getLoanId());
+        assertEquals(status, fineSearchCriteriaCommand.getStatusId());
     }
 }

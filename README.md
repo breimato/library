@@ -477,3 +477,25 @@ The `Isbn` value object validates ISBN-13 format on creation:
 - Accepts dashes and spaces (normalized internally)
 - Check digit validated using the EAN-13 algorithm
 - Throws `IsbnException` (`400 Bad Request`) on invalid input
+
+## GET search filters
+
+All collection GET endpoints accept optional query parameters and do not accept JSON search bodies.
+Omit the parameters to list all records. Existing clients must move JSON filter fields into the URL.
+
+| Endpoint (prefix /v1/library) | Optional query parameters |
+|---|---|
+| /books | id, isbn, title, author, genre |
+| /users | id, name, email, status |
+| /loans | id, userId, bookId, status |
+| /loan-requests | id, userId, bookId, status |
+| /reservations | id, userId, bookId, loanId, status |
+| /fines | id, loanId, status |
+
+Identifiers and status are integers; the remaining parameters are strings.
+Combine filters using `&` and URL-encode text values.
+
+```sh
+curl --get 'http://localhost:8080/v1/library/books' --data-urlencode 'author=Cervantes'
+curl 'http://localhost:8080/v1/library/loans?userId=1&status=0'
+```

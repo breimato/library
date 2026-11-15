@@ -4,12 +4,28 @@ get:
   operationId: "GetFinesV1"
   tags:
     - get-fines-v1
-  requestBody:
-    required: false
-    content:
-      application/json:
-        schema:
-          $ref: '../requests/GetFinesV1Request.yaml'
+  parameters:
+    - name: id
+      in: query
+      required: false
+      description: "Filter by identifier"
+      schema:
+        type: integer
+        format: int32
+    - name: loanId
+      in: query
+      required: false
+      description: "Filter by loan identifier"
+      schema:
+        type: integer
+        format: int32
+    - name: status
+      in: query
+      required: false
+      description: "Filter by status"
+      schema:
+        type: integer
+        format: int32
   responses:
     '200':
       description: "200 OK"
